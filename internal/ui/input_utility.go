@@ -6,7 +6,6 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/daffadon/fndn/internal/domain"
-	"github.com/daffadon/fndn/internal/infra"
 	"github.com/daffadon/fndn/internal/pkg"
 	"github.com/daffadon/fndn/internal/ui/style"
 )
@@ -74,28 +73,23 @@ func (m *model) submit() tea.Cmd {
 		initGit = v
 	}
 
-	// derive project name and path
 	name := pkg.LastSegment(moduleName)
 	project := domain.Project{
 		ModuleName: moduleName,
 		Name:       name,
 		Path:       m.targetDir,
+		Git:        initGit,
 	}
 
 	m.loading = true
 	m.startTime = time.Now()
 	m.err = nil
-	return m.runInitProject(project, initGit)
+	return m.runInitProject(project)
 }
 
-func (m *model) runInitProject(p domain.Project, initGit bool) tea.Cmd {
+func (m *model) runInitProject(p domain.Project) tea.Cmd {
 	return func() tea.Msg {
 		err := m.useCase.Run(&p)
-
-		if err == nil && initGit {
-			runner := infra.NewCommandRunner()
-			_ = runner.Run("git", []string{"init"}, p.Path)
-		}
 		return initFinishedMsg{err: err}
 	}
 }

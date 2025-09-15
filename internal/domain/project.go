@@ -1,7 +1,23 @@
 package domain
 
+import (
+	"github.com/daffadon/fndn/internal/infra"
+)
+
 type Project struct {
 	ModuleName string
 	Name       string
 	Path       string
+	Git        bool
+}
+
+func InitProject(i infra.CommandRunner, path, moduleName string) error {
+	return i.Run("go", []string{"mod", "init", moduleName}, path)
+}
+
+func InitGit(i infra.CommandRunner, isInit bool, path *string) error {
+	if isInit {
+		return i.Run("git", []string{"init"}, *path)
+	}
+	return nil
 }

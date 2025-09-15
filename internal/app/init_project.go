@@ -17,5 +17,15 @@ func (uc *InitProjectUseCase) Run(p *domain.Project) error {
 		}
 		p.Path = newPath
 	}
-	return uc.Runner.Run("go", []string{"mod", "init", p.ModuleName}, p.Path)
+	// create project and init
+	if err := domain.InitProject(uc.Runner, p.Path, p.ModuleName); err != nil {
+		return err
+	}
+	// init git or not
+	if err := domain.InitGit(uc.Runner, p.Git, &p.Path); err != nil {
+		return err
+	}
+	// init project
+	// which
+	return nil
 }
