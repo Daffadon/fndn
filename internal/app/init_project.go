@@ -9,6 +9,13 @@ type InitProjectUseCase struct {
 	Runner infra.CommandRunner
 }
 
-func (uc *InitProjectUseCase) Run(p domain.Project) error {
-	return uc.Runner.Run("go", "mod", "init", p.ModuleName)
+func (uc *InitProjectUseCase) Run(p *domain.Project) error {
+	if p.Path == "" {
+		newPath := p.Name
+		if err := uc.Runner.Run("mkdir", []string{newPath}, ""); err != nil {
+			return err
+		}
+		p.Path = newPath
+	}
+	return uc.Runner.Run("go", []string{"mod", "init", p.ModuleName}, p.Path)
 }
