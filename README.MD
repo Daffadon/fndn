@@ -1,8 +1,7 @@
 # fndn
 
 **The foundation for your Golang backend projects.**  
-Start strong with a clean, opinionated scaffold — `main.go`, `go.mod`, and a solid folder structure — all generated in seconds.  
-Because every great backend deserves a strong foundation.
+Start strong with a clean, opinionated scaffold — `main.go`, `go.mod`, and a solid folder structure — all generated in seconds.
 
 ---
 
