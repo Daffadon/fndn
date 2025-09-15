@@ -1,21 +1,28 @@
-package main
+package cmd
 
 import (
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/daffadon/fndn/internal/app"
-	"github.com/daffadon/fndn/internal/infra"
+	"os"
+
 	"github.com/daffadon/fndn/internal/ui"
 	"github.com/spf13/cobra"
 )
 
 var initCmd = &cobra.Command{
-	Use:   "init",
-	Short: "Start interactive project initialization",
+	Use:   "init [.]",
+	Short: "Initialize a new Go project",
+	Args:  cobra.MaximumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		uc := &app.InitProjectUseCase{Runner: infra.ShellRunner{}}
-		p := tea.NewProgram(ui.NewModel(uc))
-		_, err := p.Run()
-		return err
+		var targetPath string
+		if len(args) == 1 && args[0] == "." {
+			cwd, err := os.Getwd()
+			if err != nil {
+				return err
+			}
+			targetPath = cwd
+		} else {
+			targetPath = ""
+		}
+		return ui.RunModuleInput(targetPath)
 	},
 }
 
