@@ -3,14 +3,15 @@ package ui
 import (
 	"fmt"
 	"strings"
-	"time"
 
 	"github.com/charmbracelet/bubbles/spinner"
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 
 	"github.com/daffadon/fndn/internal/app"
 	"github.com/daffadon/fndn/internal/infra"
+	"github.com/daffadon/fndn/internal/ui/dto"
 	"github.com/daffadon/fndn/internal/ui/module"
 )
 
@@ -21,8 +22,9 @@ func (m model) Init() tea.Cmd {
 func newModel(uc *app.InitProjectUseCase, targetDir string) model {
 	sp := spinner.New()
 	sp.Spinner = spinner.Dot
+	sp.Style = lipgloss.NewStyle().Foreground(lipgloss.Color("12"))
 
-	steps := []Step{
+	steps := []dto.Step{
 		{
 			Label: "Go module name",
 			Input: module.NewTextInput("Module name (e.g. github.com/you/project)", "github.com/your-name/project"),
@@ -37,11 +39,10 @@ func newModel(uc *app.InitProjectUseCase, targetDir string) model {
 		{
 			Label:    "Initialize Git repo",
 			Input:    module.NewCheckbox("Init git?", true),
-			Validate: nil, // no validation needed
+			Validate: nil,
 		},
 	}
 
-	// Focus the first input
 	steps[0].Input.Focus()
 
 	return model{
@@ -50,6 +51,7 @@ func newModel(uc *app.InitProjectUseCase, targetDir string) model {
 		spinner:   sp,
 		useCase:   uc,
 		targetDir: targetDir,
+		stopwatch: &dto.StopwatchModel{},
 	}
 }
 
@@ -91,7 +93,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.loading = false
 		m.done = true
 		m.err = msg.err
-		m.elapsed = time.Since(m.startTime)
+		// m.elapsed = time.Since(m.startTime)
 		return m, tea.Quit
 	}
 

@@ -2,7 +2,6 @@ package ui
 
 import (
 	"fmt"
-	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/daffadon/fndn/internal/domain"
@@ -27,17 +26,19 @@ func (m *model) prevStep() {
 }
 
 func (m *model) viewLoading() string {
-	return fmt.Sprintf("Initializing project...\nElapsed: %.1fs\n\n%s\n",
-		m.elapsed.Seconds(), m.spinner.View())
+	return fmt.Sprintf(
+		"Initializing project...\nElapsed: %.1fs\n%s\n",
+		m.stopwatch.Elapsed().Seconds(), m.spinner.View(),
+	)
 }
 
 func (m *model) viewDone() string {
 	if m.err != nil {
-		return fmt.Sprintf("❌ Failed: %v\nElapsed: %.1fs\n", m.err, m.elapsed.Seconds())
+		return fmt.Sprintf("❌ Failed: %v\n", m.err)
 	}
-	// Use steps[0] because module name is first input
-	return fmt.Sprintf("✅ go mod init %s done!\nElapsed: %.1fs\n",
-		m.steps[0].Input.Value().(string), m.elapsed.Seconds())
+	pn := style.BlueStyle.Render(m.steps[0].Input.Value().(string))
+	return fmt.Sprintf("project %s has been generated!\n\nelapsed time: %.1fs\n",
+		pn, m.stopwatch.Elapsed().Seconds())
 }
 
 func (m *model) viewStep() string {
@@ -45,17 +46,26 @@ func (m *model) viewStep() string {
 	s += "\nThis will create a new Go module and scaffold a basic clean-code architecture\n"
 
 	total := len(m.steps)
-	label := style.StepLabelStyle.Render(fmt.Sprintf("Step %d/%d", m.current+1, total))
+	label := style.BlueStyle.Render(fmt.Sprintf("Step %d/%d", m.current+1, total))
+
+	s += fmt.Sprintf("%s\n", label)
+	switch m.current {
+	case 0:
+		s += style.BlueStyle.Render("enter your module name\n")
+	case 1:
+		s += style.BlueStyle.Render("would you init git also?\n")
+	}
+
+	s += "\n"
 	content := m.steps[m.current].Input.View()
 	arrow := style.ArrowStyle.Render("> ")
 
-	s += fmt.Sprintf("%s\n\n%s%s\n\n", label, arrow, content)
+	s += fmt.Sprintf("%s%s\n\n", arrow, content)
 
 	if m.err != nil {
 		s += style.ErrorStyle.Render(fmt.Sprintf("\n⚠️  %v\n", m.err))
 	}
 
-	// hints
 	if m.current < total-1 {
 		s += "\n(Enter to continue; Left/Shift+Tab to go back; Esc to cancel)\n"
 	} else {
@@ -66,6 +76,7 @@ func (m *model) viewStep() string {
 }
 
 func (m *model) submit() tea.Cmd {
+	m.stopwatch.Start()
 	moduleName := m.steps[0].Input.Value().(string)
 
 	initGit := false
@@ -82,14 +93,14 @@ func (m *model) submit() tea.Cmd {
 	}
 
 	m.loading = true
-	m.startTime = time.Now()
 	m.err = nil
-	return m.runInitProject(project)
+	return tea.Batch(m.runInitProject(project), m.spinner.Tick)
 }
 
 func (m *model) runInitProject(p domain.Project) tea.Cmd {
 	return func() tea.Msg {
 		err := m.useCase.Run(&p)
+		m.stopwatch.Stop()
 		return initFinishedMsg{err: err}
 	}
 }
