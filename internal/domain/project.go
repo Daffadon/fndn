@@ -15,7 +15,7 @@ func InitProject(i infra.CommandRunner, path, moduleName string) error {
 	return i.Run("go", []string{"mod", "init", moduleName}, path)
 }
 
-func InitGit(i infra.CommandRunner, isInit bool, path *string) error {
+func InitGit(i infra.CommandRunner, path *string, isInit bool) error {
 	if isInit {
 		return i.Run("git", []string{"init"}, *path)
 	}
