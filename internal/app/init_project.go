@@ -22,10 +22,17 @@ func (uc *InitProjectUseCase) Run(p *domain.Project) error {
 		return err
 	}
 	// init git or not
-	if err := domain.InitGit(uc.Runner, p.Git, &p.Path); err != nil {
+	if err := domain.InitGit(uc.Runner, &p.Path, p.Git); err != nil {
 		return err
 	}
-	// init project
+
+	if err := domain.InitGin(uc.Runner, &p.Path); err != nil {
+		return err
+	}
+	// init gin
+	if err := uc.Runner.Run("go", []string{"mod", "tidy"}, p.Path); err != nil {
+		return err
+	}
 	// which
 	return nil
 }
