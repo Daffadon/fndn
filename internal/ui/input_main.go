@@ -9,10 +9,12 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 
+	"github.com/daffadon/fndn/assets"
 	"github.com/daffadon/fndn/internal/app"
 	"github.com/daffadon/fndn/internal/infra"
 	"github.com/daffadon/fndn/internal/ui/dto"
 	"github.com/daffadon/fndn/internal/ui/module"
+	"github.com/daffadon/fndn/internal/ui/style"
 )
 
 func (m model) Init() tea.Cmd {
@@ -93,7 +95,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.loading = false
 		m.done = true
 		m.err = msg.err
-		// m.elapsed = time.Since(m.startTime)
 		return m, tea.Quit
 	}
 
@@ -109,12 +110,13 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m model) View() string {
+	logo := style.BlueStyle.Render(assets.Logo)
 	switch {
 	case m.loading:
-		return m.viewLoading()
+		return logo + "\n" + m.viewLoading()
 	case m.done:
-		return m.viewDone()
+		return logo + "\n" + m.viewDone()
 	default:
-		return m.viewStep()
+		return logo + "\n" + m.viewStep()
 	}
 }
