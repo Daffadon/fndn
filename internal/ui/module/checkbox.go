@@ -27,7 +27,7 @@ func (c *CheckboxInput) Update(msg tea.Msg) (types.Input, tea.Cmd) {
 func (c *CheckboxInput) View() string {
 	mark := " "
 	if c.checked {
-		mark = style.XStyle.Render("x")
+		mark = style.BlueStyle.Render("x")
 	}
 	return fmt.Sprintf("[%s] %s", mark, c.label)
 }
