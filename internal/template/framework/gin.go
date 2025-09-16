@@ -1,9 +1,9 @@
-package template
+package framework_template
 
-const GinConfigTemplate = `
+const GinConfigTemplate string = `
 package router
 
-func New(zerolog zerolog.Logger) *gin.Engine {
+func NewHTTP() *gin.Engine {
 	env := os.Getenv("ENV")
 	if env == "production" {
 		gin.SetMode(gin.ReleaseMode)

@@ -1,43 +1,23 @@
 package domain
 
 import (
+	"errors"
 	"log"
-	"os"
 
 	"github.com/daffadon/fndn/internal/infra"
-	template "github.com/daffadon/fndn/internal/template/framework"
-	"golang.org/x/tools/imports"
+	"github.com/daffadon/fndn/internal/pkg"
+	framework_template "github.com/daffadon/fndn/internal/template/framework"
 )
 
 func InitGin(i infra.CommandRunner, path *string) error {
 	if path != nil {
-		// Create directory
-		i.Run("mkdir", []string{"-p", *path + "/config/router"}, "")
-
-		// Define the Go file name
-		fileName := *path + "/config/router/http.go"
-
-		// Touch the file
-		i.Run("touch", []string{fileName}, "")
-
-		// Format the template with goimports
-		opts := &imports.Options{
-			Comments:  true,
-			TabWidth:  8,
-			TabIndent: true,
-			Fragment:  false,
-		}
-
-		formatted, err := imports.Process(fileName, []byte(template.GinConfigTemplate), opts)
-		if err != nil {
+		folderName := "/config/router"
+		fileName := folderName + "/http.go"
+		if err := pkg.FileGenerator(i, path, folderName, fileName, framework_template.GinConfigTemplate); err != nil {
 			log.Fatal(err)
-		}
-
-		// Write formatted content
-		err = os.WriteFile(fileName, formatted, 0644)
-		if err != nil {
 			return err
 		}
+		return nil
 	}
-	return nil
+	return errors.New("path is nil")
 }
