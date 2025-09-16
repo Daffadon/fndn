@@ -11,13 +11,13 @@ type initFinishedMsg struct {
 }
 type model struct {
 	steps     []dto.Step
-	current   int
 	spinner   spinner.Model
 	stopwatch *dto.StopwatchModel
 	useCase   *app.InitProjectUseCase
+	err       error
+	current   int
 	targetDir string
 
 	loading bool
 	done    bool
-	err     error
 }
