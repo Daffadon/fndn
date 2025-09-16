@@ -1,31 +1,23 @@
 package ui
 
 import (
-	"time"
-
 	"github.com/charmbracelet/bubbles/spinner"
 	"github.com/daffadon/fndn/internal/app"
-	"github.com/daffadon/fndn/internal/types"
+	"github.com/daffadon/fndn/internal/ui/dto"
 )
 
-type Step struct {
-	Label    string
-	Input    types.Input
-	Validate func(value any) error
-}
 type initFinishedMsg struct {
 	err error
 }
 type model struct {
-	steps     []Step
+	steps     []dto.Step
 	current   int
 	spinner   spinner.Model
+	stopwatch *dto.StopwatchModel
 	useCase   *app.InitProjectUseCase
 	targetDir string
 
-	loading   bool
-	done      bool
-	err       error
-	startTime time.Time
-	elapsed   time.Duration
+	loading bool
+	done    bool
+	err     error
 }
