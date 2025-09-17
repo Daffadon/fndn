@@ -1,6 +1,10 @@
 package infra
 
-import "os/exec"
+import (
+	"bytes"
+	"fmt"
+	"os/exec"
+)
 
 type CommandRunner interface {
 	Run(name string, args []string, dir string) error
@@ -16,7 +20,12 @@ func (r *runner) Run(name string, args []string, dir string) error {
 	if dir != "" {
 		cmd.Dir = dir
 	}
-	cmd.Stdout = nil
-	cmd.Stderr = nil
-	return cmd.Run()
+	var errBuf bytes.Buffer
+	cmd.Stderr = &errBuf
+
+	err := cmd.Run()
+	if err != nil {
+		return fmt.Errorf("project generation failed \n\n%s", errBuf.String())
+	}
+	return nil
 }
