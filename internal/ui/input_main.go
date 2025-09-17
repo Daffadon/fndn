@@ -43,6 +43,11 @@ func newModel(uc *app.InitProjectUseCase, targetDir string) model {
 			Input:    module.NewCheckbox("Init git?", true),
 			Validate: nil,
 		},
+		{
+			Label:    "Init hot reload with air",
+			Input:    module.NewCheckbox("init air?", true),
+			Validate: nil,
+		},
 	}
 
 	steps[0].Input.Focus()
