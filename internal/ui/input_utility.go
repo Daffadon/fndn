@@ -83,6 +83,10 @@ func (m *model) submit() tea.Cmd {
 	if v, ok := m.steps[1].Input.Value().(bool); ok {
 		initGit = v
 	}
+	initAir := false
+	if v, ok := m.steps[2].Input.Value().(bool); ok {
+		initAir = v
+	}
 
 	name := pkg.LastSegment(moduleName)
 	project := domain.Project{
@@ -90,6 +94,7 @@ func (m *model) submit() tea.Cmd {
 		Name:       name,
 		Path:       m.targetDir,
 		Git:        initGit,
+		Air:        initAir,
 	}
 
 	m.loading = true
