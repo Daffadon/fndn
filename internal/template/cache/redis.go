@@ -7,7 +7,7 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-func NewRedis(zerolog zerolog.Logger) (*redis.Client, error) {
+func NewRedisConnection(zerolog zerolog.Logger) (*redis.Client, error) {
 	addr := fmt.Sprintf("%s:%s", viper.GetString("redis.address"), viper.GetString("redis.port"))
 	client := redis.NewClient(&redis.Options{
 		Addr:       addr,
