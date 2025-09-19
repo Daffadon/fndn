@@ -4,7 +4,7 @@ const MinioInfraTemplate string = `
 package storage_infra
 
 type (
-	MinioStorage interface {
+	MinioInfra interface {
 		Set(ctx context.Context, bucketName, objectPath string, reader io.Reader, objectSize int64) error
 		Get(ctx context.Context, bucketName, objectPath string) (io.ReadCloser, error)
 		Delete(ctx context.Context, bucketName, fileName string) error
@@ -12,23 +12,23 @@ type (
 		SetPolicy(ctx context.Context, bucketName, policy string) error
 		GetPolicy(ctx context.Context, bucketName string) (string, error)
 	}
-	minioStorage struct {
+	minioInfra struct {
 		client *minio.Client
 	}
 )
 
-func NewMinioStorage(client *minio.Client) MinioStorage {
-	return &minioStorage{
+func NewMinioInfra(client *minio.Client) MinioInfra {
+	return &minioInfra{
 		client: client,
 	}
 }
 
-func (m *minioStorage) Set(ctx context.Context, bucketName, objectPath string, reader io.Reader, objectSize int64) error {
+func (m *minioInfra) Set(ctx context.Context, bucketName, objectPath string, reader io.Reader, objectSize int64) error {
 	_, err := m.client.PutObject(ctx, bucketName, objectPath, reader, objectSize, minio.PutObjectOptions{})
 	return err
 }
 
-func (m *minioStorage) Get(ctx context.Context, bucketName, objectPath string) (io.ReadCloser, error) {
+func (m *minioInfra) Get(ctx context.Context, bucketName, objectPath string) (io.ReadCloser, error) {
 	object, err := m.client.GetObject(ctx, bucketName, objectPath, minio.GetObjectOptions{})
 	if err != nil {
 		return nil, err
@@ -36,11 +36,11 @@ func (m *minioStorage) Get(ctx context.Context, bucketName, objectPath string) (
 	return object, nil
 }
 
-func (m *minioStorage) Delete(ctx context.Context, bucketName, fileName string) error {
+func (m *minioInfra) Delete(ctx context.Context, bucketName, fileName string) error {
 	return m.client.RemoveObject(ctx, bucketName, fileName, minio.RemoveObjectOptions{})
 }
 
-func (m *minioStorage) CreateBucketIfNotExist(ctx context.Context, bucketName string) error {
+func (m *minioInfra) CreateBucketIfNotExist(ctx context.Context, bucketName string) error {
 	exists, err := m.client.BucketExists(ctx, bucketName)
 	if err != nil {
 		return err
@@ -50,11 +50,11 @@ func (m *minioStorage) CreateBucketIfNotExist(ctx context.Context, bucketName st
 	}
 	return nil
 }
-func (m *minioStorage) SetPolicy(ctx context.Context, bucketName, policy string) error {
+func (m *minioInfra) SetPolicy(ctx context.Context, bucketName, policy string) error {
 	return m.client.SetBucketPolicy(ctx, bucketName, policy)
 }
 
-func (m *minioStorage) GetPolicy(ctx context.Context, bucketName string) (string, error) {
+func (m *minioInfra) GetPolicy(ctx context.Context, bucketName string) (string, error) {
 	return m.client.GetBucketPolicy(ctx, bucketName)
 }
 `
