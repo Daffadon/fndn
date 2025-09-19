@@ -54,6 +54,8 @@ func (m *model) viewStep() string {
 		s += style.BlueStyle.Render("enter your module name\n")
 	case 1:
 		s += style.BlueStyle.Render("would you init git also?\n")
+	case 2:
+		s += style.BlueStyle.Render("would you use air for hot reload?\n")
 	}
 
 	s += "\n"
@@ -105,6 +107,7 @@ func (m *model) submit() tea.Cmd {
 func (m *model) runInitProject(p domain.Project) tea.Cmd {
 	return func() tea.Msg {
 		err := m.useCase.Run(&p)
+		fmt.Println(err)
 		m.stopwatch.Stop()
 		return initFinishedMsg{err: err}
 	}
