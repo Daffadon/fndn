@@ -57,3 +57,17 @@ func InitGitignoreConfig(i infra.CommandRunner, path *string) error {
 	}
 	return errors.New("path is nil")
 }
+
+func InitDotEnvExampleConfig(i infra.CommandRunner, path *string) error {
+	if path != nil {
+		folderName := ""
+		fileName := folderName + "/.env.example"
+		if err := pkg.GenericFileGenerator(i, path, folderName, fileName, config_template.DotENVExampleTemplate); err != nil {
+			log.Fatal(err)
+			return err
+		}
+		return nil
+	}
+	return errors.New("path is nil")
+
+}
