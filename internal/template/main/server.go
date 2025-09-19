@@ -19,6 +19,7 @@ func (s *Server) Run(ctx context.Context) {
 			redis *redis.Client,
 			nc *nats.Conn,
 			pgx *pgxpool.Pool,
+			th handler.TodoHandler,
 			// and many other returned type provided
 			// in the container from /cmd/di/container.go
 		) {
@@ -33,16 +34,31 @@ func (s *Server) Run(ctx context.Context) {
 				}
 			}()
 			defer pgx.Close()
-
+			
 			router.Use(gin.Recovery())
+			
+			// you can register your routes here
+			// for the example and implementation, here is the example
+
+			
+			handler.RegisterTodoRoutes(router,th)
+			
 			srv := &http.Server{
 				Addr:              s.Address,
 				Handler:           router,
 				ReadHeaderTimeout: 5 * time.Second,
 			}
 			go func() {
-				if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-					logger.Fatal().Err(err).Msg("Failed to listen and server http server")
+				e := os.Getenv("ENV")
+				switch e {
+				case "production":
+					if err := srv.ListenAndServeTLS("./config/cert/server.crt", "./config/cert/server.key"); err != nil && err != http.ErrServerClosed {
+						logger.Fatal().Err(err).Msg("Failed to listen and serve http server")
+					}
+				default:
+					if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+						logger.Fatal().Err(err).Msg("Failed to listen and serve http server")
+					}
 				}
 			}()
 
