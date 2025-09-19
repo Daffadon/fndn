@@ -21,3 +21,16 @@ func InitNatsConfig(i infra.CommandRunner, path *string) error {
 	}
 	return errors.New("path is nil")
 }
+
+func InitNatsConfigFile(i infra.CommandRunner, path *string) error {
+	if path != nil {
+		folderName := "/config/mq"
+		fileName := folderName + "/nats-server.conf"
+		if err := pkg.GenericFileGenerator(i, path, folderName, fileName, mq_template.NatsConfigFileTemplate); err != nil {
+			log.Fatal(err)
+			return err
+		}
+		return nil
+	}
+	return errors.New("path is nil")
+}
