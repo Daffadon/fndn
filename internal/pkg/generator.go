@@ -7,7 +7,7 @@ import (
 	"golang.org/x/tools/imports"
 )
 
-func FileGenerator(i infra.CommandRunner,
+func GoFileGenerator(i infra.CommandRunner,
 	path *string,
 	folderName,
 	fileName,
@@ -34,6 +34,26 @@ func FileGenerator(i infra.CommandRunner,
 	}
 
 	err = os.WriteFile(fn, formatted, 0644)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func GenericFileGenerator(i infra.CommandRunner,
+	path *string,
+	folderName,
+	fileName,
+	template string) error {
+
+	// Define the YAML file name
+	fn := *path + fileName
+
+	// Touch the file
+	i.Run("touch", []string{fn}, "")
+
+	// Write the YAML template directly to the file
+	err := os.WriteFile(fn, []byte(template), 0644)
 	if err != nil {
 		return err
 	}

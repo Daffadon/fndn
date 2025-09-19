@@ -13,7 +13,7 @@ func InitZerologConfig(i infra.CommandRunner, path *string) error {
 	if path != nil {
 		folderName := "/config/logger"
 		fileName := folderName + "/zerolog.go"
-		if err := pkg.FileGenerator(i, path, folderName, fileName, logger_template.ZerologConfigTemplate); err != nil {
+		if err := pkg.GoFileGenerator(i, path, folderName, fileName, logger_template.ZerologConfigTemplate); err != nil {
 			log.Fatal(err)
 			return err
 		}

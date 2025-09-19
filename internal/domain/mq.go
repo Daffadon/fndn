@@ -13,7 +13,7 @@ func InitNatsConfig(i infra.CommandRunner, path *string) error {
 	if path != nil {
 		folderName := "/config/mq"
 		fileName := folderName + "/nats.go"
-		if err := pkg.FileGenerator(i, path, folderName, fileName, mq_template.NatsConfigTemplate); err != nil {
+		if err := pkg.GoFileGenerator(i, path, folderName, fileName, mq_template.NatsConfigTemplate); err != nil {
 			log.Fatal(err)
 			return err
 		}

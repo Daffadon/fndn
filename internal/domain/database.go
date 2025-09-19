@@ -13,7 +13,7 @@ func InitPostgresqlConfig(i infra.CommandRunner, path *string) error {
 	if path != nil {
 		folderName := "/config/storage"
 		fileName := folderName + "/postgresql.go"
-		if err := pkg.FileGenerator(i, path, folderName, fileName, database_template.PostgresqlConfigTemplate); err != nil {
+		if err := pkg.GoFileGenerator(i, path, folderName, fileName, database_template.PostgresqlConfigTemplate); err != nil {
 			log.Fatal(err)
 			return err
 		}

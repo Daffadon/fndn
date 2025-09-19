@@ -13,7 +13,7 @@ func InitGin(i infra.CommandRunner, path *string) error {
 	if path != nil {
 		folderName := "/config/router"
 		fileName := folderName + "/http.go"
-		if err := pkg.FileGenerator(i, path, folderName, fileName, framework_template.GinConfigTemplate); err != nil {
+		if err := pkg.GoFileGenerator(i, path, folderName, fileName, framework_template.GinConfigTemplate); err != nil {
 			log.Fatal(err)
 			return err
 		}

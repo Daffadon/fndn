@@ -13,7 +13,7 @@ func InitDependencyInjection(i infra.CommandRunner, path *string) error {
 	if path != nil {
 		folderName := "/cmd/di"
 		fileName := folderName + "/container.go"
-		if err := pkg.FileGenerator(i, path, folderName, fileName, main_template.DITemplate); err != nil {
+		if err := pkg.GoFileGenerator(i, path, folderName, fileName, main_template.DITemplate); err != nil {
 			log.Fatal(err)
 			return err
 		}
@@ -26,7 +26,7 @@ func InitBootStrap(i infra.CommandRunner, path *string) error {
 	if path != nil {
 		folderName := "/cmd/bootstrap"
 		fileName := folderName + "/bootstrap.go"
-		if err := pkg.FileGenerator(i, path, folderName, fileName, main_template.BootStrapTemplate); err != nil {
+		if err := pkg.GoFileGenerator(i, path, folderName, fileName, main_template.BootStrapTemplate); err != nil {
 			log.Fatal(err)
 			return err
 		}
@@ -39,7 +39,7 @@ func InitServer(i infra.CommandRunner, path *string) error {
 	if path != nil {
 		folderName := "/cmd/server"
 		fileName := folderName + "/server.go"
-		if err := pkg.FileGenerator(i, path, folderName, fileName, main_template.HTTPServerTemplate); err != nil {
+		if err := pkg.GoFileGenerator(i, path, folderName, fileName, main_template.HTTPServerTemplate); err != nil {
 			log.Fatal(err)
 			return err
 		}
@@ -52,7 +52,7 @@ func InitMain(i infra.CommandRunner, path *string) error {
 	if path != nil {
 		folderName := "/cmd"
 		fileName := folderName + "/main.go"
-		if err := pkg.FileGenerator(i, path, folderName, fileName, main_template.MainTemplate); err != nil {
+		if err := pkg.GoFileGenerator(i, path, folderName, fileName, main_template.MainTemplate); err != nil {
 			log.Fatal(err)
 			return err
 		}
