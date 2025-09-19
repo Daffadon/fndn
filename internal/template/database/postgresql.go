@@ -3,7 +3,11 @@ package database_template
 const PostgresqlConfigTemplate string = `
 package storage
 
-import "github.com/jackc/pgx/v5/pgxpool"
+import (
+	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/rs/zerolog"
+	"github.com/spf13/viper"
+)
 
 func NewSQLConn(logger zerolog.Logger) *pgxpool.Pool {
 	protocol := viper.GetString("database.sql.protocol")
@@ -24,3 +28,21 @@ func NewSQLConn(logger zerolog.Logger) *pgxpool.Pool {
 	return pool
 }
 `
+const DockerComposePostgresqlConfigTemplate string = `
+# db
+  {{.ProjectName}}_db:
+    image: postgres:17.5-alpine3.22
+    container_name: {{.ProjectName}}_db
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    volumes:
+      - {{.ProjectName}}_db_data:/var/lib/postgresql/data
+`
+
+const DockerComposePostgresqlVolumeTemplate string = `
+  {{.ProjectName}}_db_data: {}`
