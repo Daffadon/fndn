@@ -3,6 +3,12 @@ package main_template
 const DITemplate string = `
 package di
 
+
+import (
+	"go.uber.org/dig"
+	"github.com/nats-io/nats.go/jetstream"
+)
+
 func BuildContainer() *dig.Container {
 	container := dig.New()
 
@@ -35,9 +41,35 @@ func BuildContainer() *dig.Container {
 		panic("Failed to provide redis connection: " + err.Error())
 	}
 
-	// you can add your own handler, service, or repository here 
-	// and invoke in the /cmd/server/http_server.go to register
-	// the route to http server
+	// you can add your own handler, service, repository,infra, or even 
+	// your own defined config here and invoke in the /cmd/server/http_server.go 
+	
+	// infra
+	if err := container.Provide(cache_infra.NewRedisCache); err != nil {
+		panic("Failed to provide redis infra: " + err.Error())
+	}	
+	if err := container.Provide(mq_infra.NewJetstreamInfra); err != nil {
+		panic("Failed to provide jetstream infra: " + err.Error())
+	}	
+	if err := container.Provide(storage_infra.NewMinioInfra); err != nil {
+		panic("Failed to provide minio infra: " + err.Error())
+	}	
+	if err := container.Provide(storage_infra.NewQuerier); err != nil {
+		panic("Failed to provide querier infra: " + err.Error())
+	}
+
+	// repo
+	if err := container.Provide(repository.NewTodoRepository); err != nil {
+		panic("Failed to provide todo repository: " + err.Error())
+	}
+	// service
+	if err := container.Provide(service.NewTodoService); err != nil {
+		panic("Failed to provide todo service: " + err.Error())
+	}
+	// handler
+	if err := container.Provide(handler.NewTodoHandler); err != nil {
+		panic("Failed to provide todo handler: " + err.Error())
+	}
 
 	// http server (gin)
 	if err := container.Provide(router.NewHTTP); err != nil {

@@ -3,6 +3,12 @@ package framework_template
 const GinConfigTemplate string = `
 package router
 
+import (
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
+	"github.com/spf13/viper"
+)
+
 func NewHTTP() *gin.Engine {
 	env := os.Getenv("ENV")
 	if env == "production" {

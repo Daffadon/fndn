@@ -3,7 +3,10 @@ package infra_template
 const RedisInfraTemplate string =`
 package cache_infra
 
-import 	"github.com/redis/go-redis/v9"
+import 	(
+	"github.com/redis/go-redis/v9"
+	"github.com/rs/zerolog"
+)
 
 type (
 	RedisInfra interface {

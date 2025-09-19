@@ -3,6 +3,8 @@ package main_template
 const MainTemplate string = `
 package main
 
+import "github.com/spf13/viper"
+
 func main() {
 	container := bootstrap.Run()
 

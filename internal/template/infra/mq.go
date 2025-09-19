@@ -3,6 +3,11 @@ package infra_template
 const JetstreamInfraTemplate string = `
 package mq_infra
 
+import (
+	"github.com/nats-io/nats.go/jetstream"
+	"github.com/rs/zerolog"
+) 
+
 type (
 	JetstreamInfra interface {
 		CreateOrUpdateNewConsumer(ctx context.Context, streamName string, jsConfig *jetstream.ConsumerConfig) (jetstream.Consumer, error)

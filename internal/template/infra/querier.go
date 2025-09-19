@@ -3,7 +3,11 @@ package infra_template
 const QuerierInfraTemplate = `
 package storage_infra
 
-import 	"github.com/jackc/pgx/v5"
+import 	(
+	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgconn"
+	"github.com/jackc/pgx/v5/pgxpool"
+)
 
 type (
 	Querier interface {
