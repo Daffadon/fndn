@@ -82,6 +82,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "shift+tab", "left":
 			m.prevStep()
 		case "enter":
+			if m.loading {
+				return m, nil
+			}
 			step := m.steps[m.current]
 			if step.Validate != nil {
 				if err := step.Validate(step.Input.Value()); err != nil {
