@@ -7,6 +7,7 @@ import (
 	"github.com/daffadon/fndn/internal/infra"
 	"github.com/daffadon/fndn/internal/pkg"
 	config_template "github.com/daffadon/fndn/internal/template/config"
+	"github.com/daffadon/fndn/internal/template/readme"
 )
 
 func InitENVConfig(i infra.CommandRunner, path *string) error {
@@ -63,6 +64,23 @@ func InitDotEnvExampleConfig(i infra.CommandRunner, path *string) error {
 		folderName := ""
 		fileName := folderName + "/.env.example"
 		if err := pkg.GenericFileGenerator(i, path, folderName, fileName, config_template.DotENVExampleTemplate); err != nil {
+			log.Fatal(err)
+			return err
+		}
+		return nil
+	}
+	return errors.New("path is nil")
+}
+
+func InitReadme(i infra.CommandRunner, path *string) error {
+	if path != nil {
+		folderName := ""
+		fileName := folderName + "/README.md"
+		s, err := readme.CopyReadmeTemplate()
+		if err != nil {
+			return err
+		}
+		if err := pkg.GenericFileGenerator(i, path, folderName, fileName, s); err != nil {
 			log.Fatal(err)
 			return err
 		}
