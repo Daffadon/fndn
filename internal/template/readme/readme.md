@@ -1,6 +1,6 @@
 # Go + Gin + 3rd Party + Clean Architecture 🤯
 
-```json
+```bash
  __            _
 / _|          | |
 | |_ _ __   __| |_ __
