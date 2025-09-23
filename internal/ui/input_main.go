@@ -3,6 +3,7 @@ package ui
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/charmbracelet/bubbles/spinner"
 	"github.com/charmbracelet/bubbles/textinput"
@@ -53,12 +54,14 @@ func newModel(uc *app.InitProjectUseCase, targetDir string) model {
 	steps[0].Input.Focus()
 
 	return model{
-		steps:     steps,
-		current:   0,
-		spinner:   sp,
-		useCase:   uc,
-		targetDir: targetDir,
-		stopwatch: &dto.StopwatchModel{},
+		steps:      steps,
+		current:    0,
+		spinner:    sp,
+		useCase:    uc,
+		targetDir:  targetDir,
+		stopwatch:  &dto.StopwatchModel{},
+		progressCh: make(chan string),
+		errCh:      make(chan error, 1),
 	}
 }
 
@@ -73,6 +76,9 @@ func RunModuleInput(targetDir string) error {
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
+	case tea.WindowSizeMsg:
+		m.width = msg.Width
+		return m, nil
 	case tea.KeyMsg:
 		switch msg.String() {
 		case "ctrl+c", "esc":
@@ -102,8 +108,17 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case initFinishedMsg:
 		m.loading = false
 		m.done = true
+		m.stopwatch.Stop()
 		m.err = msg.err
 		return m, tea.Quit
+
+	case progressMsg:
+		now := time.Now()
+		if now.Sub(m.lastProgress) > 50*time.Millisecond {
+			m.logs = string(msg)
+			m.lastProgress = now
+		}
+		return m, m.waitForProgress()
 	}
 
 	if m.loading {
