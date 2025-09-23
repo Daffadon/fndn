@@ -68,15 +68,22 @@ func (uc *InitProjectUseCase) Run(p *domain.Project) error {
 		func() error { return domain.InitNatsConfigFile(uc.Runner, &p.Path) },
 		func() error { return domain.InitDotEnvExampleConfig(uc.Runner, &p.Path) },
 		func() error { return domain.InitReadme(uc.Runner, &p.Path) },
+		func() error { return domain.InitVersion(uc.Runner, &p.Path) },
+		func() error { return domain.InitBuildScript(uc.Runner, &p.Path, p.ModuleName) },
+		func() error { return domain.InitBinaryBuildScript(uc.Runner, &p.Path, p.Name) },
+		func() error { return domain.InitMakefile(uc.Runner, &p.Path) },
 	}
 
 	errCh := make(chan error, len(initFuncs))
 	var wg sync.WaitGroup
+	sem := make(chan struct{}, 5)
 
 	for _, f := range initFuncs {
 		wg.Add(1)
+		sem <- struct{}{}
 		go func(fn func() error) {
 			defer wg.Done()
+			defer func() { <-sem }()
 			if err := fn(); err != nil {
 				errCh <- err
 			}
