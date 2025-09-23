@@ -87,5 +87,73 @@ func InitReadme(i infra.CommandRunner, path *string) error {
 		return nil
 	}
 	return errors.New("path is nil")
+}
 
+func InitVersion(i infra.CommandRunner, path *string) error {
+	if path != nil {
+		folderName := ""
+		fileName := folderName + "/VERSION"
+		if err := pkg.GenericFileGenerator(i, path, folderName, fileName, config_template.VersionConfigTemplate); err != nil {
+			log.Fatal(err)
+			return err
+		}
+		return nil
+	}
+	return errors.New("path is nil")
+}
+func InitBuildScript(i infra.CommandRunner, path *string, moduleName string) error {
+	if path != nil {
+		folderName := "/script"
+		fileName := folderName + "/build.sh"
+		st := struct {
+			ModuleName string
+		}{
+			ModuleName: moduleName,
+		}
+		c, err := pkg.ParseTemplate(config_template.BuildConfigTemplate, st)
+		if err != nil {
+			log.Fatal(err)
+			return err
+		}
+		if err := pkg.GenericFileGenerator(i, path, folderName, fileName, c); err != nil {
+			log.Fatal(err)
+			return err
+		}
+		return nil
+	}
+	return errors.New("path is nil")
+}
+func InitBinaryBuildScript(i infra.CommandRunner, path *string, projectName string) error {
+	if path != nil {
+		folderName := "/script"
+		fileName := folderName + "/build-binary.sh"
+		st := struct {
+			ProjectName string
+		}{
+			ProjectName: projectName,
+		}
+		c, err := pkg.ParseTemplate(config_template.BinaryBuildConfigTemplate, st)
+		if err != nil {
+			log.Fatal(err)
+			return err
+		}
+		if err := pkg.GenericFileGenerator(i, path, folderName, fileName, c); err != nil {
+			log.Fatal(err)
+			return err
+		}
+		return nil
+	}
+	return errors.New("path is nil")
+}
+func InitMakefile(i infra.CommandRunner, path *string) error {
+	if path != nil {
+		folderName := ""
+		fileName := folderName + "/Makefile"
+		if err := pkg.GenericFileGenerator(i, path, folderName, fileName, config_template.MakefileConfigTemplate); err != nil {
+			log.Fatal(err)
+			return err
+		}
+		return nil
+	}
+	return errors.New("path is nil")
 }
