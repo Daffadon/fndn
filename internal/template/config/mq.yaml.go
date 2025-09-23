@@ -13,10 +13,10 @@ nats:
 `
 
 const JetstreamConfigTemplate string = `
-# uncomment if you want to create example stream and 
+# uncomment if you want to create example_stream
 # and maybe consumer in your app. for example how to create, go to 
 # http://https://github.com/micros-template/notification-service/blob/main/cmd/server/subscriber.go
-# for the example or nats official documentation
+# or nats official documentation
 # jetstream:
   # notification:
     # stream:
