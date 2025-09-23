@@ -6,6 +6,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/daffadon/fndn/internal/domain"
 	"github.com/daffadon/fndn/internal/pkg"
+	"github.com/daffadon/fndn/internal/ui/helper"
 	"github.com/daffadon/fndn/internal/ui/style"
 )
 
@@ -26,10 +27,17 @@ func (m *model) prevStep() {
 }
 
 func (m *model) viewLoading() string {
-	return fmt.Sprintf(
-		"Initializing project...\nElapsed: %.1fs\n%s\n",
-		m.stopwatch.Elapsed().Seconds(), m.spinner.View(),
+	width := m.width
+	if width <= 0 {
+		width = 80 // fallback until WindowSizeMsg arrives
+	}
+	line := fmt.Sprintf(
+		"%s %s | elapsed: %.1fs",
+		m.spinner.View(),
+		m.logs,
+		m.stopwatch.Elapsed().Seconds(),
 	)
+	return helper.PadOrTruncate(line, width)
 }
 
 func (m *model) viewDone() string {
@@ -37,8 +45,11 @@ func (m *model) viewDone() string {
 		return fmt.Sprintf("❌ Failed: %v\n", m.err)
 	}
 	pn := style.BlueStyle.Render(m.steps[0].Input.Value().(string))
-	return fmt.Sprintf("project %s has been generated!\n\nelapsed time: %.1fs\n",
-		pn, m.stopwatch.Elapsed().Seconds())
+	return fmt.Sprintf(
+		"project %s has been generated!\nelapsed time: %.1fs\nCheck Readme for further step after initialization\n",
+		pn,
+		m.stopwatch.Elapsed().Seconds(),
+	)
 }
 
 func (m *model) viewStep() string {
@@ -101,14 +112,28 @@ func (m *model) submit() tea.Cmd {
 
 	m.loading = true
 	m.err = nil
-	return tea.Batch(m.runInitProject(project), m.spinner.Tick)
+	return tea.Batch(m.waitForProgress(), m.runInitProject(project), m.spinner.Tick)
 }
 
 func (m *model) runInitProject(p domain.Project) tea.Cmd {
 	return func() tea.Msg {
-		err := m.useCase.Run(&p)
-		fmt.Println(err)
-		m.stopwatch.Stop()
-		return initFinishedMsg{err: err}
+		go func() {
+			err := m.useCase.Run(&p, m.progressCh)
+			close(m.progressCh)
+			m.errCh <- err
+			close(m.errCh)
+		}()
+		return m.waitForProgress()
+	}
+}
+
+func (m *model) waitForProgress() tea.Cmd {
+	return func() tea.Msg {
+		msg, ok := <-m.progressCh
+		if !ok {
+			err := <-m.errCh
+			return initFinishedMsg{err: err}
+		}
+		return progressMsg(msg)
 	}
 }
