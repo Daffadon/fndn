@@ -70,7 +70,10 @@ func GenericFileGenerator(i infra.CommandRunner,
 	}
 	f.Close()
 
-	cleanTemplate := strings.ReplaceAll(template, "\t", "  ")
+	cleanTemplate := template
+	if strings.HasSuffix(fileName, ".yaml") || strings.HasSuffix(fileName, ".yml") {
+		cleanTemplate = strings.ReplaceAll(template, "\t", "  ")
+	}
 
 	// Write the sanitized YAML template directly to the file
 	err = os.WriteFile(fn, []byte(cleanTemplate), 0644)
