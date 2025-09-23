@@ -94,7 +94,8 @@ make cert-gen
 2. Use file named **config.yaml** for production
 3. Change port number to **443** in config.yaml
 4. Uncomment your **app service** in docker compose
-5. Re-run docker compose up command
+5. Make sure the ENV is **production**
+6. Re-run docker compose up command
 
 ```bash
 docker compose up -d
