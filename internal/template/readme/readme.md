@@ -29,7 +29,7 @@ with optional, you can also generate [air](https://github.com/air-verse/air) for
 To start development, you can start by copying the **.env.example** and change the name to **.env**. Make sure that you fill the variable the same with value that you used to connect from your apps in the **config.local.example**. For example:
 
 ```bash
-ENV="development"
+ENV="production"
 
 # db env
 DB_USER=myusername
@@ -54,6 +54,12 @@ After its been set, run the third party via docker command in the root of your p
 docker compose up -d
 ```
 
+OR via Makefile
+
+```bash
+make dev-start
+```
+
 then, run your app by using air or go run command
 
 ```bash
@@ -64,6 +70,12 @@ air
 go run cmd/main.go
 ```
 
+OR via Makefile
+
+```bash
+make run
+```
+
 > [!NOTE]
 > If you use windows and generate the project using wsl, the hot reload won't work. better you use the fndn for windows instead of linux in this case or if its already generated, you can change the .air.toml in **cmd part** to become like below and **run air from windows**, not from wsl.
 >
@@ -71,4 +83,19 @@ go run cmd/main.go
 > cmd = "go build -o ./tmp/main.exe ./cmd"
 > ```
 
-happy code!!!
+## Production
+
+1. Generate **self-signed certificate** using makefile command
+
+```bash
+make cert-gen
+```
+
+2. Use file named **config.yaml** for production
+3. Change port number to **443** in config.yaml
+4. Uncomment your **app service** in docker compose
+5. Re-run docker compose up command
+
+```bash
+docker compose up -d
+```
