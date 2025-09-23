@@ -1,7 +1,6 @@
 package assets
 
-const Logo string = `
- __            _       
+const Logo string = ` __            _       
 / _|          | |      
 | |_ _ __   __| |_ __  
 |  _| '_ \ / _' | '_ \ 
