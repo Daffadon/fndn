@@ -14,6 +14,8 @@ RUN upx --best --lzma ./bin/dist/{{.ProjectName}}
 FROM gcr.io/distroless/static-debian12
 
 COPY --from=builder /app/bin/dist/{{.ProjectName}} /
+
+EXPOSE 443
 ENTRYPOINT ["/{{.ProjectName}}"]
 `
 
@@ -37,11 +39,12 @@ const DockerComposeAppConfigTemplate string = `
   #    - {{.ProjectName}}_cache
   #    - {{.ProjectName}}_storage
   #  ports:
-  #    - "8080:8080"
+  #    - "443:443"
   #   #make sure to mount the config file to /
   #   #change to config.yaml and ENV "production" for production
   #  volumes:
-  #    - ./config.local.yaml:/config.local.yaml
+  #    - ./config.yaml:/config.yaml
+  #    - ./config/cert/:/config/cert/
   #  environment:
   #    - ENV=${ENV}
   #  command: "/{{.ProjectName}}"
