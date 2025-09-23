@@ -1,9 +1,7 @@
 package domain
 
 import (
-	"log"
 	"os"
-	"os/exec"
 	"runtime"
 
 	"github.com/daffadon/fndn/internal/infra"
@@ -12,12 +10,7 @@ import (
 
 func InitAirConfig(i infra.CommandRunner, path *string, initAir bool) error {
 	if initAir {
-		_, err := exec.LookPath("air")
-		if err != nil {
-			log.Default().Println("air is not installed. Please run: go install github.com/air-verse/air@latest")
-			return nil
-		}
-		if err := i.Run("air", []string{"init"}, *path); err != nil {
+		if err := i.Run("go", []string{"run", "github.com/air-verse/air@latest", "init"}, *path); err != nil {
 			return err
 		}
 
