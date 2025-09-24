@@ -178,7 +178,7 @@ func (uc *InitProjectUseCase) Run(p *domain.Project, progressCh chan<- string) e
 		}
 	}
 	progressCh <- "Running go imports to resolve import"
-	if err := uc.Runner.Run("goimports", []string{"-w", "."}, p.Path); err != nil {
+	if err := uc.Runner.Run("go", []string{"run", "golang.org/x/tools/cmd/goimports@latest", "-w", "."}, p.Path); err != nil {
 		return err
 	}
 	progressCh <- "Running go get -u ./... to download 3rd party modules"
