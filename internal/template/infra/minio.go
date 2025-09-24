@@ -3,6 +3,8 @@ package infra_template
 const MinioInfraTemplate string = `
 package storage_infra
 
+import "github.com/minio/minio-go/v7"
+
 type (
 	MinioInfra interface {
 		Set(ctx context.Context, bucketName, objectPath string, reader io.Reader, objectSize int64) error
