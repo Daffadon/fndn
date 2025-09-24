@@ -137,4 +137,20 @@ for the files, there are several files that is generated and you can change for 
 4. `config.local.yaml`: check your repository readme for what should you do to this file
 5. `docker-compose.yml`: this is for production purpose. for development, this file is purposed to run the 3rd party for your app.
 
-happy code!!
+## 🔀 how to the code
+
+```bash
+                                                 |----> config/*.go (except /env)
+(cmd)                                            |
+main.go -> bootstrap/bootstrap.go -> di/di.go ---|
+    |                                            |
+    |                                            |----> internal/infra/*.go
+    |----> server.go
+              |
+              |(/internal)
+              |
+              |---> handler/http.go -> handler/todo.go -> service/todo.go -> repository/todo.go
+```
+
+> [!NOTE]
+> All of dependencies are injected in the `cmd/di/di.go`. So, calling to the infra in the `repository/todo.go` is not drawed.
