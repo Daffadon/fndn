@@ -1,7 +1,7 @@
 package config_template
 
 const MakefileConfigTemplate string = `
-.PHONY: run
+.PHONY: run docker-build
 
 # run app with go run command
 run: 
@@ -9,7 +9,7 @@ run:
 
 # build app docker image
 docker-build:
-	@./script/build.sh
+	@./script/docker-build.sh
 
 dev-start:
 	@docker compose up -d

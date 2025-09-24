@@ -104,7 +104,7 @@ func InitVersion(i infra.CommandRunner, path *string) error {
 func InitBuildScript(i infra.CommandRunner, path *string, moduleName string) error {
 	if path != nil {
 		folderName := "/script"
-		fileName := folderName + "/build.sh"
+		fileName := folderName + "/docker-build.sh"
 		st := struct {
 			ModuleName string
 		}{
