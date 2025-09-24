@@ -3,7 +3,14 @@ package main_template
 const HTTPServerTemplate string = `
 package server
 
-import "github.com/redis/go-redis/v9"
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/nats-io/nats.go"
+	"github.com/redis/go-redis/v9"
+	"github.com/rs/zerolog"
+	"go.uber.org/dig"
+)
 
 type Server struct {
 	Container   *dig.Container
