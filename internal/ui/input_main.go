@@ -45,8 +45,8 @@ func newModel(uc *app.InitProjectUseCase, targetDir string) model {
 			Validate: nil,
 		},
 		{
-			Label:    "Init hot reload with air",
-			Input:    module.NewCheckbox("init air?", true),
+			Label:    "Initialize hot reload with air",
+			Input:    module.NewCheckbox("Init air?", true),
 			Validate: nil,
 		},
 	}
