@@ -9,7 +9,7 @@ for GOOS in linux windows darwin; do
     mkdir -p "$OUTDIR"
     OUTFILE="${OUTDIR}/${BIN_NAME}"
     [ "$GOOS" = "windows" ] && OUTFILE="${OUTFILE}.exe"
-    CGO_ENABLED=0 GOOS=$GOOS GOARCH=$GOARCH go build -ldflags "-s -w" -o "$OUTFILE" ./cmd/fndn
+    CGO_ENABLED=0 GOOS=$GOOS GOARCH=$GOARCH go build -ldflags "-s -w" -o "$OUTFILE" .
     if ! { [ "$GOOS" = "windows" ] && [ "$GOARCH" = "arm64" ]; } && [ "$GOOS" != "darwin" ]; then
       upx --best --lzma "$OUTFILE"
     fi
