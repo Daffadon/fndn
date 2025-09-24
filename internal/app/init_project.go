@@ -102,6 +102,10 @@ func (uc *InitProjectUseCase) Run(p *domain.Project, progressCh chan<- string) e
 			progressCh <- "Running http handler example generation"
 			return domain.InitHTTPHandlerDomain(uc.Runner, &p.Path)
 		},
+		func() error {
+			progressCh <- "Running pkg example generation"
+			return domain.InitPkgExample(uc.Runner, &p.Path)
+		},
 
 		// cmd
 		func() error {
