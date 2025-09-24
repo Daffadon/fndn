@@ -83,9 +83,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg.String() {
 		case "ctrl+c", "esc":
 			return m, tea.Quit
-		case "tab", "right":
+		case "tab":
 			m.nextStep()
-		case "shift+tab", "left":
+		case "shift+tab":
 			m.prevStep()
 		case "enter":
 			if m.loading {
