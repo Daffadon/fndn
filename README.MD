@@ -15,6 +15,8 @@ Bootstrap your Go projects with clean architecture, best practices, and a solid 
 - 📦 Go modules setup
 
 ---
+> [!NOTE]
+> 0.0.1 is the stable version and generating one set of application with its driver to 3rd party. furthermore, the generation will cover other configuration for each type.
 
 ## 🔥 Get started
 
