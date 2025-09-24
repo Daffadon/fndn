@@ -139,7 +139,7 @@ for the files, there are several files that is generated and you can change for 
 4. `config.local.yaml`: check your repository readme for what should you do to this file
 5. `docker-compose.yml`: this is for production purpose. for development, this file is purposed to run the 3rd party for your app.
 
-## 🔀 how to the code
+## 🔀 how to read the code
 
 ```bash
                                                  |----> config/*.go (except /env)
