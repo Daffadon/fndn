@@ -142,7 +142,7 @@ for the files, there are several files that is generated and you can change for 
 ```bash
                                                  |----> config/*.go (except /env)
 (cmd)                                            |
-main.go -> bootstrap/bootstrap.go -> di/di.go ---|
+main.go -> bootstrap/bootstrap.go -> di/di.go ---|----> internal/domain/*.go (except /dto)
     |                                            |
     |                                            |----> internal/infra/*.go
     |----> server.go
