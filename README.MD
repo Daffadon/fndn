@@ -53,7 +53,7 @@ currently, the generation is in default mode (later will be customizable). the g
 
 ## 👌 What fndn do for you (v0.\*)
 
-it's generating the folder structure that use clean architecture as reference. If you'r not familiar with the scheme, don't worry, let's talk about it.
+it's generating the folder structure that use clean architecture as reference. If you're not familiar with the scheme, don't worry, let's talk about it.
 
 <details>
 <summary>Project Folder Structure</summary>
