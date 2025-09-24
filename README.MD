@@ -16,12 +16,12 @@ Bootstrap your Go projects with clean architecture, best practices, and a solid 
 
 ---
 > [!NOTE]
-> 0.0.1 is the stable version and generating one set of application with its driver to 3rd party. furthermore, the generation will cover other configuration for each type.
+> v0.0.1 is the stable version and generating one set of application with its driver to 3rd party. furthermore, the generation will cover other configuration for each type.
 
 ## 🔥 Get started
 
 ```bash
-go run github.com/daffadon/fndn@0.0.1 init .
+go run github.com/daffadon/fndn@v0.0.1 init .
 ```
 
 \* . generate in current directory
@@ -29,7 +29,7 @@ go run github.com/daffadon/fndn@0.0.1 init .
 OR
 
 ```bash
-go run github.com/daffadon/fndn@0.0.1 --help
+go run github.com/daffadon/fndn@v0.0.1 --help
 ```
 
 to see how can you use the tools
