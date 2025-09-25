@@ -49,7 +49,7 @@ func (s *Server) Run(ctx context.Context) {
 			
 			srv := &http.Server{
 				Addr:              s.Address,
-				Handler:           router,
+				Handler:           {{.RouterHandler}},
 				ReadHeaderTimeout: 5 * time.Second,
 			}
 			go func() {
