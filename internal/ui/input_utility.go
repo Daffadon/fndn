@@ -81,9 +81,11 @@ func (m *model) viewStep() string {
 		s += style.ErrorStyle.Render(fmt.Sprintf("\n⚠️  %v\n", m.err))
 	}
 
-	if m.current < total-1 {
+	if m.current == 3 && m.steps[3].Input.Value().(string) == "Default" {
+		s += "(Enter to scaffold; Left/Shift+Tab to go back; Esc to cancel)\n"
+	} else if m.current < total-1 {
 		s += "(Enter to continue; Left/Shift+Tab to go back; Esc to cancel)\n"
-	} else if m.current == total-1 || m.steps[3].Input.Value().(string) == "Default" {
+	} else if m.current == total-1 {
 		s += "(Enter to scaffold; Left/Shift+Tab to go back; Esc to cancel)\n"
 	}
 
