@@ -59,6 +59,8 @@ func InitHandlerDomain(i infra.CommandRunner, path *string, framework *string) e
 			t = domain_template.EchoTodoHandlerTemplate
 		case "fiber":
 			t = domain_template.FiberTodoHandlerTemplate
+		case "gorrila/mux":
+			t = domain_template.GorrilaTodoHandlerTemplate
 		}
 		if err := pkg.GoFileGenerator(i, path, folderName, fileName, t); err != nil {
 			log.Fatal(err)
@@ -96,6 +98,8 @@ func InitHTTPHandlerDomain(i infra.CommandRunner, path *string, framework *strin
 			t = domain_template.EchoHTTPHandlerTemplate
 		case "fiber":
 			t = domain_template.FiberHTTPHandlerTemplate
+		case "gorrila/mux":
+			t = domain_template.GorrilaHTTPHandlerTemplate
 		}
 		if err := pkg.GoFileGenerator(i, path, folderName, fileName, t); err != nil {
 			log.Fatal(err)
