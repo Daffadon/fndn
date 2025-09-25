@@ -21,6 +21,8 @@ func InitFramework(i infra.CommandRunner, path *string, framework *string) error
 			t = framework_template.ChiConfigTemplate
 		case "echo":
 			t = framework_template.EchoConfigTemplate
+		case "fiber":
+			t = framework_template.FiberConfigTemplate
 		}
 		if err := pkg.GoFileGenerator(i, path, folderName, fileName, t); err != nil {
 			log.Fatal(err)
