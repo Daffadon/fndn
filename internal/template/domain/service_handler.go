@@ -81,3 +81,31 @@ func (t *todoHandler) AddNewTodo(c echo.Context)error{
 	panic("unimplemented")
 }
 `
+
+const FiberTodoHandlerTemplate string = `
+package handler
+
+import "github.com/gofiber/fiber/v2"
+
+type (
+	TodoHandler interface {
+		// your function definition
+		AddNewTodo(c *fiber.Ctx) error
+	}
+	todoHandler struct {
+		// your injected dependency
+		// for example
+		ts service.TodoService
+	}
+)
+
+func NewTodoHandler(ts service.TodoService) TodoHandler {
+	return &todoHandler{
+		ts: ts,
+	}
+}
+
+func (t *todoHandler) AddNewTodo(c *fiber.Ctx)error{
+	panic("unimplemented")
+}
+`

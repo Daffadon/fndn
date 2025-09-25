@@ -28,3 +28,13 @@ func RegisterTodoRoutes(r *echo.Echo, th TodoHandler) {
 	r.POST("/todo",th.AddNewTodo)
 }
 `
+
+const FiberHTTPHandlerTemplate string = `
+package handler
+
+import "github.com/gofiber/fiber/v2"
+
+func RegisterTodoRoutes(r *fiber.App, th TodoHandler) {
+	r.Post("/todo",th.AddNewTodo)
+}
+`
