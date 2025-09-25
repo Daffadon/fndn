@@ -2,6 +2,7 @@ package ui
 
 import (
 	"fmt"
+	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/daffadon/fndn/internal/domain"
@@ -57,9 +58,7 @@ func (m *model) viewStep() string {
 	s += "\nThis will create a new Go module and scaffold a basic clean-code architecture\n"
 
 	total := len(m.steps)
-	label := style.BlueStyle.Render(fmt.Sprintf("Step %d/%d", m.current+1, total))
 
-	s += fmt.Sprintf("%s\n", label)
 	switch m.current {
 	case 0:
 		s += style.BlueStyle.Render("enter your module name\n")
@@ -67,22 +66,25 @@ func (m *model) viewStep() string {
 		s += style.BlueStyle.Render("would you init git also?\n")
 	case 2:
 		s += style.BlueStyle.Render("would you use air for hot reload?\n")
+	case 3:
+		s += style.BlueStyle.Render("which set would you generate?\n")
+	case 4:
+		s += style.BlueStyle.Render("which framework would you use?\n")
 	}
 
 	s += "\n"
 	content := m.steps[m.current].Input.View()
-	arrow := style.ArrowStyle.Render("> ")
 
-	s += fmt.Sprintf("%s%s\n\n", arrow, content)
+	s += fmt.Sprintf("%s\n\n", content)
 
 	if m.err != nil {
 		s += style.ErrorStyle.Render(fmt.Sprintf("\n⚠️  %v\n", m.err))
 	}
 
 	if m.current < total-1 {
-		s += "\n(Enter to continue; Left/Shift+Tab to go back; Esc to cancel)\n"
-	} else {
-		s += "\n(Enter to scaffold; Left/Shift+Tab to go back; Esc to cancel)\n"
+		s += "(Enter to continue; Left/Shift+Tab to go back; Esc to cancel)\n"
+	} else if m.current == total-1 || m.steps[3].Input.Value().(string) == "Default" {
+		s += "(Enter to scaffold; Left/Shift+Tab to go back; Esc to cancel)\n"
 	}
 
 	return s
@@ -90,26 +92,35 @@ func (m *model) viewStep() string {
 
 func (m *model) submit() tea.Cmd {
 	m.stopwatch.Start()
-	moduleName := m.steps[0].Input.Value().(string)
+	project := domain.Project{
+		ModuleName: "",
+		Name:       "",
+		Path:       "",
+		Git:        false,
+		Air:        false,
+		Framework:  "gin",
+	}
+	project.Path = m.targetDir
 
-	initGit := false
-	if v, ok := m.steps[1].Input.Value().(bool); ok {
-		initGit = v
-	}
-	initAir := false
-	if v, ok := m.steps[2].Input.Value().(bool); ok {
-		initAir = v
-	}
+	moduleName := m.steps[0].Input.Value().(string)
+	project.ModuleName = moduleName
 
 	name := pkg.LastSegment(moduleName)
-	project := domain.Project{
-		ModuleName: moduleName,
-		Name:       name,
-		Path:       m.targetDir,
-		Git:        initGit,
-		Air:        initAir,
-	}
+	project.Name = name
 
+	if v, ok := m.steps[1].Input.Value().(bool); ok {
+		project.Git = v
+	}
+	if v, ok := m.steps[2].Input.Value().(bool); ok {
+		project.Air = v
+	}
+	if v, ok := m.steps[3].Input.Value().(string); ok {
+		if strings.ToLower(v) != "default" {
+			if v, ok := m.steps[4].Input.Value().(string); ok {
+				project.Framework = strings.ToLower(v)
+			}
+		}
+	}
 	m.loading = true
 	m.err = nil
 	return tea.Batch(m.waitForProgress(), m.runInitProject(project), m.spinner.Tick)
