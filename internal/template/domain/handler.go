@@ -1,6 +1,6 @@
 package domain_template
 
-const HTTPHandlerTemplate string = `
+const GinHTTPHandlerTemplate string = `
 package handler
 	
 import "github.com/gin-gonic/gin"
@@ -10,30 +10,21 @@ func RegisterTodoRoutes(r *gin.Engine, th TodoHandler) {
 }
 `
 
-const TodoHandlerTemplate string = `
+const ChiHTTPHandlerTemplate string = `
 package handler
 
-import "github.com/gin-gonic/gin"
+import "github.com/go-chi/chi/v5"
 
-type (
-	TodoHandler interface {
-		// your function definition
-		AddNewTodo(ctx *gin.Context)
-	}
-	todoHandler struct {
-		// your injected dependency
-		// for example
-		ts service.TodoService
-	}
-)
-
-func NewTodoHandler(ts service.TodoService) TodoHandler {
-	return &todoHandler{
-		ts: ts,
-	}
+func RegisterTodoRoutes(r *chi.Mux, th TodoHandler) {
+	r.Post("/todo",th.AddNewTodo)
 }
+`
+const EchoHTTPHandlerTemplate string = `
+package handler
 
-func (t *todoHandler) AddNewTodo(ctx *gin.Context){
-	panic("unimplemented")
+import "github.com/labstack/echo/v4"
+
+func RegisterTodoRoutes(r *echo.Echo, th TodoHandler) {
+	r.POST("/todo",th.AddNewTodo)
 }
 `
