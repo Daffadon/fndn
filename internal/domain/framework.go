@@ -9,11 +9,20 @@ import (
 	framework_template "github.com/daffadon/fndn/internal/template/framework"
 )
 
-func InitGin(i infra.CommandRunner, path *string) error {
+func InitFramework(i infra.CommandRunner, path *string, framework *string) error {
 	if path != nil {
 		folderName := "/config/router"
 		fileName := folderName + "/http.go"
-		if err := pkg.GoFileGenerator(i, path, folderName, fileName, framework_template.GinConfigTemplate); err != nil {
+		var t string
+		switch *framework {
+		case "gin":
+			t = framework_template.GinConfigTemplate
+		case "chi":
+			t = framework_template.ChiConfigTemplate
+		case "echo":
+			t = framework_template.EchoConfigTemplate
+		}
+		if err := pkg.GoFileGenerator(i, path, folderName, fileName, t); err != nil {
 			log.Fatal(err)
 			return err
 		}
