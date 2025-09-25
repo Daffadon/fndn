@@ -38,3 +38,14 @@ func RegisterTodoRoutes(r *fiber.App, th TodoHandler) {
 	r.Post("/todo",th.AddNewTodo)
 }
 `
+
+const GorrilaHTTPHandlerTemplate string = `
+package handler
+
+import "github.com/gorilla/mux"
+
+func RegisterTodoRoutes(r *mux.Router, th TodoHandler) {
+	r.HandleFunc("/todo",th.AddNewTodo).Methods("POST")
+}
+
+`
