@@ -35,11 +35,16 @@ func InitBootStrap(i infra.CommandRunner, path *string) error {
 	return errors.New("path is nil")
 }
 
-func InitServer(i infra.CommandRunner, path *string) error {
+func InitServer(i infra.CommandRunner, path *string, fwk *string) error {
 	if path != nil {
 		folderName := "/cmd/server"
 		fileName := folderName + "/server.go"
-		if err := pkg.GoFileGenerator(i, path, folderName, fileName, main_template.HTTPServerTemplate); err != nil {
+		c, err := pkg.HTTPServerParser(*fwk)
+		if err != nil {
+			log.Fatal(err)
+			return err
+		}
+		if err := pkg.GoFileGenerator(i, path, folderName, fileName, c); err != nil {
 			log.Fatal(err)
 			return err
 		}
