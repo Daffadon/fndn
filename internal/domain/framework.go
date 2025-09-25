@@ -23,6 +23,8 @@ func InitFramework(i infra.CommandRunner, path *string, framework *string) error
 			t = framework_template.EchoConfigTemplate
 		case "fiber":
 			t = framework_template.FiberConfigTemplate
+		case "gorrila/mux":
+			t = framework_template.GorillaMuxConfigTemplate
 		}
 		if err := pkg.GoFileGenerator(i, path, folderName, fileName, t); err != nil {
 			log.Fatal(err)
