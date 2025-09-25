@@ -4,6 +4,7 @@ import (
 	btxt "github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/daffadon/fndn/internal/types"
+	"github.com/daffadon/fndn/internal/ui/style"
 )
 
 type TextInput struct {
@@ -24,7 +25,13 @@ func (i *TextInput) Update(msg tea.Msg) (types.Input, tea.Cmd) {
 	return i, cmd
 }
 
-func (i *TextInput) View() string { return i.ti.View() }
-func (i *TextInput) Value() any   { return i.ti.Value() }
-func (i *TextInput) Focus()       { i.ti.Focus() }
-func (i *TextInput) Blur()        { i.ti.Blur() }
+func (i *TextInput) View() string {
+	arrow := ""
+	if i.ti.Focused() {
+		arrow = style.ArrowStyle.Render("> ")
+	}
+	return arrow + i.ti.View()
+}
+func (i *TextInput) Value() any { return i.ti.Value() }
+func (i *TextInput) Focus()     { i.ti.Focus() }
+func (i *TextInput) Blur()      { i.ti.Blur() }
