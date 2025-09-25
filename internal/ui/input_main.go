@@ -56,7 +56,7 @@ func newModel(uc *app.InitProjectUseCase, targetDir string) model {
 		},
 		{
 			Label:    "Framework",
-			Input:    module.NewRadioButton([]string{"Gin", "Chi", "Echo"}, 0),
+			Input:    module.NewRadioButton([]string{"Gin", "Chi", "Echo", "Fiber"}, 0),
 			Validate: nil,
 		},
 	}
