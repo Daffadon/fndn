@@ -45,11 +45,20 @@ func InitServiceDomain(i infra.CommandRunner, path *string) error {
 	return errors.New("path is nil")
 }
 
-func InitHandlerDomain(i infra.CommandRunner, path *string) error {
+func InitHandlerDomain(i infra.CommandRunner, path *string, framework *string) error {
 	if path != nil {
 		folderName := "/internal/domain/handler"
 		fileName := folderName + "/todo.go"
-		if err := pkg.GoFileGenerator(i, path, folderName, fileName, domain_template.TodoHandlerTemplate); err != nil {
+		var t string
+		switch *framework {
+		case "gin":
+			t = domain_template.GinTodoHandlerTemplate
+		case "chi":
+			t = domain_template.ChiTodoHandlerTemplate
+		case "echo":
+			t = domain_template.EchoTodoHandlerTemplate
+		}
+		if err := pkg.GoFileGenerator(i, path, folderName, fileName, t); err != nil {
 			log.Fatal(err)
 			return err
 		}
@@ -71,11 +80,20 @@ func InitDTODomain(i infra.CommandRunner, path *string) error {
 	return errors.New("path is nil")
 }
 
-func InitHTTPHandlerDomain(i infra.CommandRunner, path *string) error {
+func InitHTTPHandlerDomain(i infra.CommandRunner, path *string, framework *string) error {
 	if path != nil {
 		folderName := "/internal/domain/handler"
 		fileName := folderName + "/http.go"
-		if err := pkg.GoFileGenerator(i, path, folderName, fileName, domain_template.HTTPHandlerTemplate); err != nil {
+		var t string
+		switch *framework {
+		case "gin":
+			t = domain_template.GinHTTPHandlerTemplate
+		case "chi":
+			t = domain_template.ChiHTTPHandlerTemplate
+		case "echo":
+			t = domain_template.EchoHTTPHandlerTemplate
+		}
+		if err := pkg.GoFileGenerator(i, path, folderName, fileName, t); err != nil {
 			log.Fatal(err)
 			return err
 		}
