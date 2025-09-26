@@ -19,7 +19,7 @@ Bootstrap your Go projects with clean architecture, best practices, and a solid 
 
 > [!NOTE]
 > v0.1.0 now is stable version and generating one set of application with its driver to 3rd party. in this version, you can generate different framework but still limited to others. furthermore, the generation will cover other configuration for each type.
-
+  
 ## 🔥 Get started
 
 ```bash
@@ -36,6 +36,9 @@ go run github.com/daffadon/fndn@v0.1.0 --help
 
 to see how can you use the tools
 
+> [!NOTE]
+> For The first time, it will take around 50 seconds to generate because your go cache might not have modules that used here.
+
 ## 📦 Installation
 
 If you want to install the tools to your system, you can either using go install or download the binary in available release:
@@ -46,7 +49,7 @@ go install github.com/your-username/fndn@v0.1.0
 
 ## 🛠️ Default techstack
 
-currently, the generation is in default mode (later will be customizable). the generated techstack are:
+Currently, the generation are in default mode and custom mode with limitation in some of the parts. the `Default` mode is using the first techstack from each section. the generated techstack that you can use are:
 
 - Framework
 
