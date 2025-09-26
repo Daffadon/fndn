@@ -11,10 +11,11 @@ import (
 type CheckboxInput struct {
 	label   string
 	checked bool
+	focused bool
 }
 
 func NewCheckbox(label string, initial bool) *CheckboxInput {
-	return &CheckboxInput{label: label, checked: initial}
+	return &CheckboxInput{label: label, checked: initial, focused: false}
 }
 
 func (c *CheckboxInput) Update(msg tea.Msg) (types.Input, tea.Cmd) {
@@ -29,9 +30,15 @@ func (c *CheckboxInput) View() string {
 	if c.checked {
 		mark = style.BlueStyle.Render("x")
 	}
-	return fmt.Sprintf("[%s] %s", mark, c.label)
+
+	arrow := ""
+	if c.focused {
+		arrow = style.ArrowStyle.Render("> ")
+	}
+
+	return arrow + fmt.Sprintf("[%s] %s", mark, c.label)
 }
 
 func (c *CheckboxInput) Value() any { return c.checked }
-func (c *CheckboxInput) Focus()     {}
-func (c *CheckboxInput) Blur()      {}
+func (c *CheckboxInput) Focus()     { c.focused = true }
+func (c *CheckboxInput) Blur()      { c.focused = false }
