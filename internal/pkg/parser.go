@@ -41,7 +41,7 @@ func HTTPServerParser(fwk string) (string, error) {
 		`
 		t.FrameworkRouter = "*fiber.App"
 		t.RouterHandler = "adaptor.FiberApp(r)"
-	case "gorrila/mux":
+	case "gorilla/mux":
 		t.FrameworkImport = `"github.com/gorilla/mux"`
 		t.FrameworkRouter = "*mux.Router"
 		t.RouterHandler = "router.WarpWithCorsAndLogger(r)"
