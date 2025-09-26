@@ -49,6 +49,16 @@ func newModel(uc *app.InitProjectUseCase, targetDir string) model {
 			Input:    module.NewCheckbox("Init air?", true),
 			Validate: nil,
 		},
+		{
+			Label:    "Generated set of module",
+			Input:    module.NewRadioButton([]string{"Default", "Custom"}, 0),
+			Validate: nil,
+		},
+		{
+			Label:    "Framework",
+			Input:    module.NewRadioButton([]string{"Gin", "Chi", "Echo", "Fiber", "Gorrila/mux"}, 0),
+			Validate: nil,
+		},
 	}
 
 	steps[0].Input.Focus()
@@ -83,8 +93,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg.String() {
 		case "ctrl+c", "esc":
 			return m, tea.Quit
-		case "tab":
-			m.nextStep()
 		case "shift+tab":
 			m.prevStep()
 		case "enter":
@@ -99,6 +107,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				}
 			}
 			if m.current < len(m.steps)-1 {
+				if m.current == 3 && m.steps[3].Input.Value().(string) == "Default" {
+					return m, m.submit()
+				}
 				m.nextStep()
 			} else {
 				return m, m.submit()

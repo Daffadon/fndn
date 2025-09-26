@@ -4,7 +4,7 @@ const HTTPServerTemplate string = `
 package server
 
 import (
-	"github.com/gin-gonic/gin"
+	{{.FrameworkImport}}
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/nats-io/nats.go"
 	"github.com/redis/go-redis/v9"
@@ -22,7 +22,7 @@ func (s *Server) Run(ctx context.Context) {
 	err := s.Container.Invoke(
 		func(
 			logger zerolog.Logger,
-			router *gin.Engine,
+			r {{.FrameworkRouter}},
 			redis *redis.Client,
 			nc *nats.Conn,
 			pgx *pgxpool.Pool,
@@ -42,17 +42,14 @@ func (s *Server) Run(ctx context.Context) {
 			}()
 			defer pgx.Close()
 			
-			router.Use(gin.Recovery())
-			
 			// you can register your routes here
 			// for the example and implementation, here is the example
 
-			
-			handler.RegisterTodoRoutes(router,th)
+			handler.RegisterTodoRoutes(r,th)
 			
 			srv := &http.Server{
 				Addr:              s.Address,
-				Handler:           router,
+				Handler:           {{.RouterHandler}},
 				ReadHeaderTimeout: 5 * time.Second,
 			}
 			go func() {

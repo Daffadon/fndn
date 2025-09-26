@@ -10,6 +10,7 @@ type Project struct {
 	Path       string
 	Git        bool
 	Air        bool
+	Framework  string
 }
 
 func InitProject(i infra.CommandRunner, path, moduleName string) error {

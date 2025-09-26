@@ -35,8 +35,8 @@ func (uc *InitProjectUseCase) Run(p *domain.Project, progressCh chan<- string) e
 	initFuncs := []func() error{
 		// config
 		func() error {
-			progressCh <- "Running gin framework generation"
-			return domain.InitGin(uc.Runner, &p.Path)
+			progressCh <- "Running framework generation"
+			return domain.InitFramework(uc.Runner, &p.Path, &p.Framework)
 		},
 		func() error {
 			progressCh <- "Running env config generation"
@@ -96,11 +96,11 @@ func (uc *InitProjectUseCase) Run(p *domain.Project, progressCh chan<- string) e
 		},
 		func() error {
 			progressCh <- "Running handler example generation"
-			return domain.InitHandlerDomain(uc.Runner, &p.Path)
+			return domain.InitHandlerDomain(uc.Runner, &p.Path, &p.Framework)
 		},
 		func() error {
 			progressCh <- "Running http handler example generation"
-			return domain.InitHTTPHandlerDomain(uc.Runner, &p.Path)
+			return domain.InitHTTPHandlerDomain(uc.Runner, &p.Path, &p.Framework)
 		},
 		func() error {
 			progressCh <- "Running pkg example generation"
@@ -118,7 +118,7 @@ func (uc *InitProjectUseCase) Run(p *domain.Project, progressCh chan<- string) e
 		},
 		func() error {
 			progressCh <- "Running server file generation"
-			return domain.InitServer(uc.Runner, &p.Path)
+			return domain.InitServer(uc.Runner, &p.Path, &p.Framework)
 		},
 		func() error {
 			progressCh <- "Running main file generation"
