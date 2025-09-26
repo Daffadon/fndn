@@ -44,7 +44,7 @@ func HTTPServerParser(fwk string) (string, error) {
 	case "gorrila/mux":
 		t.FrameworkImport = `"github.com/gorilla/mux"`
 		t.FrameworkRouter = "*mux.Router"
-		t.RouterHandler = "router.WarpWithCors(r)"
+		t.RouterHandler = "router.WarpWithCorsAndLogger(r)"
 	}
 	return ParseTemplate(main_template.HTTPServerTemplate, t)
 }
