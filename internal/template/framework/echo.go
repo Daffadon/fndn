@@ -6,16 +6,18 @@ package router
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/spf13/viper"
 )
 
 func NewHTTP() *echo.Echo {
 	env := os.Getenv("ENV")
 	e := echo.New()
+	e.Use(middleware.Logger())
 
 	if env == "production" {
-			e.Debug = false
-			e.HideBanner = true
-			e.HidePort = true
+		e.Debug = false
+		e.HideBanner = true
+		e.HidePort = true
 	}
 
 	allowOrigins := viper.GetString("server.cors.allow_origins")
@@ -26,12 +28,12 @@ func NewHTTP() *echo.Echo {
 	maxAge := viper.GetInt("server.cors.max_age")
 
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-			AllowOrigins:     strings.Split(allowOrigins, ","),
-			AllowMethods:     strings.Split(allowMethods, ","),
-			AllowHeaders:     strings.Split(allowHeaders, ","),
-			ExposeHeaders:    strings.Split(exposeHeaders, ","),
-			AllowCredentials: allowCredentials,
-			MaxAge:           int(time.Duration(maxAge).Seconds()),
+		AllowOrigins:     strings.Split(allowOrigins, ","),
+		AllowMethods:     strings.Split(allowMethods, ","),
+		AllowHeaders:     strings.Split(allowHeaders, ","),
+		ExposeHeaders:    strings.Split(exposeHeaders, ","),
+		AllowCredentials: allowCredentials,
+		MaxAge:           int(time.Duration(maxAge).Seconds()),
 	}))
 
 	return e
