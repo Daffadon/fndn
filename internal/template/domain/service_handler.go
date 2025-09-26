@@ -110,7 +110,7 @@ func (t *todoHandler) AddNewTodo(c *fiber.Ctx)error{
 }
 `
 
-const GorrilaTodoHandlerTemplate string = `
+const GorillaTodoHandlerTemplate string = `
 package handler
 
 type (

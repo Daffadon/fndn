@@ -18,12 +18,12 @@ Bootstrap your Go projects with clean architecture, best practices, and a solid 
 ---
 
 > [!NOTE]
-> v0.1.0 now is stable version and generating one set of application with its driver to 3rd party. in this version, you can generate different framework but still limited to others. furthermore, the generation will cover other configuration for each type.
+> v0.1.1 now is stable, latest version, and generating one set of application with its driver to 3rd party. in this version, you can generate different framework but still limited to others. furthermore, the generation will cover other configuration for each type.
   
 ## 🔥 Get started
 
 ```bash
-go run github.com/daffadon/fndn@v0.1.0 init .
+go run github.com/daffadon/fndn@v0.1.1 init .
 ```
 
 \* . generate in current directory
@@ -31,7 +31,7 @@ go run github.com/daffadon/fndn@v0.1.0 init .
 OR
 
 ```bash
-go run github.com/daffadon/fndn@v0.1.0 --help
+go run github.com/daffadon/fndn@v0.1.1 --help
 ```
 
 to see how can you use the tools
@@ -44,7 +44,7 @@ to see how can you use the tools
 If you want to install the tools to your system, you can either using go install or download the binary in available release:
 
 ```bash
-go install github.com/your-username/fndn@v0.1.0
+go install github.com/your-username/fndn@v0.1.1
 ```
 
 ## 🛠️ Default techstack
@@ -57,7 +57,7 @@ Currently, the generation are in default mode and custom mode with limitation in
 ![](https://img.shields.io/badge/fiber-00ACD7?style=for-the-badge&logo=fiber)
 ![](https://img.shields.io/badge/echo-00AFD1?style=for-the-badge&logo=echo)
 ![](https://img.shields.io/badge/chi-01933F?style=for-the-badge&logo=chi)
-![](https://img.shields.io/badge/gorrila/mux-939292?style=for-the-badge&logo=gorrila)
+![](https://img.shields.io/badge/gorilla/mux-939292?style=for-the-badge&logo=gorilla)
 
 - Database
 
@@ -155,7 +155,7 @@ The folder structure is grouped by its usage:
 1. `cmd`: where the command is exist to running the application. there are several folder, which is for bootstraping, dependency injection, construct the server. `main.go` is the entrypoint for all of those.
 2. `config`: store all the configs; connection to 3rd party, instantiation of an dependency, configuration for http server, and certificate for tls. furthermore you can add more like grpc server config, log emitter, or any other configuration.
 3. `internal`: the place where you put on your app logic business that is not should be exposed. this is special folder for golang cause the module can't be imported from anywhere even when the repository is publicly accessible. [see more](https://go.dev/doc/go1.4#internalpackages)
-4. `script`: this is shell script for build the app. there are thow scripts, one for build the binary and one for build the docker image.
+4. `script`: this is shell script for build the app. there are two scripts, one for build the binary and one for build the docker image.
 
 for the files, there are several files that is generated and you can change for your app:
 

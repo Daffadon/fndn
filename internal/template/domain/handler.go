@@ -39,7 +39,7 @@ func RegisterTodoRoutes(r *fiber.App, th TodoHandler) {
 }
 `
 
-const GorrilaHTTPHandlerTemplate string = `
+const GorillaHTTPHandlerTemplate string = `
 package handler
 
 import "github.com/gorilla/mux"
