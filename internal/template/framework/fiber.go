@@ -6,6 +6,7 @@ package router
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/spf13/viper"
 )
 
@@ -16,6 +17,7 @@ func NewHTTP() *fiber.App {
 		config.Prefork = true
 	}
 	r := fiber.New(config)
+	r.Use(logger.New())
 
 	allowOrigins := viper.GetString("server.cors.allow_origins")
 	allowMethods := viper.GetString("server.cors.allow_methods")
