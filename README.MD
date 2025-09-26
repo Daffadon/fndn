@@ -6,22 +6,24 @@ Bootstrap your Go projects with clean architecture, best practices, and a solid 
 ---
 
 ## 🚀 Features
+
 <!-- - 🔧 Configurable tech stack options -->
 
 - 🏗️ Clean architecture scaffolding
-- 🖧 Organized project structure
+- 🛠️ Customizable set of techstack
 - ⚡ Interactive CLI with Bubble Tea
 - 🐳 Docker & containerization ready
 - 📦 Go modules setup
 
 ---
+
 > [!NOTE]
-> v0.0.1 is the stable version and generating one set of application with its driver to 3rd party. furthermore, the generation will cover other configuration for each type.
+> v0.1.0 now is stable version and generating one set of application with its driver to 3rd party. in this version, you can generate different framework but still limited to others. furthermore, the generation will cover other configuration for each type.
 
 ## 🔥 Get started
 
 ```bash
-go run github.com/daffadon/fndn@v0.0.1 init .
+go run github.com/daffadon/fndn@v0.1.0 init .
 ```
 
 \* . generate in current directory
@@ -29,7 +31,7 @@ go run github.com/daffadon/fndn@v0.0.1 init .
 OR
 
 ```bash
-go run github.com/daffadon/fndn@v0.0.1 --help
+go run github.com/daffadon/fndn@v0.1.0 --help
 ```
 
 to see how can you use the tools
@@ -39,18 +41,39 @@ to see how can you use the tools
 If you want to install the tools to your system, you can either using go install or download the binary in available release:
 
 ```bash
-go install github.com/your-username/fndn@latest
+go install github.com/your-username/fndn@v0.1.0
 ```
 
 ## 🛠️ Default techstack
 
 currently, the generation is in default mode (later will be customizable). the generated techstack are:
 
+- Framework
+
 ![](https://img.shields.io/badge/gin-3997AA?style=for-the-badge&logo=gin&logoColor=white)
+![](https://img.shields.io/badge/fiber-00ACD7?style=for-the-badge&logo=fiber)
+![](https://img.shields.io/badge/echo-00AFD1?style=for-the-badge&logo=echo)
+![](https://img.shields.io/badge/chi-01933F?style=for-the-badge&logo=chi)
+![](https://img.shields.io/badge/gorrila/mux-939292?style=for-the-badge&logo=gorrila)
+
+- Database
+
 ![](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+
+- Message Queue
+
 ![](https://img.shields.io/badge/nats-2DACE1?style=for-the-badge&logo=nats&logoColor=white)
+
+- Cache
+
 ![](https://img.shields.io/badge/redis-%23DD0031.svg?&style=for-the-badge&logo=redis&logoColor=white)
+
+- Object Storage
+
 ![](https://img.shields.io/badge/minio-C8324D?style=for-the-badge&logo=nats&logoColor=white)
+
+- Deployment
+
 ![](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white)
 
 ## 👌 What fndn do for you (v0.\*)
