@@ -28,9 +28,9 @@ func BuildContainer() *dig.Container {
 	if err := container.Provide(mq.NewNatsConnection); err != nil {
 		panic("Failed to provide nats connection: " + err.Error())
 	}
-	// postgresql pool connection
+	// db connection
 	if err := container.Provide(storage.NewSQLConn); err != nil {
-		panic("Failed to provide postgresql pool connection: " + err.Error())
+		panic("Failed to provide db connection: " + err.Error())
 	}
 	// jetstream connection
 	if err := container.Provide(jetstream.New); err != nil {
@@ -71,9 +71,9 @@ func BuildContainer() *dig.Container {
 		panic("Failed to provide todo handler: " + err.Error())
 	}
 
-	// http server (gin)
+	// http server
 	if err := container.Provide(router.NewHTTP); err != nil {
-		panic("Failed to provide gin http server: " + err.Error())
+		panic("Failed to provide http server: " + err.Error())
 	}
 	return container
 }
