@@ -7,10 +7,11 @@ import (
 type Project struct {
 	ModuleName string
 	Name       string
-	Path       string
+	Path       *string
+	Framework  string
+	Database   string
 	Git        bool
 	Air        bool
-	Framework  string
 }
 
 func InitProject(i infra.CommandRunner, path, moduleName string) error {

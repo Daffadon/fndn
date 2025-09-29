@@ -97,12 +97,13 @@ func (m *model) submit() tea.Cmd {
 	project := domain.Project{
 		ModuleName: "",
 		Name:       "",
-		Path:       "",
+		Path:       nil,
 		Git:        false,
 		Air:        false,
 		Framework:  "gin",
+		Database:   "postgresql",
 	}
-	project.Path = m.targetDir
+	project.Path = &m.targetDir
 
 	moduleName := m.steps[0].Input.Value().(string)
 	project.ModuleName = moduleName
@@ -120,6 +121,9 @@ func (m *model) submit() tea.Cmd {
 		if strings.ToLower(v) != "default" {
 			if v, ok := m.steps[4].Input.Value().(string); ok {
 				project.Framework = strings.ToLower(v)
+			}
+			if v, ok := m.steps[5].Input.Value().(string); ok {
+				project.Database = strings.ToLower(v)
 			}
 		}
 	}
