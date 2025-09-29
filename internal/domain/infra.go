@@ -9,11 +9,18 @@ import (
 	infra_template "github.com/daffadon/fndn/internal/template/infra"
 )
 
-func InitQuerierInfra(i infra.CommandRunner, path *string) error {
+func InitQuerierInfra(i infra.CommandRunner, path *string, database *string) error {
 	if path != nil {
 		folderName := "/internal/infra/storage"
 		fileName := folderName + "/querier.go"
-		if err := pkg.GoFileGenerator(i, path, folderName, fileName, infra_template.QuerierInfraTemplate); err != nil {
+		var s string
+		switch *database {
+		case "postgresql":
+			s = infra_template.QuerierPgxInfraTemplate
+		case "mariadb":
+			s = infra_template.QuerierMariaDBInfraTemplate
+		}
+		if err := pkg.GoFileGenerator(i, path, folderName, fileName, s); err != nil {
 			log.Fatal(err)
 			return err
 		}

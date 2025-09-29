@@ -23,13 +23,19 @@ func InitENVConfig(i infra.CommandRunner, path *string) error {
 	return errors.New("path is nil")
 }
 
-func InitYamlConfig(i infra.CommandRunner, p *Project, path *string) error {
-	if path != nil {
+func InitYamlConfig(i infra.CommandRunner, p *Project) error {
+	if p.Path != nil {
 		folderName := ""
 		fileName := folderName + "/config.local.yaml"
 
 		s := config_template.YamlConfigMessageTemplate
-		s += config_template.PostresqlYamlConfigTemplate
+
+		switch p.Database {
+		case "postgresql":
+			s += config_template.PostresqlYamlConfigTemplate
+		case "mariadb":
+			s += config_template.MariaDBYamlConfigTemplate
+		}
 		s += config_template.AppYamlConfigTemplate
 		s += config_template.RedisYamlConfigTemplate
 		s += config_template.NatsYamlConfigTemplate
@@ -37,7 +43,7 @@ func InitYamlConfig(i infra.CommandRunner, p *Project, path *string) error {
 		s += config_template.MinioYamlConfigTemplate
 		s += config_template.ServerYamlConfigTemplate
 
-		if err := pkg.GenericFileGenerator(i, path, folderName, fileName, s); err != nil {
+		if err := pkg.GenericFileGenerator(i, p.Path, folderName, fileName, s); err != nil {
 			log.Fatal(err)
 			return err
 		}
