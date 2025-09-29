@@ -59,6 +59,11 @@ func newModel(uc *app.InitProjectUseCase, targetDir string) model {
 			Input:    module.NewRadioButton([]string{"Gin", "Chi", "Echo", "Fiber", "Gorilla/mux"}, 0),
 			Validate: nil,
 		},
+		{
+			Label:    "Database",
+			Input:    module.NewRadioButton([]string{"Postgresql", "MariaDB", "MongoDB"}, 0),
+			Validate: nil,
+		},
 	}
 
 	steps[0].Input.Focus()
