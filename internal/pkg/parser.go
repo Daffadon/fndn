@@ -20,7 +20,7 @@ func ParseTemplate(tmplStr string, data interface{}) (string, error) {
 	return buf.String(), nil
 }
 
-func HTTPServerParser(fwk string) (string, error) {
+func HTTPServerParser(fwk, db string) (string, error) {
 	var t types.HTTPServerParse
 	switch fwk {
 	case "gin":
@@ -45,6 +45,12 @@ func HTTPServerParser(fwk string) (string, error) {
 		t.FrameworkImport = `"github.com/gorilla/mux"`
 		t.FrameworkRouter = "*mux.Router"
 		t.RouterHandler = "router.WarpWithCorsAndLogger(r)"
+	}
+	switch db {
+	case "postgresql":
+		t.DBInstanceType = "*pgxpool.Pool"
+	case "mariadb":
+		t.DBInstanceType = "*sql.DB"
 	}
 	return ParseTemplate(main_template.HTTPServerTemplate, t)
 }

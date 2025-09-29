@@ -25,7 +25,7 @@ func (s *Server) Run(ctx context.Context) {
 			r {{.FrameworkRouter}},
 			redis *redis.Client,
 			nc *nats.Conn,
-			pgx *pgxpool.Pool,
+			db {{.DBInstanceType}},
 			th handler.TodoHandler,
 			// and many other returned type provided
 			// in the container from /cmd/di/container.go
@@ -40,7 +40,7 @@ func (s *Server) Run(ctx context.Context) {
 					logger.Error().Err(err).Msg("Failed to drain nats client")
 				}
 			}()
-			defer pgx.Close()
+			defer db.Close()
 			
 			// you can register your routes here
 			// for the example and implementation, here is the example

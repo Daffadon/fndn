@@ -5,5 +5,6 @@ type (
 		FrameworkImport string
 		FrameworkRouter string
 		RouterHandler   string
+		DBInstanceType  string
 	}
 )
