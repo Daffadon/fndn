@@ -17,13 +17,19 @@ func NewSQLConn(logger zerolog.Logger) *pgxpool.Pool {
 	port := viper.GetString("database.sql.port")
 	dbname := viper.GetString("database.sql.name")
 	sslmode := viper.GetString("database.sql.sslmode")
+	
 	dsn := fmt.Sprintf("%s://%s:%s@%s:%s/%s?sslmode=%s", protocol, user, password, host, port, dbname, sslmode)
 	if dsn == "" {
 		logger.Fatal().Msg("Database configuration is not set")
 	}
+	
 	pool, err := pgxpool.New(context.Background(), dsn)
 	if err != nil {
 		logger.Fatal().Err(err).Msg("Database configuration is not set")
+	}
+	
+	if err := pool.Ping(context.Background()); err != nil {
+			logger.Fatal().Err(err).Msg("Failed to ping PostgreSQL")
 	}
 	return pool
 }
@@ -43,6 +49,3 @@ const DockerComposePostgresqlConfigTemplate string = `
     volumes:
       - {{.ProjectName}}_db_data:/var/lib/postgresql/data
 `
-
-const DockerComposePostgresqlVolumeTemplate string = `
-  {{.ProjectName}}_db_data: {}`
