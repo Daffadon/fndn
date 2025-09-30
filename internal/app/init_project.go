@@ -110,7 +110,7 @@ func (uc *InitProjectUseCase) Run(p *domain.Project, progressCh chan<- string) e
 		// cmd
 		func() error {
 			progressCh <- "Running dependency injection file generation"
-			return domain.InitDependencyInjection(uc.Runner, p.Path)
+			return domain.InitDependencyInjection(uc.Runner, p)
 		},
 		func() error {
 			progressCh <- "Running bootstraper file generation"
