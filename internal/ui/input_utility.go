@@ -70,6 +70,9 @@ func (m *model) viewStep() string {
 		s += style.BlueStyle.Render("which set would you generate?\n")
 	case 4:
 		s += style.BlueStyle.Render("which framework would you use?\n")
+	case 5:
+		s += style.BlueStyle.Render("which database would you working on?\n")
+
 	}
 
 	s += "\n"

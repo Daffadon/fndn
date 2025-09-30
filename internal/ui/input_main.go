@@ -61,7 +61,7 @@ func newModel(uc *app.InitProjectUseCase, targetDir string) model {
 		},
 		{
 			Label:    "Database",
-			Input:    module.NewRadioButton([]string{"Postgresql", "MariaDB", "MongoDB"}, 0),
+			Input:    module.NewRadioButton([]string{"Postgresql", "MariaDB", "MongoDB", "Cassandra", "DynamoDB", "Neo4j"}, 0),
 			Validate: nil,
 		},
 	}
