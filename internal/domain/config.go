@@ -35,6 +35,8 @@ func InitYamlConfig(i infra.CommandRunner, p *Project) error {
 			s += config_template.PostresqlYamlConfigTemplate
 		case "mariadb":
 			s += config_template.MariaDBYamlConfigTemplate
+		case "mongodb":
+			s += config_template.MongoDBYamlConigTemplate
 		}
 		s += config_template.AppYamlConfigTemplate
 		s += config_template.RedisYamlConfigTemplate
