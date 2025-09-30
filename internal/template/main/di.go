@@ -29,7 +29,7 @@ func BuildContainer() *dig.Container {
 		panic("Failed to provide nats connection: " + err.Error())
 	}
 	// db connection
-	if err := container.Provide(storage.NewSQLConn); err != nil {
+	if err := container.Provide(storage.{{.DBConnection}}); err != nil {
 		panic("Failed to provide db connection: " + err.Error())
 	}
 	// jetstream connection
