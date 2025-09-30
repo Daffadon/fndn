@@ -9,11 +9,25 @@ import (
 	main_template "github.com/daffadon/fndn/internal/template/main"
 )
 
-func InitDependencyInjection(i infra.CommandRunner, path *string) error {
-	if path != nil {
+func InitDependencyInjection(i infra.CommandRunner, p *Project) error {
+	if p.Path != nil {
 		folderName := "/cmd/di"
 		fileName := folderName + "/container.go"
-		if err := pkg.GoFileGenerator(i, path, folderName, fileName, main_template.DITemplate); err != nil {
+		var st struct {
+			DBConnection string
+		}
+		switch p.Database {
+		case "postgresql", "mariadb":
+			st.DBConnection = "NewSQLConn"
+		default:
+			st.DBConnection = "NewNoSQLConn"
+		}
+		template, err := pkg.ParseTemplate(main_template.DITemplate, st)
+		if err != nil {
+			log.Fatal(err)
+			return err
+		}
+		if err := pkg.GoFileGenerator(i, p.Path, folderName, fileName, template); err != nil {
 			log.Fatal(err)
 			return err
 		}
