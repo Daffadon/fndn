@@ -21,3 +21,14 @@ database:
     port: "3306"
     name: "database_name"
 `
+
+const MongoDBYamlConigTemplate string = `
+database:
+  nosql:
+    protocol: "mongodb"
+    host: "localhost"
+    user: "myusername"
+    password: "password"
+    port: "27017"
+    name: "database_name"
+`
