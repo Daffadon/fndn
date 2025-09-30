@@ -70,3 +70,82 @@ func (q *sqlQuerier) Query(ctx context.Context, query string, args ...any) (*sql
 	return q.db.QueryContext(ctx, query, args...)
 }
 `
+
+const QuerierMongoDBInfraTemplate = `
+package storage_infra
+
+import (
+	"context"
+	
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+)
+
+type (
+	Querier interface {
+		Collection(name string) *mongo.Collection
+		FindOne(ctx context.Context, collection string, filter interface{}, opts ...*options.FindOneOptions) *mongo.SingleResult
+		Find(ctx context.Context, collection string, filter interface{}, opts ...*options.FindOptions) (*mongo.Cursor, error)
+		InsertOne(ctx context.Context, collection string, document interface{}, opts ...*options.InsertOneOptions) (*mongo.InsertOneResult, error)
+		InsertMany(ctx context.Context, collection string, documents []interface{}, opts ...*options.InsertManyOptions) (*mongo.InsertManyResult, error)
+		UpdateOne(ctx context.Context, collection string, filter interface{}, update interface{}, opts ...*options.UpdateOptions) (*mongo.UpdateResult, error)
+		UpdateMany(ctx context.Context, collection string, filter interface{}, update interface{}, opts ...*options.UpdateOptions) (*mongo.UpdateResult, error)
+		DeleteOne(ctx context.Context, collection string, filter interface{}, opts ...*options.DeleteOptions) (*mongo.DeleteResult, error)
+		DeleteMany(ctx context.Context, collection string, filter interface{}, opts ...*options.DeleteOptions) (*mongo.DeleteResult, error)
+		Disconnect(ctx context.Context) error
+	}
+
+	mongoQuerier struct {
+		client   *mongo.Client
+		database *mongo.Database
+	}
+)
+
+func NewQuerier(client *mongo.Client) Querier {
+	dn := "{{.DatabaseName}}"
+	return &mongoQuerier{
+		client:   client,
+		database: client.Database(dn),
+	}
+}
+
+func (m *mongoQuerier) Collection(name string) *mongo.Collection {
+	return m.database.Collection(name)
+}
+
+func (m *mongoQuerier) FindOne(ctx context.Context, collection string, filter interface{}, opts ...*options.FindOneOptions) *mongo.SingleResult {
+	return m.database.Collection(collection).FindOne(ctx, filter, opts...)
+}
+
+func (m *mongoQuerier) Find(ctx context.Context, collection string, filter interface{}, opts ...*options.FindOptions) (*mongo.Cursor, error) {
+	return m.database.Collection(collection).Find(ctx, filter, opts...)
+}
+
+func (m *mongoQuerier) InsertOne(ctx context.Context, collection string, document interface{}, opts ...*options.InsertOneOptions) (*mongo.InsertOneResult, error) {
+	return m.database.Collection(collection).InsertOne(ctx, document, opts...)
+}
+
+func (m *mongoQuerier) InsertMany(ctx context.Context, collection string, documents []interface{}, opts ...*options.InsertManyOptions) (*mongo.InsertManyResult, error) {
+	return m.database.Collection(collection).InsertMany(ctx, documents, opts...)
+}
+
+func (m *mongoQuerier) UpdateOne(ctx context.Context, collection string, filter interface{}, update interface{}, opts ...*options.UpdateOptions) (*mongo.UpdateResult, error) {
+	return m.database.Collection(collection).UpdateOne(ctx, filter, update, opts...)
+}
+
+func (m *mongoQuerier) UpdateMany(ctx context.Context, collection string, filter interface{}, update interface{}, opts ...*options.UpdateOptions) (*mongo.UpdateResult, error) {
+	return m.database.Collection(collection).UpdateMany(ctx, filter, update, opts...)
+}
+
+func (m *mongoQuerier) DeleteOne(ctx context.Context, collection string, filter interface{}, opts ...*options.DeleteOptions) (*mongo.DeleteResult, error) {
+	return m.database.Collection(collection).DeleteOne(ctx, filter, opts...)
+}
+
+func (m *mongoQuerier) DeleteMany(ctx context.Context, collection string, filter interface{}, opts ...*options.DeleteOptions) (*mongo.DeleteResult, error) {
+	return m.database.Collection(collection).DeleteMany(ctx, filter, opts...)
+}
+
+func (m *mongoQuerier) Disconnect(ctx context.Context) error {
+	return m.client.Disconnect(ctx)
+}
+`

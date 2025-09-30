@@ -19,6 +19,14 @@ func InitQuerierInfra(i infra.CommandRunner, path *string, database *string) err
 			s = infra_template.QuerierPgxInfraTemplate
 		case "mariadb":
 			s = infra_template.QuerierMariaDBInfraTemplate
+		case "mongodb":
+			st := struct{ DatabaseName string }{DatabaseName: "database_name"}
+			tmp, err := pkg.ParseTemplate(infra_template.QuerierMongoDBInfraTemplate, st)
+			if err != nil {
+				log.Println(err)
+			} else {
+				s = tmp
+			}
 		}
 		if err := pkg.GoFileGenerator(i, path, folderName, fileName, s); err != nil {
 			log.Fatal(err)
