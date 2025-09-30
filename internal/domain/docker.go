@@ -54,6 +54,8 @@ func InitDockerComposeConfig(i infra.CommandRunner, p *Project) error {
 			dbDockerTemplate = database_template.DockerComposePostgresqlConfigTemplate
 		case "mariadb":
 			dbDockerTemplate = database_template.DockerComposeMariaDBConfigTemplate
+		case "mongodb":
+			dbDockerTemplate = database_template.DockerComposeMongoDBConfigTemplate
 		}
 		templates := []string{
 			config_template.DockerComposeAppConfigTemplate,
