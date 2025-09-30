@@ -19,7 +19,7 @@ Bootstrap your Go projects with clean architecture, best practices, and a solid 
 
 > [!NOTE]
 > v0.1.1 now is stable, latest version, and generating one set of application with its driver to 3rd party. in this version, you can generate different framework but still limited to others. furthermore, the generation will cover other configuration for each type.
-  
+
 ## 🔥 Get started
 
 ```bash
@@ -182,3 +182,34 @@ main.go -> bootstrap/bootstrap.go -> di/di.go ---|----> internal/domain/*.go (ex
 
 > [!NOTE]
 > All of dependencies are injected in the `cmd/di/di.go`. So, calling to the infra in the `repository/todo.go` is not drawed.
+
+## 🚨 Troubleshoot
+
+### Air is not working on wsl
+
+> [!NOTE]
+> If you use windows and generate the project using wsl, the hot reload won't work. better you use the fndn for windows in this case or if its already generated, you can change the .air.toml in **cmd part** to become like below and **run air from windows**, not from wsl.
+>
+> ```yml
+> cmd = "go build -o ./tmp/main.exe ./cmd"
+> ```
+
+### go run command can't be stopped on wsl
+
+> [!NOTE]
+> In windows environment, sometimes go run command can't be stopped. It's because the compatibility. Just use powershell to run the app and don't use the wsl.
+
+### FerretDB is not working as expected
+
+> [!NOTE]
+> due to limitation, you can't use any database. instead use, `postgres` database. if you find similar log with below log in your postgres db, change the database to `postgres` (i've made this default, but in case you change the database name in docker-compose.yml, change your database).
+>
+> ```
+> /usr/local/bin/docker-entrypoint.sh: running /docker-entrypoint-initdb.d/20-install.sql
+> psql:/docker-entrypoint-initdb.d/20-install.sql:1: NOTICE: installing required extension "documentdb_core"
+> psql:/docker-entrypoint-initdb.d/20-install.sql:1: NOTICE: installing required extension "pg_cron"
+> 2025-09-30 06:23:15.653 UTC [76] ERROR: can only create extension in database postgres
+> psql:/docker-entrypoint-initdb.d/20-install.sql:1: ERROR: can only create extension in database postgres
+> DETAIL: Jobs must be scheduled from the database configured in cron.database_name, since the pg_cron background worker reads job descriptions from this database.
+> HINT: Add cron.database_name = 'database_name' in postgresql.conf to use the current database.
+> ```
