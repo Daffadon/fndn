@@ -20,6 +20,9 @@ func InitDBConfig(i infra.CommandRunner, path *string, db *string) error {
 		case "mariadb":
 			fileName = folderName + "/mariadb.go"
 			template = database_template.MariaDBConfigTemplate
+		case "mongodb":
+			fileName = folderName + "/mongodb.go"
+			template = database_template.MongoDBConfigTemplate
 		}
 		if err := pkg.GoFileGenerator(i, path, folderName, fileName, template); err != nil {
 			log.Fatal(err)
