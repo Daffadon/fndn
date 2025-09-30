@@ -49,8 +49,16 @@ func HTTPServerParser(fwk, db string) (string, error) {
 	switch db {
 	case "postgresql":
 		t.DBInstanceType = "*pgxpool.Pool"
+		t.DBCloseConnection = "db.Close()"
+		t.DBImport = `"github.com/jackc/pgx/v5/pgxpool"`
 	case "mariadb":
 		t.DBInstanceType = "*sql.DB"
+		t.DBCloseConnection = "db.Close()"
+		t.DBImport = `"database/sql"`
+	case "mongodb":
+		t.DBInstanceType = "*mongo.Client"
+		t.DBCloseConnection = "db.Disconnect(context.TODO())"
+		t.DBImport = `"go.mongodb.org/mongo-driver/mongo"`
 	}
 	return ParseTemplate(main_template.HTTPServerTemplate, t)
 }

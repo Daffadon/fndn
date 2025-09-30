@@ -5,7 +5,7 @@ package server
 
 import (
 	{{.FrameworkImport}}
-	"github.com/jackc/pgx/v5/pgxpool"
+	{{.DBImport}}
 	"github.com/nats-io/nats.go"
 	"github.com/redis/go-redis/v9"
 	"github.com/rs/zerolog"
@@ -40,7 +40,7 @@ func (s *Server) Run(ctx context.Context) {
 					logger.Error().Err(err).Msg("Failed to drain nats client")
 				}
 			}()
-			defer db.Close()
+			defer {{.DBCloseConnection}}
 			
 			// you can register your routes here
 			// for the example and implementation, here is the example
