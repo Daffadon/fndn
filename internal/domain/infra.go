@@ -19,7 +19,7 @@ func InitQuerierInfra(i infra.CommandRunner, path *string, database *string) err
 			s = infra_template.QuerierPgxInfraTemplate
 		case "mariadb":
 			s = infra_template.QuerierMariaDBInfraTemplate
-		case "mongodb":
+		case "mongodb", "ferretdb":
 			st := struct{ DatabaseName string }{DatabaseName: "database_name"}
 			tmp, err := pkg.ParseTemplate(infra_template.QuerierMongoDBInfraTemplate, st)
 			if err != nil {

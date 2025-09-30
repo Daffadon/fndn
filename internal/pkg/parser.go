@@ -55,7 +55,7 @@ func HTTPServerParser(fwk, db string) (string, error) {
 		t.DBInstanceType = "*sql.DB"
 		t.DBCloseConnection = "db.Close()"
 		t.DBImport = `"database/sql"`
-	case "mongodb":
+	case "mongodb", "ferretdb":
 		t.DBInstanceType = "*mongo.Client"
 		t.DBCloseConnection = "db.Disconnect(context.TODO())"
 		t.DBImport = `"go.mongodb.org/mongo-driver/mongo"`
