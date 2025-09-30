@@ -22,7 +22,7 @@ database:
     name: "database_name"
 `
 
-const MongoDBYamlConigTemplate string = `
+const MongoDBYamlConfigTemplate string = `
 database:
   nosql:
     protocol: "mongodb"
@@ -31,4 +31,12 @@ database:
     password: "password"
     port: "27017"
     name: "database_name"
+`
+
+const FerretDBYamlConfigTemplate string = `
+database:
+  nosql:
+    protocol: "mongodb"
+    host: "localhost"
+    port: "27017"
 `
