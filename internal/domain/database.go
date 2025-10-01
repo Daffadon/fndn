@@ -26,6 +26,9 @@ func InitDBConfig(i infra.CommandRunner, path *string, db *string) error {
 		case "ferretdb":
 			fileName = folderName + "/ferretdb.go"
 			template = database_template.FerretDBConfigTemplate
+		case "neo4j":
+			fileName = folderName + "/neo4j.go"
+			template = database_template.Neo4jConfigTemplate
 		}
 		if err := pkg.GoFileGenerator(i, path, folderName, fileName, template); err != nil {
 			log.Fatal(err)
