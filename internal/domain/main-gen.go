@@ -19,6 +19,8 @@ func InitDependencyInjection(i infra.CommandRunner, p *Project) error {
 		switch p.Database {
 		case "postgresql", "mariadb":
 			st.DBConnection = "NewSQLConn"
+		case "neo4j":
+			st.DBConnection = "NewGraphDBConn"
 		default:
 			st.DBConnection = "NewNoSQLConn"
 		}
