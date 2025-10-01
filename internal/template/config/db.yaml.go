@@ -40,3 +40,13 @@ database:
     host: "localhost"
     port: "27017"
 `
+
+const Neo4JYamlConfigTemplate string = `
+database:
+  graph:
+    protocol: "bolt"
+    host: "localhost"
+    port: "7687"
+    user: "neo4j"
+    password: "password"
+`
