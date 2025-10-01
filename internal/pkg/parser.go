@@ -57,8 +57,12 @@ func HTTPServerParser(fwk, db string) (string, error) {
 		t.DBImport = `"database/sql"`
 	case "mongodb", "ferretdb":
 		t.DBInstanceType = "*mongo.Client"
-		t.DBCloseConnection = "db.Disconnect(context.TODO())"
+		t.DBCloseConnection = "db.Disconnect(ctx)"
 		t.DBImport = `"go.mongodb.org/mongo-driver/mongo"`
+	case "neo4j":
+		t.DBInstanceType = "neo4j.DriverWithContext"
+		t.DBCloseConnection = "db.Close(ctx)"
+		t.DBImport = `"github.com/neo4j/neo4j-go-driver/v5/neo4j"`
 	}
 	return ParseTemplate(main_template.HTTPServerTemplate, t)
 }
