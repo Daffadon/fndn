@@ -149,3 +149,43 @@ func (m *mongoQuerier) Disconnect(ctx context.Context) error {
 	return m.client.Disconnect(ctx)
 }
 `
+
+const QuerierNeo4jInfraTemplate = `
+package storage_infra
+
+import (
+	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
+)
+
+type (
+	Querier interface {
+		ExecuteWrite(ctx context.Context, query string, params map[string]interface{}) (neo4j.ResultWithContext, error)
+		ExecuteRead(ctx context.Context, query string, params map[string]interface{}) (neo4j.ResultWithContext, error)
+		Close(ctx context.Context) error
+	}
+
+	neo4jQuerier struct {
+		driver neo4j.DriverWithContext
+	}
+)
+
+func NewQuerier(driver neo4j.DriverWithContext) Querier {
+	return &neo4jQuerier{driver: driver}
+}
+
+func (n *neo4jQuerier) ExecuteWrite(ctx context.Context, query string, params map[string]interface{}) (neo4j.ResultWithContext, error) {
+	session := n.driver.NewSession(ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite})
+	defer session.Close(ctx)
+	return session.Run(ctx, query, params)
+}
+
+func (n *neo4jQuerier) ExecuteRead(ctx context.Context, query string, params map[string]interface{}) (neo4j.ResultWithContext, error) {
+	session := n.driver.NewSession(ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeRead})
+	defer session.Close(ctx)
+	return session.Run(ctx, query, params)
+}
+
+func (n *neo4jQuerier) Close(ctx context.Context) error {
+	return n.driver.Close(ctx)
+}
+`
