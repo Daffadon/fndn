@@ -32,7 +32,11 @@ To start development, you can start by copying the `.env.example` and change the
 ENV="production"
 
 # db env
+# spesial for neo4j, the db user is neo4j and databasename for database name
+
 DB_USER=myusername
+# DB_USER=neo4j
+# DB_NAME=databasename
 DB_PASSWORD=password
 DB_NAME=database_name
 
