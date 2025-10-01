@@ -58,6 +58,8 @@ func InitDockerComposeConfig(i infra.CommandRunner, p *Project) error {
 			dbDockerTemplate = database_template.DockerComposeMongoDBConfigTemplate
 		case "ferretdb":
 			dbDockerTemplate = database_template.DockerComposeFerretDBConfigTemplate
+		case "neo4j":
+			dbDockerTemplate = database_template.DockerComposeNeo4JConfigTemplate
 		}
 		templates := []string{
 			config_template.DockerComposeAppConfigTemplate,
