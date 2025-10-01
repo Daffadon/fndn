@@ -27,6 +27,8 @@ func InitQuerierInfra(i infra.CommandRunner, path *string, database *string) err
 			} else {
 				s = tmp
 			}
+		case "neo4j":
+			s = infra_template.QuerierNeo4jInfraTemplate
 		}
 		if err := pkg.GoFileGenerator(i, path, folderName, fileName, s); err != nil {
 			log.Fatal(err)
