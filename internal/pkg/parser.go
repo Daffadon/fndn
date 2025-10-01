@@ -20,7 +20,7 @@ func ParseTemplate(tmplStr string, data interface{}) (string, error) {
 	return buf.String(), nil
 }
 
-func HTTPServerParser(fwk string) (string, error) {
+func HTTPServerParser(fwk, db string) (string, error) {
 	var t types.HTTPServerParse
 	switch fwk {
 	case "gin":
@@ -45,6 +45,24 @@ func HTTPServerParser(fwk string) (string, error) {
 		t.FrameworkImport = `"github.com/gorilla/mux"`
 		t.FrameworkRouter = "*mux.Router"
 		t.RouterHandler = "router.WarpWithCorsAndLogger(r)"
+	}
+	switch db {
+	case "postgresql":
+		t.DBInstanceType = "*pgxpool.Pool"
+		t.DBCloseConnection = "db.Close()"
+		t.DBImport = `"github.com/jackc/pgx/v5/pgxpool"`
+	case "mariadb":
+		t.DBInstanceType = "*sql.DB"
+		t.DBCloseConnection = "db.Close()"
+		t.DBImport = `"database/sql"`
+	case "mongodb", "ferretdb":
+		t.DBInstanceType = "*mongo.Client"
+		t.DBCloseConnection = "db.Disconnect(ctx)"
+		t.DBImport = `"go.mongodb.org/mongo-driver/mongo"`
+	case "neo4j":
+		t.DBInstanceType = "neo4j.DriverWithContext"
+		t.DBCloseConnection = "db.Close(ctx)"
+		t.DBImport = `"github.com/neo4j/neo4j-go-driver/v5/neo4j"`
 	}
 	return ParseTemplate(main_template.HTTPServerTemplate, t)
 }

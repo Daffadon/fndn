@@ -9,11 +9,27 @@ import (
 	main_template "github.com/daffadon/fndn/internal/template/main"
 )
 
-func InitDependencyInjection(i infra.CommandRunner, path *string) error {
-	if path != nil {
+func InitDependencyInjection(i infra.CommandRunner, p *Project) error {
+	if p.Path != nil {
 		folderName := "/cmd/di"
 		fileName := folderName + "/container.go"
-		if err := pkg.GoFileGenerator(i, path, folderName, fileName, main_template.DITemplate); err != nil {
+		var st struct {
+			DBConnection string
+		}
+		switch p.Database {
+		case "postgresql", "mariadb":
+			st.DBConnection = "NewSQLConn"
+		case "neo4j":
+			st.DBConnection = "NewGraphDBConn"
+		default:
+			st.DBConnection = "NewNoSQLConn"
+		}
+		template, err := pkg.ParseTemplate(main_template.DITemplate, st)
+		if err != nil {
+			log.Fatal(err)
+			return err
+		}
+		if err := pkg.GoFileGenerator(i, p.Path, folderName, fileName, template); err != nil {
 			log.Fatal(err)
 			return err
 		}
@@ -35,16 +51,16 @@ func InitBootStrap(i infra.CommandRunner, path *string) error {
 	return errors.New("path is nil")
 }
 
-func InitServer(i infra.CommandRunner, path *string, fwk *string) error {
-	if path != nil {
+func InitServer(i infra.CommandRunner, d *Project) error {
+	if d.Path != nil {
 		folderName := "/cmd/server"
 		fileName := folderName + "/server.go"
-		c, err := pkg.HTTPServerParser(*fwk)
+		c, err := pkg.HTTPServerParser(d.Framework, d.Database)
 		if err != nil {
 			log.Fatal(err)
 			return err
 		}
-		if err := pkg.GoFileGenerator(i, path, folderName, fileName, c); err != nil {
+		if err := pkg.GoFileGenerator(i, d.Path, folderName, fileName, c); err != nil {
 			log.Fatal(err)
 			return err
 		}

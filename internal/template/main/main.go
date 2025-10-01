@@ -30,5 +30,7 @@ func main() {
 
 	<-sig
 	cancel()
+	
+	<-httpServerDone
 }
 `
