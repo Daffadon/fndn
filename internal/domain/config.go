@@ -39,6 +39,8 @@ func InitYamlConfig(i infra.CommandRunner, p *Project) error {
 			s += config_template.MongoDBYamlConfigTemplate
 		case "ferretdb":
 			s += config_template.FerretDBYamlConfigTemplate
+		case "neo4j":
+			s += config_template.Neo4JYamlConfigTemplate
 		}
 		s += config_template.AppYamlConfigTemplate
 		s += config_template.RedisYamlConfigTemplate
