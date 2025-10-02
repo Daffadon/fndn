@@ -49,7 +49,7 @@ go install github.com/your-username/fndn@v0.2.0
 
 ## 🛠️ Default techstack
 
-Currently, the generation are in default mode and custom mode with limitation in some of the parts. the `Default` mode is using the first techstack from each section. the generated techstack that you can use are:
+Currently, the generation are in default mode and custom mode with limitation at `framework` and `database`. the `Default` mode is using the first techstack from each section. the generated techstack that you can use are:
 
 - Framework
 
