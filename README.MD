@@ -18,12 +18,12 @@ Bootstrap your Go projects with clean architecture, best practices, and a solid 
 ---
 
 > [!NOTE]
-> v0.1.1 now is stable, latest version, and generating one set of application with its driver to 3rd party. in this version, you can generate different framework but still limited to others. furthermore, the generation will cover other configuration for each type.
+> v0.2.0 now is stable, latest version, and generating one set of application with its driver to 3rd party. in this version, you can generate different framework but still limited to others. furthermore, the generation will cover other configuration for each type.
 
 ## 🔥 Get started
 
 ```bash
-go run github.com/daffadon/fndn@v0.1.1 init .
+go run github.com/daffadon/fndn@v0.2.0 init .
 ```
 
 \* . generate in current directory
@@ -31,7 +31,7 @@ go run github.com/daffadon/fndn@v0.1.1 init .
 OR
 
 ```bash
-go run github.com/daffadon/fndn@v0.1.1 --help
+go run github.com/daffadon/fndn@v0.2.0 --help
 ```
 
 to see how can you use the tools
@@ -44,7 +44,7 @@ to see how can you use the tools
 If you want to install the tools to your system, you can either using go install or download the binary in available release:
 
 ```bash
-go install github.com/your-username/fndn@v0.1.1
+go install github.com/your-username/fndn@v0.2.0
 ```
 
 ## 🛠️ Default techstack
@@ -207,7 +207,6 @@ main.go -> bootstrap/bootstrap.go -> di/di.go ---|----> internal/domain/*.go (ex
 
 > [!NOTE]
 > due to limitation, you can't use any database. instead use, `postgres` database. if you find similar log with below log in your postgres db, change the database to `postgres` (i've made this default, but in case you change the database name in docker-compose.yml, change your database).
->
 > ```
 > /usr/local/bin/docker-entrypoint.sh: running /docker-entrypoint-initdb.d/20-install.sql
 > psql:/docker-entrypoint-initdb.d/20-install.sql:1: NOTICE: installing required extension "documentdb_core"
