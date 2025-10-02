@@ -37,23 +37,39 @@ func InitDockerFileConfig(i infra.CommandRunner, path *string, projectName strin
 	return errors.New("path is nil")
 }
 
-func InitDockerComposeConfig(i infra.CommandRunner, path *string, projectName string) error {
-	if path != nil {
+func InitDockerComposeConfig(i infra.CommandRunner, p *Project) error {
+	if p.Path != nil {
 		folderName := ""
 		fileName := folderName + "/docker-compose.yml"
 		st := struct {
 			ProjectName string
 		}{
-			ProjectName: projectName,
+			ProjectName: p.Name,
 		}
 		var results []string
+		var dbDockerTemplate string
+
+		switch p.Database {
+		case "postgresql":
+			dbDockerTemplate = database_template.DockerComposePostgresqlConfigTemplate
+		case "mariadb":
+			dbDockerTemplate = database_template.DockerComposeMariaDBConfigTemplate
+		case "mongodb":
+			dbDockerTemplate = database_template.DockerComposeMongoDBConfigTemplate
+		case "ferretdb":
+			dbDockerTemplate = database_template.DockerComposeFerretDBConfigTemplate
+		case "neo4j":
+			dbDockerTemplate = database_template.DockerComposeNeo4JConfigTemplate
+		}
 		templates := []string{
 			config_template.DockerComposeAppConfigTemplate,
-			database_template.DockerComposePostgresqlConfigTemplate,
+			dbDockerTemplate,
 			mq_template.DockerComposeNatsConfigTemplate,
 			cache_template.DockerComposeRedisConfigTemplate,
 			objectstorage_template.DockerComposeMinioConfigTemplate,
-			database_template.DockerComposePostgresqlVolumeTemplate,
+
+			// volume
+			database_template.DockerComposeDBVolumeTemplate,
 			mq_template.DockerComposeNatsVolumeTemplate,
 			cache_template.DockerComposeRedisVolumeTemplate,
 			objectstorage_template.DockerComposeMinioVolumeTemplate,
@@ -72,7 +88,7 @@ func InitDockerComposeConfig(i infra.CommandRunner, path *string, projectName st
 			}
 			s += results[i]
 		}
-		if err := pkg.GenericFileGenerator(i, path, folderName, fileName, s); err != nil {
+		if err := pkg.GenericFileGenerator(i, p.Path, folderName, fileName, s); err != nil {
 			log.Fatal(err)
 			return err
 		}

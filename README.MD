@@ -19,7 +19,7 @@ Bootstrap your Go projects with clean architecture, best practices, and a solid 
 
 > [!NOTE]
 > v0.1.1 now is stable, latest version, and generating one set of application with its driver to 3rd party. in this version, you can generate different framework but still limited to others. furthermore, the generation will cover other configuration for each type.
-  
+
 ## 🔥 Get started
 
 ```bash
@@ -53,31 +53,35 @@ Currently, the generation are in default mode and custom mode with limitation in
 
 - Framework
 
-![](https://img.shields.io/badge/gin-3997AA?style=for-the-badge&logo=gin&logoColor=white)
-![](https://img.shields.io/badge/fiber-00ACD7?style=for-the-badge&logo=fiber)
-![](https://img.shields.io/badge/echo-00AFD1?style=for-the-badge&logo=echo)
-![](https://img.shields.io/badge/chi-01933F?style=for-the-badge&logo=chi)
-![](https://img.shields.io/badge/gorilla/mux-939292?style=for-the-badge&logo=gorilla)
+![Gin](https://img.shields.io/badge/gin-3997AA?style=for-the-badge&logo=gin&logoColor=white)
+![Fiber](https://img.shields.io/badge/fiber-00ACD7?style=for-the-badge&logo=fiber)
+![Echo](https://img.shields.io/badge/echo-00AFD1?style=for-the-badge&logo=echo)
+![Chi](https://img.shields.io/badge/chi-01933F?style=for-the-badge&logo=chi)
+![Gorilla/mux](https://img.shields.io/badge/gorilla/mux-939292?style=for-the-badge&logo=gorilla)
 
 - Database
 
-![](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![Postgresql](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![MariaDB](https://img.shields.io/badge/MariaDB-003545?style=for-the-badge&logo=mariadb&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)
+![FerretDB](https://img.shields.io/badge/FerretDB-black?style=for-the-badge&logo=ferretdb&logoColor=white)
+![Neo4J](https://img.shields.io/badge/Neo4j-008CC1?style=for-the-badge&logo=neo4j&logoColor=white)
 
 - Message Queue
 
-![](https://img.shields.io/badge/nats-2DACE1?style=for-the-badge&logo=nats&logoColor=white)
+![Nats](https://img.shields.io/badge/nats-2DACE1?style=for-the-badge&logo=nats&logoColor=white)
 
 - Cache
 
-![](https://img.shields.io/badge/redis-%23DD0031.svg?&style=for-the-badge&logo=redis&logoColor=white)
+![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?&style=for-the-badge&logo=redis&logoColor=white)
 
 - Object Storage
 
-![](https://img.shields.io/badge/minio-C8324D?style=for-the-badge&logo=nats&logoColor=white)
+![Minio](https://img.shields.io/badge/minio-C8324D?style=for-the-badge&logo=nats&logoColor=white)
 
 - Deployment
 
-![](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white)
 
 ## 👌 What fndn do for you (v0.\*)
 
@@ -182,3 +186,34 @@ main.go -> bootstrap/bootstrap.go -> di/di.go ---|----> internal/domain/*.go (ex
 
 > [!NOTE]
 > All of dependencies are injected in the `cmd/di/di.go`. So, calling to the infra in the `repository/todo.go` is not drawed.
+
+## 🚨 Troubleshoot
+
+### Air is not working on wsl
+
+> [!NOTE]
+> If you use windows and generate the project using wsl, the hot reload won't work. better you use the fndn for windows in this case or if its already generated, you can change the .air.toml in **cmd part** to become like below and **run air from windows**, not from wsl.
+>
+> ```yml
+> cmd = "go build -o ./tmp/main.exe ./cmd"
+> ```
+
+### go run command can't be stopped on wsl
+
+> [!NOTE]
+> In windows environment, sometimes go run command can't be stopped. It's because the compatibility. Just use powershell to run the app and don't use the wsl.
+
+### FerretDB is not working as expected
+
+> [!NOTE]
+> due to limitation, you can't use any database. instead use, `postgres` database. if you find similar log with below log in your postgres db, change the database to `postgres` (i've made this default, but in case you change the database name in docker-compose.yml, change your database).
+>
+> ```
+> /usr/local/bin/docker-entrypoint.sh: running /docker-entrypoint-initdb.d/20-install.sql
+> psql:/docker-entrypoint-initdb.d/20-install.sql:1: NOTICE: installing required extension "documentdb_core"
+> psql:/docker-entrypoint-initdb.d/20-install.sql:1: NOTICE: installing required extension "pg_cron"
+> 2025-09-30 06:23:15.653 UTC [76] ERROR: can only create extension in database postgres
+> psql:/docker-entrypoint-initdb.d/20-install.sql:1: ERROR: can only create extension in database postgres
+> DETAIL: Jobs must be scheduled from the database configured in cron.database_name, since the pg_cron background worker reads job descriptions from this database.
+> HINT: Add cron.database_name = 'database_name' in postgresql.conf to use the current database.
+> ```

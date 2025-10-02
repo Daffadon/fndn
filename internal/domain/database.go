@@ -9,11 +9,28 @@ import (
 	database_template "github.com/daffadon/fndn/internal/template/database"
 )
 
-func InitPostgresqlConfig(i infra.CommandRunner, path *string) error {
+func InitDBConfig(i infra.CommandRunner, path *string, db *string) error {
 	if path != nil {
 		folderName := "/config/storage"
-		fileName := folderName + "/postgresql.go"
-		if err := pkg.GoFileGenerator(i, path, folderName, fileName, database_template.PostgresqlConfigTemplate); err != nil {
+		var fileName, template string
+		switch *db {
+		case "postgresql":
+			fileName = folderName + "/postgresql.go"
+			template = database_template.PostgresqlConfigTemplate
+		case "mariadb":
+			fileName = folderName + "/mariadb.go"
+			template = database_template.MariaDBConfigTemplate
+		case "mongodb":
+			fileName = folderName + "/mongodb.go"
+			template = database_template.MongoDBConfigTemplate
+		case "ferretdb":
+			fileName = folderName + "/ferretdb.go"
+			template = database_template.FerretDBConfigTemplate
+		case "neo4j":
+			fileName = folderName + "/neo4j.go"
+			template = database_template.Neo4jConfigTemplate
+		}
+		if err := pkg.GoFileGenerator(i, path, folderName, fileName, template); err != nil {
 			log.Fatal(err)
 			return err
 		}
