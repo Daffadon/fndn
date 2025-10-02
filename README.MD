@@ -53,31 +53,35 @@ Currently, the generation are in default mode and custom mode with limitation in
 
 - Framework
 
-![](https://img.shields.io/badge/gin-3997AA?style=for-the-badge&logo=gin&logoColor=white)
-![](https://img.shields.io/badge/fiber-00ACD7?style=for-the-badge&logo=fiber)
-![](https://img.shields.io/badge/echo-00AFD1?style=for-the-badge&logo=echo)
-![](https://img.shields.io/badge/chi-01933F?style=for-the-badge&logo=chi)
-![](https://img.shields.io/badge/gorilla/mux-939292?style=for-the-badge&logo=gorilla)
+![Gin](https://img.shields.io/badge/gin-3997AA?style=for-the-badge&logo=gin&logoColor=white)
+![Fiber](https://img.shields.io/badge/fiber-00ACD7?style=for-the-badge&logo=fiber)
+![Echo](https://img.shields.io/badge/echo-00AFD1?style=for-the-badge&logo=echo)
+![Chi](https://img.shields.io/badge/chi-01933F?style=for-the-badge&logo=chi)
+![Gorilla/mux](https://img.shields.io/badge/gorilla/mux-939292?style=for-the-badge&logo=gorilla)
 
 - Database
 
-![](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![Postgresql](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![MariaDB](https://img.shields.io/badge/MariaDB-003545?style=for-the-badge&logo=mariadb&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)
+![FerretDB](https://img.shields.io/badge/FerretDB-black?style=for-the-badge&logo=ferretdb&logoColor=white)
+![Neo4J](https://img.shields.io/badge/Neo4j-008CC1?style=for-the-badge&logo=neo4j&logoColor=white)
 
 - Message Queue
 
-![](https://img.shields.io/badge/nats-2DACE1?style=for-the-badge&logo=nats&logoColor=white)
+![Nats](https://img.shields.io/badge/nats-2DACE1?style=for-the-badge&logo=nats&logoColor=white)
 
 - Cache
 
-![](https://img.shields.io/badge/redis-%23DD0031.svg?&style=for-the-badge&logo=redis&logoColor=white)
+![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?&style=for-the-badge&logo=redis&logoColor=white)
 
 - Object Storage
 
-![](https://img.shields.io/badge/minio-C8324D?style=for-the-badge&logo=nats&logoColor=white)
+![Minio](https://img.shields.io/badge/minio-C8324D?style=for-the-badge&logo=nats&logoColor=white)
 
 - Deployment
 
-![](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white)
 
 ## 👌 What fndn do for you (v0.\*)
 
