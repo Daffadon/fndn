@@ -44,7 +44,7 @@ to see how can you use the tools
 If you want to install the tools to your system, you can either using go install or download the binary in available release:
 
 ```bash
-go install github.com/your-username/fndn@v0.2.0
+go install github.com/daffadon/fndn@v0.2.0
 ```
 
 ## 🛠️ Default techstack
