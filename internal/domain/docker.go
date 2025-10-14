@@ -48,6 +48,8 @@ func InitDockerComposeConfig(i infra.CommandRunner, p *Project) error {
 		}
 		var results []string
 		var dbDockerTemplate string
+		var mqDockerTemplate string
+		var mqVolumetemplate string
 
 		switch p.Database {
 		case "postgresql":
@@ -61,16 +63,25 @@ func InitDockerComposeConfig(i infra.CommandRunner, p *Project) error {
 		case "neo4j":
 			dbDockerTemplate = database_template.DockerComposeNeo4JConfigTemplate
 		}
+
+		switch p.MQ {
+		case "nats":
+			mqDockerTemplate = mq_template.DockerComposeNatsConfigTemplate
+			mqVolumetemplate = mq_template.DockerComposeNatsVolumeTemplate
+		case "rabbitmq":
+			mqDockerTemplate = mq_template.DockerComposeRabbitMQConfigTemplate
+			mqVolumetemplate = mq_template.DockerComposeRabbitVolumeTemplate
+		}
 		templates := []string{
 			config_template.DockerComposeAppConfigTemplate,
 			dbDockerTemplate,
-			mq_template.DockerComposeNatsConfigTemplate,
+			mqDockerTemplate,
 			cache_template.DockerComposeRedisConfigTemplate,
 			objectstorage_template.DockerComposeMinioConfigTemplate,
 
 			// volume
 			database_template.DockerComposeDBVolumeTemplate,
-			mq_template.DockerComposeNatsVolumeTemplate,
+			mqVolumetemplate,
 			cache_template.DockerComposeRedisVolumeTemplate,
 			objectstorage_template.DockerComposeMinioVolumeTemplate,
 		}
