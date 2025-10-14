@@ -24,17 +24,12 @@ func BuildContainer() *dig.Container {
 	if err := container.Provide(storage.NewMinioConnection); err != nil {
 		panic("Failed to provide minio connection: " + err.Error())
 	}
-	// nats client connection
-	if err := container.Provide(mq.NewNatsConnection); err != nil {
-		panic("Failed to provide nats connection: " + err.Error())
-	}
+
+	{{.MQInit}}
+
 	// db connection
 	if err := container.Provide(storage.{{.DBConnection}}); err != nil {
 		panic("Failed to provide db connection: " + err.Error())
-	}
-	// jetstream connection
-	if err := container.Provide(jetstream.New); err != nil {
-		panic("Failed to provide jetstream instance: " + err.Error())
 	}
 	// redis connection
 	if err := container.Provide(cache.NewRedisConnection); err != nil {
@@ -48,8 +43,8 @@ func BuildContainer() *dig.Container {
 	if err := container.Provide(cache_infra.NewRedisCache); err != nil {
 		panic("Failed to provide redis infra: " + err.Error())
 	}	
-	if err := container.Provide(mq_infra.NewJetstreamInfra); err != nil {
-		panic("Failed to provide jetstream infra: " + err.Error())
+	if err := container.Provide(mq_infra.{{.MQInfra}}); err != nil {
+		panic("Failed to provide MQ infra: " + err.Error())
 	}	
 	if err := container.Provide(storage_infra.NewMinioInfra); err != nil {
 		panic("Failed to provide minio infra: " + err.Error())
