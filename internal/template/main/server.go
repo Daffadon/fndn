@@ -6,7 +6,8 @@ package server
 import (
 	{{.FrameworkImport}}
 	{{.DBImport}}
-	"github.com/nats-io/nats.go"
+	{{.MQImport}}
+	
 	"github.com/redis/go-redis/v9"
 	"github.com/rs/zerolog"
 	"go.uber.org/dig"
@@ -24,7 +25,7 @@ func (s *Server) Run(ctx context.Context) {
 			logger zerolog.Logger,
 			r {{.FrameworkRouter}},
 			redis *redis.Client,
-			nc *nats.Conn,
+			mq {{.MQInstanceType}},
 			db {{.DBInstanceType}},
 			th handler.TodoHandler,
 			// and many other returned type provided
@@ -36,8 +37,8 @@ func (s *Server) Run(ctx context.Context) {
 				}
 			}()
 			defer func() {
-				if err := nc.Drain(); err != nil {
-					logger.Error().Err(err).Msg("Failed to drain nats client")
+				if err := {{.MQCloseConn}}; err != nil {
+					logger.Error().Err(err).Msg("Failed to close mq client connection")
 				}
 			}()
 			defer {{.DBCloseConnection}}
