@@ -27,3 +27,13 @@ const JetstreamConfigTemplate string = `
       # specific: "example_stream.specific"
 `
 
+const RabbitYamlConfigTemplate string = `
+rabbitmq:
+  protocol: amqp
+  credential:
+    user: user
+    password: password
+  address: localhost
+  port: 5672
+  heartbeat: 10
+`
