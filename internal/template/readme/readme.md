@@ -1,4 +1,4 @@
-****# Go + Gin + 3rd Party + Clean Architecture 🤯
+# Go + Gin + 3rd Party + Clean Architecture 🤯
 
 ```bash
  __            _
