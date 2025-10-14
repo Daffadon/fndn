@@ -57,3 +57,55 @@ func (n *jetstreamInfra) Publish(ctx context.Context, subject string, payload []
 	return ack, nil
 }
 `
+
+const RabbitMQInfraTemplate string = `
+package mq_infra
+
+import (
+	"context"
+	amqp "github.com/rabbitmq/amqp091-go"
+	"github.com/rs/zerolog"
+)
+
+type (
+	RabbitMQInfra interface {
+		Publish(ctx context.Context, exchange, routingKey string, payload []byte) error
+	}
+	rabbitMQInfra struct {
+		conn   *amqp.Connection
+		ch     *amqp.Channel
+		logger zerolog.Logger
+	}
+)
+
+func NewRabbitMQInfra(logger zerolog.Logger, conn *amqp.Connection) (RabbitMQInfra, error) {
+	ch, err := conn.Channel()
+	if err != nil {
+		logger.Error().Err(err).Msg("failed to create channel")
+		return nil, err
+	}
+	return &rabbitMQInfra{
+		logger: logger,
+		conn:   conn,
+		ch:     ch,
+	}, nil
+}
+
+func (r *rabbitMQInfra) Publish(ctx context.Context, exchange, routingKey string, payload []byte) error {
+	err := r.ch.PublishWithContext(ctx,
+		exchange,
+		routingKey,
+		false,
+		false,
+		amqp.Publishing{
+			ContentType: "application/json",
+			Body:        payload,
+		},
+	)
+	if err != nil {
+		r.logger.Error().Err(err).Msg("failed to publish message")
+		return err
+	}
+	return nil
+}
+`
