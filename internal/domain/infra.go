@@ -52,11 +52,19 @@ func InitRedisInfra(i infra.CommandRunner, path *string) error {
 	return errors.New("path is nil")
 }
 
-func InitJetstreamInfra(i infra.CommandRunner, path *string) error {
-	if path != nil {
+func InitMQinfra(i infra.CommandRunner, p *Project) error {
+	if p.Path != nil {
 		folderName := "/internal/infra/mq"
-		fileName := folderName + "/jetstream_infra.go"
-		if err := pkg.GoFileGenerator(i, path, folderName, fileName, infra_template.JetstreamInfraTemplate); err != nil {
+		var fileName, template string
+		switch p.MQ {
+		case "nats":
+			fileName = folderName + "/jetstream_infra.go"
+			template = infra_template.JetstreamInfraTemplate
+		case "rabbitmq":
+			fileName = folderName + "/rabbitmq_infra.go"
+			template = infra_template.RabbitMQInfraTemplate
+		}
+		if err := pkg.GoFileGenerator(i, p.Path, folderName, fileName, template); err != nil {
 			log.Fatal(err)
 			return err
 		}
