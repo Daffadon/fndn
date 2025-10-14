@@ -47,7 +47,7 @@ If you want to install the tools to your system, you can either using go install
 go install github.com/daffadon/fndn@v0.2.0
 ```
 
-## 🛠️ Default techstack
+## 🛠️ The techstack
 
 Currently, the generation are in default mode and custom mode with limitation at `framework` and `database`. the `Default` mode is using the first techstack from each section. the generated techstack that you can use are:
 
