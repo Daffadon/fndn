@@ -71,6 +71,10 @@ func InitDockerComposeConfig(i infra.CommandRunner, p *Project) error {
 		case "rabbitmq":
 			mqDockerTemplate = mq_template.DockerComposeRabbitMQConfigTemplate
 			mqVolumetemplate = mq_template.DockerComposeRabbitVolumeTemplate
+		case "kafka":
+			mqDockerTemplate = mq_template.DockerComposeKafkaConfigTemplate
+			mqVolumetemplate = mq_template.DockerComposeKafkaVolumeTemplate
+
 		}
 		templates := []string{
 			config_template.DockerComposeAppConfigTemplate,
