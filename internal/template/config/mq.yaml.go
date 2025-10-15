@@ -37,3 +37,15 @@ rabbitmq:
   port: 5672
   heartbeat: 10
 `
+
+const KafkaYamlConfigTemplate string = `
+kafka:
+  address: "localhost"
+  port: "9092"
+  timeout: 10
+
+  auth:
+    enabled: true
+    username: "app"
+    password: "app-secret"
+`
