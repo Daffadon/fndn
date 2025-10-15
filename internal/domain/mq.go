@@ -21,6 +21,9 @@ func InitMQConfig(i infra.CommandRunner, p *Project) error {
 		case "rabbitmq":
 			fileName = folderName + "/rabbitmq.go"
 			template = mq_template.RabbitMQConfigTemplate
+		case "kafka":
+			fileName = folderName + "/kafka.go"
+			template = mq_template.KafkaConfigTemplate
 		}
 		if err := pkg.GoFileGenerator(i, p.Path, folderName, fileName, template); err != nil {
 			log.Fatal(err)
@@ -42,6 +45,9 @@ func InitMQConfigFile(i infra.CommandRunner, p *Project) error {
 		case "rabbitmq":
 			fileName = folderName + "/definition.json"
 			template = mq_template.RabbitMQConfigFileTemplate
+		case "kafka":
+			fileName = folderName + "/jaas.conf"
+			template = mq_template.KafkaConfigFileTemplate
 		}
 		if err := pkg.GenericFileGenerator(i, p.Path, folderName, fileName, template); err != nil {
 			log.Fatal(err)
