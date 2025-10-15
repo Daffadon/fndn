@@ -63,6 +63,9 @@ func InitMQinfra(i infra.CommandRunner, p *Project) error {
 		case "rabbitmq":
 			fileName = folderName + "/rabbitmq_infra.go"
 			template = infra_template.RabbitMQInfraTemplate
+		case "kafka":
+			fileName = folderName + "/kafka_infra.go"
+			template = infra_template.KafkaMQInfraTemplate
 		}
 		if err := pkg.GoFileGenerator(i, p.Path, folderName, fileName, template); err != nil {
 			log.Fatal(err)
