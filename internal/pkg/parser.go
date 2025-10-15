@@ -20,7 +20,7 @@ func ParseTemplate(tmplStr string, data interface{}) (string, error) {
 	return buf.String(), nil
 }
 
-func HTTPServerParser(fwk, db string) (string, error) {
+func HTTPServerParser(fwk, db, mq string) (string, error) {
 	var t types.HTTPServerParse
 	switch fwk {
 	case "gin":
@@ -46,6 +46,7 @@ func HTTPServerParser(fwk, db string) (string, error) {
 		t.FrameworkRouter = "*mux.Router"
 		t.RouterHandler = "router.WarpWithCorsAndLogger(r)"
 	}
+
 	switch db {
 	case "postgresql":
 		t.DBInstanceType = "*pgxpool.Pool"
@@ -64,5 +65,21 @@ func HTTPServerParser(fwk, db string) (string, error) {
 		t.DBCloseConnection = "db.Close(ctx)"
 		t.DBImport = `"github.com/neo4j/neo4j-go-driver/v5/neo4j"`
 	}
+
+	switch mq {
+	case "nats":
+		t.MQImport = `"github.com/nats-io/nats.go"`
+		t.MQInstanceType = "*nats.Conn"
+		t.MQCloseConn = "mq.Drain()"
+	case "rabbitmq":
+		t.MQImport = `amqp "github.com/rabbitmq/amqp091-go"`
+		t.MQInstanceType = "*amqp.Connection"
+		t.MQCloseConn = "mq.Close()"
+	case "kafka":
+		t.MQImport = `"github.com/segmentio/kafka-go"`
+		t.MQInstanceType = "*kafka.Conn"
+		t.MQCloseConn = "mq.Close()"
+	}
+
 	return ParseTemplate(main_template.HTTPServerTemplate, t)
 }

@@ -8,5 +8,8 @@ type (
 		DBInstanceType    string
 		DBCloseConnection string
 		DBImport          string
+		MQImport          string
+		MQInstanceType    string
+		MQCloseConn       string
 	}
 )

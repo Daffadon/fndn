@@ -10,6 +10,7 @@ type Project struct {
 	Path       *string
 	Framework  string
 	Database   string
+	MQ         string
 	Git        bool
 	Air        bool
 }
