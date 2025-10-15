@@ -45,8 +45,7 @@ const DockerComposeRabbitMQConfigTemplate string = `
 `
 
 const DockerComposeRabbitVolumeTemplate string = `
-  {{.ProjectName}}_rabbitmq_data: {}
-`
+  {{.ProjectName}}_rabbitmq_data: {}`
 const RabbitMQConfigFileTemplate string = `
 {
   "users": [
