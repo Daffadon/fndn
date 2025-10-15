@@ -44,6 +44,8 @@ func InitDependencyInjection(i infra.CommandRunner, p *Project) error {
 			`
 		case "rabbitmq":
 			st.MQInfra = "NewRabbitMQInfra"
+		case "kafka":
+			st.MQInfra = "NewKafkaInfra"
 		}
 		st.MQInit = provideMQDefault
 
