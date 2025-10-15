@@ -75,6 +75,11 @@ func HTTPServerParser(fwk, db, mq string) (string, error) {
 		t.MQImport = `amqp "github.com/rabbitmq/amqp091-go"`
 		t.MQInstanceType = "*amqp.Connection"
 		t.MQCloseConn = "mq.Close()"
+	case "kafka":
+		t.MQImport = `"github.com/segmentio/kafka-go"`
+		t.MQInstanceType = "*kafka.Conn"
+		t.MQCloseConn = "mq.Close()"
 	}
+
 	return ParseTemplate(main_template.HTTPServerTemplate, t)
 }
