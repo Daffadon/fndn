@@ -51,6 +51,8 @@ func InitYamlConfig(i infra.CommandRunner, p *Project) error {
 			s += config_template.JetstreamConfigTemplate
 		case "rabbitmq":
 			s += config_template.RabbitYamlConfigTemplate
+		case "kafka":
+			s += config_template.KafkaYamlConfigTemplate
 		}
 		s += config_template.MinioYamlConfigTemplate
 		s += config_template.ServerYamlConfigTemplate
