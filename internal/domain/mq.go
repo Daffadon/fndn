@@ -24,6 +24,9 @@ func InitMQConfig(i infra.CommandRunner, p *Project) error {
 		case "kafka":
 			fileName = folderName + "/kafka.go"
 			template = mq_template.KafkaConfigTemplate
+		case "amazon sqs":
+			fileName = folderName + "/sqs.go"
+			template = mq_template.AmazonSQSConfigTemplate
 		}
 		if err := pkg.GoFileGenerator(i, p.Path, folderName, fileName, template); err != nil {
 			log.Fatal(err)
@@ -49,9 +52,11 @@ func InitMQConfigFile(i infra.CommandRunner, p *Project) error {
 			fileName = folderName + "/jaas.conf"
 			template = mq_template.KafkaConfigFileTemplate
 		}
-		if err := pkg.GenericFileGenerator(i, p.Path, folderName, fileName, template); err != nil {
-			log.Fatal(err)
-			return err
+		if fileName != "" || template != "" {
+			if err := pkg.GenericFileGenerator(i, p.Path, folderName, fileName, template); err != nil {
+				log.Fatal(err)
+				return err
+			}
 		}
 		return nil
 	}
