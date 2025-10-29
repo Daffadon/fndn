@@ -4,8 +4,6 @@ on:
   push:
     tags:
       - 'v*'   # only run when a tag starting with "v" is pushed (e.g., v1.0.0)
-    branches:
-      - main   # only on main branch
 
 permissions:
   contents: write   # required for creating GitHub Releases
