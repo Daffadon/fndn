@@ -42,5 +42,5 @@ bin
 tmp
 
 #config
-#config.yaml
+config*.yaml
 `
