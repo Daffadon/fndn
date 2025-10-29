@@ -49,3 +49,11 @@ kafka:
     username: "app"
     password: "app-secret"
 `
+
+const AmazonSQSConfigTemplate string = `
+sqs:
+  auth:
+    access_key_id: "your aws access_key_id"
+    access_secret_key: "your aws access_secret_key"
+    region: "region to connect to or where the sqs service exist"
+`
