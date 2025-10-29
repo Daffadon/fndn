@@ -44,7 +44,7 @@ archives:
         formats: [zip]
     files:
       - LICENSE
-      - README.md
+      - README.MD
 
 checksum:
   name_template: "checksums.txt"
