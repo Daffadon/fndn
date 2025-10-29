@@ -33,3 +33,5 @@ go.work.sum
 
 #build
 bin
+# Added by goreleaser init:
+dist/

@@ -8,7 +8,7 @@ import(
 	"github.com/nats-io/nats.go"
 )
 
-func NewNatsConnection() *nats.Conn {
+func NewMQConnection() *nats.Conn {
 	addr := fmt.Sprintf("%s://%s:%s", viper.GetString("nats.protocol"), viper.GetString("nats.address"), viper.GetString("nats.port"))
 	nc, err := nats.Connect(addr,
 		nats.UserInfo(viper.GetString("nats.credential.user"), viper.GetString("nats.credential.password")),
@@ -36,8 +36,8 @@ const DockerComposeNatsConfigTemplate string = `
       - {{.ProjectName}}_nats_data:/nats:rw
       - {{.ProjectName}}_nats_jetstream-data:/jetstream/data:rw
     environment:
-      - NATS_USER=${NATS_USER}
-      - NATS_PASSWORD=${NATS_PASSWORD}
+      - NATS_USER=${MQ_USER}
+      - NATS_PASSWORD=${MQ_PASSWORD}
     ports:
       -	"8081:8081"
     command: "-c /etc/nats/nats.conf --name nats -p 4221"

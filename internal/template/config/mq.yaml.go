@@ -27,3 +27,33 @@ const JetstreamConfigTemplate string = `
       # specific: "example_stream.specific"
 `
 
+const RabbitYamlConfigTemplate string = `
+rabbitmq:
+  protocol: amqp
+  credential:
+    user: user
+    password: password
+  address: localhost
+  port: 5672
+  heartbeat: 10
+`
+
+const KafkaYamlConfigTemplate string = `
+kafka:
+  address: "localhost"
+  port: "9092"
+  timeout: 10
+
+  auth:
+    enabled: true
+    username: "app"
+    password: "app-secret"
+`
+
+const AmazonSQSConfigTemplate string = `
+sqs:
+  auth:
+    access_key_id: "your aws access_key_id"
+    access_secret_key: "your aws access_secret_key"
+    region: "region to connect to or where the sqs service exist"
+`
