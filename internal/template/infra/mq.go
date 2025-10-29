@@ -220,3 +220,41 @@ func (k *kafkaInfra) Consume(ctx context.Context, topic, groupID string, handler
 	}
 }
 `
+
+const AmazonSQSInfratemplate string = `
+package mq_infra
+
+import (
+	"github.com/aws/aws-sdk-go-v2/service/sqs"
+	"github.com/rs/zerolog"
+)
+
+type (
+	SQSInfra interface {
+		Publish(ctx context.Context, queueURL, msg string) bool
+	}
+	sqsInfra struct {
+		client *sqs.Client
+		logger zerolog.Logger
+	}
+)
+
+func NewSQSInfra(sqs *sqs.Client, logger zerolog.Logger) SQSInfra {
+	return &sqsInfra{
+		client: sqs,
+		logger: logger,
+	}
+}
+
+func (s *sqsInfra) Publish(ctx context.Context, queueURL string, msg string) bool {
+	_, err := s.client.SendMessage(ctx, &sqs.SendMessageInput{
+		QueueUrl:    &queueURL,
+		MessageBody: &msg,
+	})
+	if err != nil {
+		s.logger.Fatal().Msgf("Send failed: %v", err)
+		return false
+	}
+	return true
+}
+`
