@@ -9,7 +9,7 @@ type (
 		DBCloseConnection string
 		DBImport          string
 		MQImport          string
-		MQInstanceType    string
+		MQInstance        string
 		MQCloseConn       string
 	}
 )

@@ -25,7 +25,7 @@ func (s *Server) Run(ctx context.Context) {
 			logger zerolog.Logger,
 			r {{.FrameworkRouter}},
 			redis *redis.Client,
-			mq {{.MQInstanceType}},
+			{{.MQInstance}}
 			db {{.DBInstanceType}},
 			th handler.TodoHandler,
 			// and many other returned type provided
@@ -36,11 +36,7 @@ func (s *Server) Run(ctx context.Context) {
 					logger.Error().Err(err).Msg("Failed to close Redis client")
 				}
 			}()
-			defer func() {
-				if err := {{.MQCloseConn}}; err != nil {
-					logger.Error().Err(err).Msg("Failed to close mq client connection")
-				}
-			}()
+			{{.MQCloseConn}}
 			defer {{.DBCloseConnection}}
 			
 			// you can register your routes here

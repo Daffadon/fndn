@@ -69,16 +69,31 @@ func HTTPServerParser(fwk, db, mq string) (string, error) {
 	switch mq {
 	case "nats":
 		t.MQImport = `"github.com/nats-io/nats.go"`
-		t.MQInstanceType = "*nats.Conn"
-		t.MQCloseConn = "mq.Drain()"
+		t.MQInstance = "mq *nats.Conn,"
+		t.MQCloseConn = `
+			defer func() {
+				if err := mq.Drain(); err != nil {
+					logger.Error().Err(err).Msg("Failed to close mq client connection")
+				}
+			}()`
 	case "rabbitmq":
 		t.MQImport = `amqp "github.com/rabbitmq/amqp091-go"`
-		t.MQInstanceType = "*amqp.Connection"
-		t.MQCloseConn = "mq.Close()"
+		t.MQInstance = "mq *amqp.Connection,"
+		t.MQCloseConn = `
+			defer func() {
+				if err := mq.Close(); err != nil {
+					logger.Error().Err(err).Msg("Failed to close mq client connection")
+				}
+			}()`
 	case "kafka":
 		t.MQImport = `"github.com/segmentio/kafka-go"`
-		t.MQInstanceType = "*kafka.Conn"
-		t.MQCloseConn = "mq.Close()"
+		t.MQInstance = "mq *kafka.Conn,"
+		t.MQCloseConn = `
+			defer func() {
+				if err := mq.Close(); err != nil {
+					logger.Error().Err(err).Msg("Failed to close mq client connection")
+				}
+			}()`
 	}
 
 	return ParseTemplate(main_template.HTTPServerTemplate, t)
