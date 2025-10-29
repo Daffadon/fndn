@@ -66,7 +66,7 @@ func newModel(uc *app.InitProjectUseCase, targetDir string) model {
 		},
 		{
 			Label:    "Message Queue",
-			Input:    module.NewRadioButton([]string{"Nats", "RabbitMQ", "Kafka"}, 0),
+			Input:    module.NewRadioButton([]string{"Nats", "RabbitMQ", "Kafka","Amazon SQS"}, 0),
 			Validate: nil,
 		},
 	}
