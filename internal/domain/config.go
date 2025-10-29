@@ -44,8 +44,18 @@ func InitYamlConfig(i infra.CommandRunner, p *Project) error {
 		}
 		s += config_template.AppYamlConfigTemplate
 		s += config_template.RedisYamlConfigTemplate
-		s += config_template.NatsYamlConfigTemplate
-		s += config_template.JetstreamConfigTemplate
+
+		switch p.MQ {
+		case "nats":
+			s += config_template.NatsYamlConfigTemplate
+			s += config_template.JetstreamConfigTemplate
+		case "rabbitmq":
+			s += config_template.RabbitYamlConfigTemplate
+		case "kafka":
+			s += config_template.KafkaYamlConfigTemplate
+		case "amazon sqs":
+			s += config_template.AmazonSQSConfigTemplate
+		}
 		s += config_template.MinioYamlConfigTemplate
 		s += config_template.ServerYamlConfigTemplate
 

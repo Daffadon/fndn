@@ -15,6 +15,8 @@ func InitDependencyInjection(i infra.CommandRunner, p *Project) error {
 		fileName := folderName + "/container.go"
 		var st struct {
 			DBConnection string
+			MQInit       string
+			MQInfra      string
 		}
 		switch p.Database {
 		case "postgresql", "mariadb":
@@ -24,6 +26,31 @@ func InitDependencyInjection(i infra.CommandRunner, p *Project) error {
 		default:
 			st.DBConnection = "NewNoSQLConn"
 		}
+
+		provideMQDefault := `
+			// mq client connection
+			if err := container.Provide(mq.NewMQConnection); err != nil {
+				panic("Failed to provide mq connection: " + err.Error())
+			}
+		`
+		switch p.MQ {
+		case "nats":
+			st.MQInfra = "NewJetstreamInfra"
+			provideMQDefault += `
+				// jetstream connection
+				if err := container.Provide(jetstream.New); err != nil {
+					panic("Failed to provide jetstream instance: " + err.Error())
+				}
+			`
+		case "rabbitmq":
+			st.MQInfra = "NewRabbitMQInfra"
+		case "kafka":
+			st.MQInfra = "NewKafkaInfra"
+		case "amazon sqs":
+			st.MQInfra = "NewSQSInfra"
+		}
+		st.MQInit = provideMQDefault
+
 		template, err := pkg.ParseTemplate(main_template.DITemplate, st)
 		if err != nil {
 			log.Fatal(err)
@@ -51,16 +78,16 @@ func InitBootStrap(i infra.CommandRunner, path *string) error {
 	return errors.New("path is nil")
 }
 
-func InitServer(i infra.CommandRunner, d *Project) error {
-	if d.Path != nil {
+func InitServer(i infra.CommandRunner, p *Project) error {
+	if p.Path != nil {
 		folderName := "/cmd/server"
 		fileName := folderName + "/server.go"
-		c, err := pkg.HTTPServerParser(d.Framework, d.Database)
+		c, err := pkg.HTTPServerParser(p.Framework, p.Database, p.MQ)
 		if err != nil {
 			log.Fatal(err)
 			return err
 		}
-		if err := pkg.GoFileGenerator(i, d.Path, folderName, fileName, c); err != nil {
+		if err := pkg.GoFileGenerator(i, p.Path, folderName, fileName, c); err != nil {
 			log.Fatal(err)
 			return err
 		}

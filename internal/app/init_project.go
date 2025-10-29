@@ -51,8 +51,8 @@ func (uc *InitProjectUseCase) Run(p *domain.Project, progressCh chan<- string) e
 			return domain.InitRedisConfig(uc.Runner, p.Path)
 		},
 		func() error {
-			progressCh <- "Running nats config generation"
-			return domain.InitNatsConfig(uc.Runner, p.Path)
+			progressCh <- "Running mq config generation"
+			return domain.InitMQConfig(uc.Runner, p)
 		},
 		func() error {
 			progressCh <- "Running minio config generation"
@@ -73,8 +73,8 @@ func (uc *InitProjectUseCase) Run(p *domain.Project, progressCh chan<- string) e
 			return domain.InitRedisInfra(uc.Runner, p.Path)
 		},
 		func() error {
-			progressCh <- "Running jetstream infra generation"
-			return domain.InitJetstreamInfra(uc.Runner, p.Path)
+			progressCh <- "Running mq infra generation"
+			return domain.InitMQinfra(uc.Runner, p)
 		},
 		func() error {
 			progressCh <- "Running minio infra generation"
@@ -147,8 +147,8 @@ func (uc *InitProjectUseCase) Run(p *domain.Project, progressCh chan<- string) e
 			return domain.InitDockerComposeConfig(uc.Runner, p)
 		},
 		func() error {
-			progressCh <- "Running nats-server.conf file generation"
-			return domain.InitNatsConfigFile(uc.Runner, p.Path)
+			progressCh <- "Running mq config file generation"
+			return domain.InitMQConfigFile(uc.Runner, p)
 		},
 		func() error {
 			progressCh <- "Running .env.example file generation"

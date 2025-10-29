@@ -11,19 +11,6 @@
 
 This project is generated with [fndn](https://github.com/Daffadon/fndn), the foundation for modern golang project that easy to modify, extend, and learn. to learn more, visit our github at [here](https://github.com/Daffadon/fndn).
 
-## Techstack
-
-Here are generated configuration and 3rd party that can be used immediately.
-
-![](https://img.shields.io/badge/gin-3997AA?style=for-the-badge&logo=gin&logoColor=white)
-![](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
-![](https://img.shields.io/badge/nats-2DACE1?style=for-the-badge&logo=nats&logoColor=white)
-![](https://img.shields.io/badge/redis-%23DD0031.svg?&style=for-the-badge&logo=redis&logoColor=white)
-![](https://img.shields.io/badge/minio-C8324D?style=for-the-badge&logo=nats&logoColor=white)
-![](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white)
-
-with optional, you can also generate [air](https://github.com/air-verse/air) for hot reload in development when prompted in the **fndn init** command.
-
 ## Usage
 
 To start development, you can start by copying the `.env.example` and change the name to `.env`. Make sure that you fill the variable the same with value that you used to connect from your apps in the `config.local.yaml`. For example:
@@ -41,8 +28,8 @@ DB_PASSWORD=password
 DB_NAME=database_name
 
 # nats env
-NATS_USER=user
-NATS_PASSWORD=password
+MQ_USER=user
+MQ_PASSWORD=password
 
 # redis env
 REDIS_PASSWORD=password

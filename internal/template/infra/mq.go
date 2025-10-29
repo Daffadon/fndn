@@ -57,3 +57,204 @@ func (n *jetstreamInfra) Publish(ctx context.Context, subject string, payload []
 	return ack, nil
 }
 `
+
+const RabbitMQInfraTemplate string = `
+package mq_infra
+
+import (
+	"context"
+	amqp "github.com/rabbitmq/amqp091-go"
+	"github.com/rs/zerolog"
+)
+
+type (
+	RabbitMQInfra interface {
+		Publish(ctx context.Context, exchange, routingKey string, payload []byte) error
+	}
+	rabbitMQInfra struct {
+		conn   *amqp.Connection
+		ch     *amqp.Channel
+		logger zerolog.Logger
+	}
+)
+
+func NewRabbitMQInfra(logger zerolog.Logger, conn *amqp.Connection) (RabbitMQInfra, error) {
+	ch, err := conn.Channel()
+	if err != nil {
+		logger.Error().Err(err).Msg("failed to create channel")
+		return nil, err
+	}
+	return &rabbitMQInfra{
+		logger: logger,
+		conn:   conn,
+		ch:     ch,
+	}, nil
+}
+
+func (r *rabbitMQInfra) Publish(ctx context.Context, exchange, routingKey string, payload []byte) error {
+	err := r.ch.PublishWithContext(ctx,
+		exchange,
+		routingKey,
+		false,
+		false,
+		amqp.Publishing{
+			ContentType: "application/json",
+			Body:        payload,
+		},
+	)
+	if err != nil {
+		r.logger.Error().Err(err).Msg("failed to publish message")
+		return err
+	}
+	return nil
+}
+`
+
+const KafkaMQInfraTemplate string = `
+package mq_infra
+
+import (
+	"github.com/rs/zerolog"
+	"github.com/segmentio/kafka-go"
+)
+
+type (
+	KafkaInfra interface {
+		CreateTopic(ctx context.Context, topic string, partitions int, replicationFactor int) error
+		Publish(ctx context.Context, topic string, payload []byte) error
+		Consume(ctx context.Context, topic, groupID string, handler func([]byte) error) error
+	}
+
+	kafkaInfra struct {
+		conn   *kafka.Conn
+		logger zerolog.Logger
+	}
+)
+
+func NewKafkaInfra(logger zerolog.Logger, conn *kafka.Conn) KafkaInfra {
+	return &kafkaInfra{
+		logger: logger,
+		conn:   conn,
+	}
+}
+
+// --- Create topic (idempotent) ---
+func (k *kafkaInfra) CreateTopic(ctx context.Context, topic string, partitions int, replicationFactor int) error {
+	controller, err := k.conn.Controller()
+	if err != nil {
+		k.logger.Error().Err(err).Msg("failed to get controller")
+		return err
+	}
+
+	controllerAddr := controller.Host + ":" + strconv.Itoa(controller.Port)
+	controllerConn, err := kafka.DialContext(ctx, "tcp", controllerAddr)
+	if err != nil {
+		k.logger.Error().Err(err).Msg("failed to connect to controller")
+		return err
+	}
+	defer controllerConn.Close()
+
+	err = controllerConn.CreateTopics(kafka.TopicConfig{
+		Topic:             topic,
+		NumPartitions:     partitions,
+		ReplicationFactor: replicationFactor,
+	})
+	if err != nil {
+		k.logger.Error().Err(err).Msg("failed to create topic")
+		return err
+	}
+	k.logger.Info().Str("topic", topic).Msg("topic created or already exists")
+	return nil
+}
+
+// --- Publish (similar to JetStream Publish) ---
+func (k *kafkaInfra) Publish(ctx context.Context, topic string, payload []byte) error {
+	writer := &kafka.Writer{
+		Addr:         k.conn.RemoteAddr(),
+		Topic:        topic,
+		Balancer:     &kafka.LeastBytes{},
+		RequiredAcks: kafka.RequireAll,
+		Async:        false,
+	}
+	defer writer.Close()
+
+	err := writer.WriteMessages(ctx, kafka.Message{
+		Value: payload,
+		Time:  time.Now(),
+	})
+	if err != nil {
+		k.logger.Error().Err(err).Str("topic", topic).Msg("failed to publish message")
+		return err
+	}
+	k.logger.Debug().Str("topic", topic).Msg("message published successfully")
+	return nil
+}
+
+// --- Consume (similar to JetStream consumer) ---
+func (k *kafkaInfra) Consume(ctx context.Context, topic, groupID string, handler func([]byte) error) error {
+	brokerAddr := k.conn.RemoteAddr().String()
+	reader := kafka.NewReader(kafka.ReaderConfig{
+		Brokers:  []string{brokerAddr},
+		GroupID:  groupID,
+		Topic:    topic,
+		MinBytes: 1,
+		MaxBytes: 10e6,
+	})
+	defer reader.Close()
+
+	for {
+		m, err := reader.FetchMessage(ctx)
+		if err != nil {
+			k.logger.Error().Err(err).Msg("failed to fetch message")
+			return err
+		}
+
+		if err := handler(m.Value); err != nil {
+			k.logger.Error().Err(err).Msg("handler failed, skipping commit")
+			continue
+		}
+
+		if err := reader.CommitMessages(ctx, m); err != nil {
+			k.logger.Error().Err(err).Msg("failed to commit message")
+		}
+	}
+}
+`
+
+const AmazonSQSInfratemplate string = `
+package mq_infra
+
+import (
+	"github.com/aws/aws-sdk-go-v2/service/sqs"
+	"github.com/rs/zerolog"
+)
+
+type (
+	SQSInfra interface {
+		Publish(ctx context.Context, queueURL, msg string) bool
+	}
+	sqsInfra struct {
+		client *sqs.Client
+		logger zerolog.Logger
+	}
+)
+
+func NewSQSInfra(sqs *sqs.Client, logger zerolog.Logger) SQSInfra {
+	return &sqsInfra{
+		client: sqs,
+		logger: logger,
+	}
+}
+
+func (s *sqsInfra) Publish(ctx context.Context, queueURL string, msg string) bool {
+	_, err := s.client.SendMessage(ctx, &sqs.SendMessageInput{
+		QueueUrl:    &queueURL,
+		MessageBody: &msg,
+	})
+	if err != nil {
+		s.logger.Fatal().Msgf("Send failed: %v", err)
+		return false
+	}
+	return true
+}
+`
