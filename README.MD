@@ -18,12 +18,12 @@ Bootstrap your Go projects with clean architecture, best practices, and a solid 
 ---
 
 > [!NOTE]
-> v0.3.0 now is stable, latest version, and generating one set of application with its driver to 3rd party. in this version, you can generate different framework, database, and message queue.
+> v0.3.2 now is stable, latest version, and generating one set of application with its driver to 3rd party. in this version, you can generate different framework, database, and message queue.
 
 ## 🔥 Get started
 
 ```bash
-go run github.com/daffadon/fndn@v0.3.0 init .
+go run github.com/daffadon/fndn@v0.3.2 init .
 ```
 
 \* . generate in current directory
@@ -31,7 +31,7 @@ go run github.com/daffadon/fndn@v0.3.0 init .
 OR
 
 ```bash
-go run github.com/daffadon/fndn@v0.3.0 --help
+go run github.com/daffadon/fndn@v0.3.2 --help
 ```
 
 to see how can you use the tools
@@ -44,7 +44,7 @@ to see how can you use the tools
 If you want to install the tools to your system, you can either using go install or download the binary in available release:
 
 ```bash
-go install github.com/daffadon/fndn@v0.3.0
+go install github.com/daffadon/fndn@v0.3.2
 ```
 
 ## 🛠️ The techstack
