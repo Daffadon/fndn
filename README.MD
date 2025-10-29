@@ -18,12 +18,12 @@ Bootstrap your Go projects with clean architecture, best practices, and a solid 
 ---
 
 > [!NOTE]
-> v0.2.0 now is stable, latest version, and generating one set of application with its driver to 3rd party. in this version, you can generate different framework but still limited to others. furthermore, the generation will cover other configuration for each type.
+> v0.3.0 now is stable, latest version, and generating one set of application with its driver to 3rd party. in this version, you can generate different framework, database, and message queue.
 
 ## 🔥 Get started
 
 ```bash
-go run github.com/daffadon/fndn@v0.2.0 init .
+go run github.com/daffadon/fndn@v0.3.0 init .
 ```
 
 \* . generate in current directory
@@ -31,20 +31,20 @@ go run github.com/daffadon/fndn@v0.2.0 init .
 OR
 
 ```bash
-go run github.com/daffadon/fndn@v0.2.0 --help
+go run github.com/daffadon/fndn@v0.3.0 --help
 ```
 
 to see how can you use the tools
 
 > [!NOTE]
-> For The first time, it will take around 50 seconds to generate because your go cache might not have modules that used here.
+> For The first time, it will take longer than expected to generate depends on go cache, go modcache, and your internet speed.
 
 ## 📦 Installation
 
 If you want to install the tools to your system, you can either using go install or download the binary in available release:
 
 ```bash
-go install github.com/daffadon/fndn@v0.2.0
+go install github.com/daffadon/fndn@v0.3.0
 ```
 
 ## 🛠️ The techstack
@@ -70,6 +70,9 @@ Currently, the generation are in default mode and custom mode with limitation at
 - Message Queue
 
 ![Nats](https://img.shields.io/badge/nats-2DACE1?style=for-the-badge&logo=nats&logoColor=white)
+![RabbitMQ](https://img.shields.io/badge/rabbitmq-%23FF6600.svg?&style=for-the-badge&logo=rabbitmq&logoColor=white)
+![Kafka](https://img.shields.io/badge/Apache_Kafka-231F20?style=for-the-badge&logo=apache-kafka&logoColor=white)
+![Amazon SQS](https://img.shields.io/badge/amazon%20sqs-F79114?style=for-the-badge&logo=amazon%20sqs&logoColor=whit)
 
 - Cache
 
