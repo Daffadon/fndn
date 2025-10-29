@@ -66,6 +66,9 @@ func InitMQinfra(i infra.CommandRunner, p *Project) error {
 		case "kafka":
 			fileName = folderName + "/kafka_infra.go"
 			template = infra_template.KafkaMQInfraTemplate
+		case "amazon sqs":
+			fileName = folderName + "/sqs_infra.go"
+			template = infra_template.AmazonSQSInfratemplate
 		}
 		if err := pkg.GoFileGenerator(i, p.Path, folderName, fileName, template); err != nil {
 			log.Fatal(err)
