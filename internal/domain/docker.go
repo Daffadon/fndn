@@ -56,6 +56,8 @@ func InitDockerComposeConfig(i infra.CommandRunner, p *Project) error {
 			dbDockerTemplate = database_template.DockerComposePostgresqlConfigTemplate
 		case "mariadb":
 			dbDockerTemplate = database_template.DockerComposeMariaDBConfigTemplate
+		case "clickhouse":
+			dbDockerTemplate = database_template.DockerComposeClickHouseConfigTemplate
 		case "mongodb":
 			dbDockerTemplate = database_template.DockerComposeMongoDBConfigTemplate
 		case "ferretdb":
