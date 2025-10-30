@@ -56,6 +56,10 @@ func HTTPServerParser(fwk, db, mq string) (string, error) {
 		t.DBInstanceType = "*sql.DB"
 		t.DBCloseConnection = "db.Close()"
 		t.DBImport = `"database/sql"`
+	case "clickhouse":
+		t.DBInstanceType = "clickhouse.Conn"
+		t.DBCloseConnection = "db.Close()"
+		t.DBImport = `"github.com/ClickHouse/clickhouse-go/v2"`
 	case "mongodb", "ferretdb":
 		t.DBInstanceType = "*mongo.Client"
 		t.DBCloseConnection = "db.Disconnect(ctx)"

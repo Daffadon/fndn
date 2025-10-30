@@ -19,7 +19,7 @@ func InitDependencyInjection(i infra.CommandRunner, p *Project) error {
 			MQInfra      string
 		}
 		switch p.Database {
-		case "postgresql", "mariadb":
+		case "postgresql", "mariadb", "clickhouse":
 			st.DBConnection = "NewSQLConn"
 		case "neo4j":
 			st.DBConnection = "NewGraphDBConn"
