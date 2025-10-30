@@ -21,6 +21,16 @@ database:
     port: "3306"
     name: "database_name"
 `
+const ClickHouseYamlConfigTemplate string = `
+database:
+  sql:
+    host: "localhost"
+    user: "myusername"
+    password: "password"
+    port: "9002"
+    name: "database_name"
+    debug: true
+`
 
 const MongoDBYamlConfigTemplate string = `
 database:

@@ -189,3 +189,55 @@ func (n *neo4jQuerier) Close(ctx context.Context) error {
 	return n.driver.Close(ctx)
 }
 `
+
+const QuerierClickHouseInfraTemplate = `
+package storage_infra
+
+import (
+	"github.com/ClickHouse/clickhouse-go/v2"
+	"github.com/ClickHouse/clickhouse-go/v2/lib/driver"
+)
+
+type (
+	Querier interface {
+		QueryRow(ctx context.Context, query string, args ...any) driver.Row
+		Query(ctx context.Context, query string, args ...any) (driver.Rows, error)
+		Exec(ctx context.Context, query string, args ...any) error
+		Close(ctx context.Context) error
+	}
+
+	clickhouseQuerier struct {
+		conn clickhouse.Conn
+	}
+)
+
+// NewQuerier creates a new ClickHouse querier using a shared connection
+func NewQuerier(conn clickhouse.Conn) Querier {
+	return &clickhouseQuerier{conn: conn}
+}
+
+func (c *clickhouseQuerier) QueryRow(ctx context.Context, query string, args ...any) driver.Row {
+	rows, err := c.conn.Query(ctx, query, args...)
+	if err != nil {
+		return nil
+	}
+	if !rows.Next() {
+		_ = rows.Close()
+		return nil
+	}
+	return rows
+}
+
+func (c *clickhouseQuerier) Query(ctx context.Context, query string, args ...any) (driver.Rows, error) {
+	return c.conn.Query(ctx, query, args...)
+}
+
+func (c *clickhouseQuerier) Exec(ctx context.Context, query string, args ...any) error {
+	return c.conn.Exec(ctx, query, args...)
+}
+
+func (c *clickhouseQuerier) Close(ctx context.Context) error {
+	return c.conn.Close()
+}
+
+`

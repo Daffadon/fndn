@@ -35,6 +35,8 @@ func InitYamlConfig(i infra.CommandRunner, p *Project) error {
 			s += config_template.PostresqlYamlConfigTemplate
 		case "mariadb":
 			s += config_template.MariaDBYamlConfigTemplate
+		case "clickhouse":
+			s += config_template.ClickHouseYamlConfigTemplate
 		case "mongodb":
 			s += config_template.MongoDBYamlConfigTemplate
 		case "ferretdb":
