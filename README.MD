@@ -18,12 +18,12 @@ Bootstrap your Go projects with clean architecture, best practices, and a solid 
 ---
 
 > [!NOTE]
-> v0.3.2 now is stable, latest version, and generating one set of application with its driver to 3rd party. in this version, you can generate different framework, database, and message queue.
+> v0.4.0 now is stable, latest version, and generating one set of application with its driver to 3rd party. in this version, you can generate different framework, database, and message queue.
 
 ## 🔥 Get started
 
 ```bash
-go run github.com/daffadon/fndn@v0.3.2 init .
+go run github.com/daffadon/fndn@v0.4.0 init .
 ```
 
 \* . generate in current directory
@@ -31,7 +31,7 @@ go run github.com/daffadon/fndn@v0.3.2 init .
 OR
 
 ```bash
-go run github.com/daffadon/fndn@v0.3.2 --help
+go run github.com/daffadon/fndn@v0.4.0 --help
 ```
 
 to see how can you use the tools
@@ -44,12 +44,12 @@ to see how can you use the tools
 If you want to install the tools to your system, you can either using go install or download the binary in available release:
 
 ```bash
-go install github.com/daffadon/fndn@v0.3.2
+go install github.com/daffadon/fndn@v0.4.0
 ```
 
 ## 🛠️ The techstack
 
-Currently, the generation are in default mode and custom mode with limitation at `framework` and `database`. the `Default` mode is using the first techstack from each section. the generated techstack that you can use are:
+Currently, the generation are in default mode and custom mode with limitation at `framework`, `database`, and `message queue`. the `Default` mode is using the first techstack from each section. the generated techstack that you can use are:
 
 - Framework
 
@@ -63,6 +63,7 @@ Currently, the generation are in default mode and custom mode with limitation at
 
 ![Postgresql](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
 ![MariaDB](https://img.shields.io/badge/MariaDB-003545?style=for-the-badge&logo=mariadb&logoColor=white)
+![ClickHouse](https://img.shields.io/badge/ClickHouse-FFCC01?style=for-the-badge&logo=ClickHouse&logoColor=white)
 ![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)
 ![FerretDB](https://img.shields.io/badge/FerretDB-black?style=for-the-badge&logo=ferretdb&logoColor=white)
 ![Neo4J](https://img.shields.io/badge/Neo4j-008CC1?style=for-the-badge&logo=neo4j&logoColor=white)
