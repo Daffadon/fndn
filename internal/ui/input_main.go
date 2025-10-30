@@ -61,12 +61,12 @@ func newModel(uc *app.InitProjectUseCase, targetDir string) model {
 		},
 		{
 			Label:    "Database",
-			Input:    module.NewRadioButton([]string{"Postgresql", "MariaDB", "MongoDB", "FerretDB", "Neo4j"}, 0),
+			Input:    module.NewRadioButton([]string{"Postgresql", "MariaDB", "ClickHouse", "MongoDB", "FerretDB", "Neo4j"}, 0),
 			Validate: nil,
 		},
 		{
 			Label:    "Message Queue",
-			Input:    module.NewRadioButton([]string{"Nats", "RabbitMQ", "Kafka","Amazon SQS"}, 0),
+			Input:    module.NewRadioButton([]string{"Nats", "RabbitMQ", "Kafka", "Amazon SQS"}, 0),
 			Validate: nil,
 		},
 	}
