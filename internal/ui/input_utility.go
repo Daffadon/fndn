@@ -74,6 +74,8 @@ func (m *model) viewStep() string {
 		s += style.BlueStyle.Render("which database would you working on?\n")
 	case 6:
 		s += style.BlueStyle.Render("which message queue would you connect?\n")
+	case 7:
+		s += style.BlueStyle.Render("which in-memory store would you use?\n")
 	}
 
 	s += "\n"
@@ -107,6 +109,7 @@ func (m *model) submit() tea.Cmd {
 		Framework:  "gin",
 		Database:   "postgresql",
 		MQ:         "nats",
+		InMemory:   "redis",
 	}
 	project.Path = &m.targetDir
 
@@ -132,6 +135,9 @@ func (m *model) submit() tea.Cmd {
 			}
 			if v, ok := m.steps[6].Input.Value().(string); ok {
 				project.MQ = strings.ToLower(v)
+			}
+			if v, ok := m.steps[7].Input.Value().(string); ok {
+				project.InMemory = strings.ToLower(v)
 			}
 		}
 	}
