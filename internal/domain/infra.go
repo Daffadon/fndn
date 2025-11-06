@@ -52,16 +52,15 @@ func InitInMemoryInfra(i infra.CommandRunner, path *string, inMemory *string) er
 		case "valkey":
 			fileName = folderName + "/valkey_infra.go"
 			template = infra_template.ValkeyInfraTemplate
-		case "keydb":
-			fileName = folderName + "/keydb.go"
-			// template = cache_template.RedisConfigTemplate
 		case "dragonfly":
-			fileName = folderName + "/dragonfly.go"
-			// template = cache_template.RedisConfigTemplate
+			fileName = folderName + "/dragonfly_infra.go"
+			template = infra_template.DragonFlyInfraTemplate
 		}
-		if err := pkg.GoFileGenerator(i, path, folderName, fileName, template); err != nil {
-			log.Fatal(err)
-			return err
+		if fileName != "" || template != "" {
+			if err := pkg.GoFileGenerator(i, path, folderName, fileName, template); err != nil {
+				log.Fatal(err)
+				return err
+			}
 		}
 		return nil
 	}
@@ -86,9 +85,11 @@ func InitMQinfra(i infra.CommandRunner, p *Project) error {
 			fileName = folderName + "/sqs_infra.go"
 			template = infra_template.AmazonSQSInfratemplate
 		}
-		if err := pkg.GoFileGenerator(i, p.Path, folderName, fileName, template); err != nil {
-			log.Fatal(err)
-			return err
+		if fileName != "" || template != "" {
+			if err := pkg.GoFileGenerator(i, p.Path, folderName, fileName, template); err != nil {
+				log.Fatal(err)
+				return err
+			}
 		}
 		return nil
 	}
