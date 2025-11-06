@@ -196,9 +196,10 @@ main.go -> bootstrap/bootstrap.go -> di/di.go ---|----> internal/domain/*.go (ex
 ### Air is not working on wsl
 
 > [!NOTE]
-> If you use windows and generate the project using wsl, the hot reload won't work. better you use the fndn for windows in this case or if its already generated, you can change the .air.toml in **cmd part** to become like below and **run air from windows**, not from wsl.
+> If you use windows and generate the project using wsl, the hot reload won't work. better you use the fndn for windows in this case or if its already generated, you can change the .air.toml in `bin and cmd` to become like below and **run air from windows**, not from wsl.
 >
 > ```yml
+> bin = "./tmp/main.exe"
 > cmd = "go build -o ./tmp/main.exe ./cmd"
 > ```
 
