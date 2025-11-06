@@ -45,7 +45,12 @@ func InitYamlConfig(i infra.CommandRunner, p *Project) error {
 			s += config_template.Neo4JYamlConfigTemplate
 		}
 		s += config_template.AppYamlConfigTemplate
-		s += config_template.RedisYamlConfigTemplate
+		switch p.InMemory {
+		case "redis":
+			s += config_template.RedisYamlConfigTemplate
+		case "valkey":
+			s += config_template.ValkeyYamlConfigTemplate
+		}
 
 		switch p.MQ {
 		case "nats":
