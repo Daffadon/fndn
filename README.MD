@@ -18,12 +18,12 @@ Bootstrap your Go projects with clean architecture, best practices, and a solid 
 ---
 
 > [!NOTE]
-> v0.4.0 now is stable, latest version, and generating one set of application with its driver to 3rd party. in this version, you can generate different framework, database, and message queue.
+> v0.5.0 now is stable, latest version, and generating one set of application with its driver to 3rd party. in this version, you can generate different framework, database, message queue, and in-memory-store.
 
 ## 🔥 Get started
 
 ```bash
-go run github.com/daffadon/fndn@v0.4.0 init .
+go run github.com/daffadon/fndn@v0.5.0 init .
 ```
 
 \* . generate in current directory
@@ -31,7 +31,7 @@ go run github.com/daffadon/fndn@v0.4.0 init .
 OR
 
 ```bash
-go run github.com/daffadon/fndn@v0.4.0 --help
+go run github.com/daffadon/fndn@v0.5.0 --help
 ```
 
 to see how can you use the tools
@@ -44,12 +44,12 @@ to see how can you use the tools
 If you want to install the tools to your system, you can either using go install or download the binary in available release:
 
 ```bash
-go install github.com/daffadon/fndn@v0.4.0
+go install github.com/daffadon/fndn@v0.5.0
 ```
 
 ## 🛠️ The techstack
 
-Currently, the generation are in default mode and custom mode with limitation at `framework`, `database`, and `message queue`. the `Default` mode is using the first techstack from each section. the generated techstack that you can use are:
+Currently, the generation are in default mode and custom mode with limitation at `framework`, `database`, `message queue`, and `in-memory store`. the `Default` mode is using the first techstack from each section. the generated techstack that you can use are:
 
 - Framework
 
@@ -78,6 +78,8 @@ Currently, the generation are in default mode and custom mode with limitation at
 - Cache
 
 ![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?&style=for-the-badge&logo=redis&logoColor=white)
+![Valkey](https://img.shields.io/badge/valkey-2D2471?style=for-the-badge&logo=valkey&logoColor=white)
+![Dragonfly](https://img.shields.io/badge/Dragonfly-0B0514?style=for-the-badge&logo=dragonfly&logoColor=white)
 
 - Object Storage
 
