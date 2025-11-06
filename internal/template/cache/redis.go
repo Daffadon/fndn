@@ -37,8 +37,8 @@ const DockerComposeRedisConfigTemplate string = `
 		ports:
       - "6379:6379"
     environment:
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
-    command: ["redis-server", "--requirepass", "$REDIS_PASSWORD"]
+      - CACHE_PASSWORD=${CACHE_PASSWORD}
+    command: ["redis-server", "--requirepass", "$CACHE_PASSWORD"]
 `
 
 const DockerComposeRedisVolumeTemplate string = `
