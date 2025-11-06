@@ -20,16 +20,15 @@ func InitInMemoryConfig(i infra.CommandRunner, path *string, inMemory *string) e
 		case "valkey":
 			fileName = folderName + "/valkey.go"
 			template = cache_template.ValkeyConfigTemplate
-		case "keydb":
-			fileName = folderName + "/keydb.go"
-			// template = cache_template.RedisConfigTemplate
 		case "dragonfly":
 			fileName = folderName + "/dragonfly.go"
-			// template = cache_template.RedisConfigTemplate
+			template = cache_template.DragonflyConfigTemplate
 		}
-		if err := pkg.GoFileGenerator(i, path, folderName, fileName, template); err != nil {
-			log.Fatal(err)
-			return err
+		if fileName != "" || template != "" {
+			if err := pkg.GoFileGenerator(i, path, folderName, fileName, template); err != nil {
+				log.Fatal(err)
+				return err
+			}
 		}
 		return nil
 	}
