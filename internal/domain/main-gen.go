@@ -60,6 +60,9 @@ func InitDependencyInjection(i infra.CommandRunner, p *Project) error {
 		case "valkey":
 			st.CacheConnection = "NewValkeyConnection"
 			st.CacheInfra = "NewValkeyCache"
+		case "dragonfly":
+			st.CacheConnection = "NewDragonflyConnection"
+			st.CacheInfra = "NewDragonflyCache"
 		}
 
 		template, err := pkg.ParseTemplate(main_template.DITemplate, st)
