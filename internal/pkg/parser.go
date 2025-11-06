@@ -101,7 +101,7 @@ func HTTPServerParser(fwk, db, mq, cache string) (string, error) {
 	}
 
 	switch cache {
-	case "redis":
+	case "redis","dragonfly":
 		t.CacheImport = `"github.com/redis/go-redis/v9"`
 		t.CacheInstanceType = "*redis.Client"
 		t.CacheCloseConn = `defer func() {
