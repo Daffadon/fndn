@@ -47,20 +47,20 @@ func (uc *InitProjectUseCase) Run(p *domain.Project, progressCh chan<- string) e
 			return domain.InitZerologConfig(uc.Runner, p.Path)
 		},
 		func() error {
-			progressCh <- "Running redis config generation"
-			return domain.InitRedisConfig(uc.Runner, p.Path)
+			progressCh <- "Running DB config generation"
+			return domain.InitDBConfig(uc.Runner, p.Path, &p.Database)
 		},
 		func() error {
 			progressCh <- "Running mq config generation"
 			return domain.InitMQConfig(uc.Runner, p)
 		},
 		func() error {
-			progressCh <- "Running minio config generation"
-			return domain.InitMinioConfig(uc.Runner, p.Path)
+			progressCh <- "Running in-memory store config generation"
+			return domain.InitInMemoryConfig(uc.Runner, p.Path, &p.InMemory)
 		},
 		func() error {
-			progressCh <- "Running postgresql config generation"
-			return domain.InitDBConfig(uc.Runner, p.Path, &p.Database)
+			progressCh <- "Running minio config generation"
+			return domain.InitMinioConfig(uc.Runner, p.Path)
 		},
 
 		// infra
@@ -69,8 +69,8 @@ func (uc *InitProjectUseCase) Run(p *domain.Project, progressCh chan<- string) e
 			return domain.InitQuerierInfra(uc.Runner, p.Path, &p.Database)
 		},
 		func() error {
-			progressCh <- "Running redis infra generation"
-			return domain.InitRedisInfra(uc.Runner, p.Path)
+			progressCh <- "Running in-memory infra generation"
+			return domain.InitInMemoryInfra(uc.Runner, p.Path, &p.InMemory)
 		},
 		func() error {
 			progressCh <- "Running mq infra generation"
@@ -149,6 +149,10 @@ func (uc *InitProjectUseCase) Run(p *domain.Project, progressCh chan<- string) e
 		func() error {
 			progressCh <- "Running mq config file generation"
 			return domain.InitMQConfigFile(uc.Runner, p)
+		},
+		func() error {
+			progressCh <- "Running cache config file generation"
+			return domain.InitInMemoryConfigFile(uc.Runner, p)
 		},
 		func() error {
 			progressCh <- "Running .env.example file generation"

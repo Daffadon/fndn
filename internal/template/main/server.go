@@ -7,8 +7,7 @@ import (
 	{{.FrameworkImport}}
 	{{.DBImport}}
 	{{.MQImport}}
-	
-	"github.com/redis/go-redis/v9"
+	{{.CacheImport}}
 	"github.com/rs/zerolog"
 	"go.uber.org/dig"
 )
@@ -24,18 +23,14 @@ func (s *Server) Run(ctx context.Context) {
 		func(
 			logger zerolog.Logger,
 			r {{.FrameworkRouter}},
-			redis *redis.Client,
+			cache {{.CacheInstanceType}},
 			{{.MQInstance}}
 			db {{.DBInstanceType}},
 			th handler.TodoHandler,
 			// and many other returned type provided
 			// in the container from /cmd/di/container.go
 		) {
-			defer func() {
-				if err := redis.Close(); err != nil {
-					logger.Error().Err(err).Msg("Failed to close Redis client")
-				}
-			}()
+			{{.CacheCloseConn}}
 			{{.MQCloseConn}}
 			defer {{.DBCloseConnection}}
 			

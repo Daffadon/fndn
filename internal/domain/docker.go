@@ -48,9 +48,6 @@ func InitDockerComposeConfig(i infra.CommandRunner, p *Project) error {
 		}
 		var results []string
 		var dbDockerTemplate string
-		var mqDockerTemplate string
-		var mqVolumetemplate string
-
 		switch p.Database {
 		case "postgresql":
 			dbDockerTemplate = database_template.DockerComposePostgresqlConfigTemplate
@@ -66,6 +63,8 @@ func InitDockerComposeConfig(i infra.CommandRunner, p *Project) error {
 			dbDockerTemplate = database_template.DockerComposeNeo4JConfigTemplate
 		}
 
+		var mqDockerTemplate string
+		var mqVolumetemplate string
 		switch p.MQ {
 		case "nats":
 			mqDockerTemplate = mq_template.DockerComposeNatsConfigTemplate
@@ -76,19 +75,33 @@ func InitDockerComposeConfig(i infra.CommandRunner, p *Project) error {
 		case "kafka":
 			mqDockerTemplate = mq_template.DockerComposeKafkaConfigTemplate
 			mqVolumetemplate = mq_template.DockerComposeKafkaVolumeTemplate
-
 		}
+
+		var cacheDockerTemplate string
+		var cacheVolumeTemplate string
+		switch p.InMemory {
+		case "redis":
+			cacheDockerTemplate = cache_template.DockerComposeRedisConfigTemplate
+			cacheVolumeTemplate = cache_template.DockerComposeRedisVolumeTemplate
+		case "valkey":
+			cacheDockerTemplate = cache_template.DockerComposeValkeyConfigTemplate
+			cacheVolumeTemplate = cache_template.DockerComposeValkeyVolumeTemplate
+		case "dragonfly":
+			cacheDockerTemplate = cache_template.DockerComposeDragonflyConfigTemplate
+			cacheVolumeTemplate = cache_template.DockerComposeDragonflyVolumeTemplate
+		}
+
 		templates := []string{
 			config_template.DockerComposeAppConfigTemplate,
 			dbDockerTemplate,
 			mqDockerTemplate,
-			cache_template.DockerComposeRedisConfigTemplate,
+			cacheDockerTemplate,
 			objectstorage_template.DockerComposeMinioConfigTemplate,
 
 			// volume
 			database_template.DockerComposeDBVolumeTemplate,
 			mqVolumetemplate,
-			cache_template.DockerComposeRedisVolumeTemplate,
+			cacheVolumeTemplate,
 			objectstorage_template.DockerComposeMinioVolumeTemplate,
 		}
 		for _, tpl := range templates {

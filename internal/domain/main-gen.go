@@ -14,9 +14,11 @@ func InitDependencyInjection(i infra.CommandRunner, p *Project) error {
 		folderName := "/cmd/di"
 		fileName := folderName + "/container.go"
 		var st struct {
-			DBConnection string
-			MQInit       string
-			MQInfra      string
+			DBConnection    string
+			MQInit          string
+			MQInfra         string
+			CacheConnection string
+			CacheInfra      string
 		}
 		switch p.Database {
 		case "postgresql", "mariadb", "clickhouse":
@@ -51,6 +53,18 @@ func InitDependencyInjection(i infra.CommandRunner, p *Project) error {
 		}
 		st.MQInit = provideMQDefault
 
+		switch p.InMemory {
+		case "redis":
+			st.CacheConnection = "NewRedisConnection"
+			st.CacheInfra = "NewRedisCache"
+		case "valkey":
+			st.CacheConnection = "NewValkeyConnection"
+			st.CacheInfra = "NewValkeyCache"
+		case "dragonfly":
+			st.CacheConnection = "NewDragonflyConnection"
+			st.CacheInfra = "NewDragonflyCache"
+		}
+
 		template, err := pkg.ParseTemplate(main_template.DITemplate, st)
 		if err != nil {
 			log.Fatal(err)
@@ -82,7 +96,7 @@ func InitServer(i infra.CommandRunner, p *Project) error {
 	if p.Path != nil {
 		folderName := "/cmd/server"
 		fileName := folderName + "/server.go"
-		c, err := pkg.HTTPServerParser(p.Framework, p.Database, p.MQ)
+		c, err := pkg.HTTPServerParser(p.Framework, p.Database, p.MQ, p.InMemory)
 		if err != nil {
 			log.Fatal(err)
 			return err

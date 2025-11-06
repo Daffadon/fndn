@@ -47,8 +47,8 @@ DB_NAME=
 MQ_USER=
 MQ_PASSWORD=
 
-# redis env
-REDIS_PASSWORD=
+# cache env
+CACHE_PASSWORD=
 
 # minio env
 MINIO_ROOT_USER=

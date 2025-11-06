@@ -32,7 +32,7 @@ MQ_USER=user
 MQ_PASSWORD=password
 
 # redis env
-REDIS_PASSWORD=password
+CACHE_PASSWORD=password
 
 # minio env
 MINIO_ROOT_USER=ROOTUSER
@@ -68,9 +68,10 @@ make run
 ```
 
 > [!NOTE]
-> If you use windows and generate the project using wsl, the hot reload won't work. better you use the fndn for windows in this case or if its already generated, you can change the .air.toml in **cmd part** to become like below and **run air from windows**, not from wsl.
+> If you use windows and generate the project using wsl, the hot reload won't work. better you use the fndn for windows in this case or if its already generated, you can change the .air.toml in `bin and cmd` part to become like below and **run air from windows**, not from wsl.
 >
 > ```yml
+> bin = "./tmp/main.exe"
 > cmd = "go build -o ./tmp/main.exe ./cmd"
 > ```
 

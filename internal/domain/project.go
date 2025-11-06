@@ -11,6 +11,7 @@ type Project struct {
 	Framework  string
 	Database   string
 	MQ         string
+	InMemory   string
 	Git        bool
 	Air        bool
 }
