@@ -32,7 +32,7 @@ MQ_USER=user
 MQ_PASSWORD=password
 
 # redis env
-REDIS_PASSWORD=password
+CACHE_PASSWORD=password
 
 # minio env
 MINIO_ROOT_USER=ROOTUSER
