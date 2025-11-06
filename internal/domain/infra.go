@@ -41,11 +41,25 @@ func InitQuerierInfra(i infra.CommandRunner, path *string, database *string) err
 	return errors.New("path is nil")
 }
 
-func InitRedisInfra(i infra.CommandRunner, path *string) error {
+func InitInMemoryInfra(i infra.CommandRunner, path *string, inMemory *string) error {
 	if path != nil {
 		folderName := "/internal/infra/cache"
-		fileName := folderName + "/redis.go"
-		if err := pkg.GoFileGenerator(i, path, folderName, fileName, infra_template.RedisInfraTemplate); err != nil {
+		var fileName, template string
+		switch *inMemory {
+		case "redis":
+			fileName = folderName + "/redis_infra.go"
+			template = infra_template.RedisInfraTemplate
+		case "valkey":
+			fileName = folderName + "/valkey_infra.go"
+			template = infra_template.ValkeyInfraTemplate
+		case "keydb":
+			fileName = folderName + "/keydb.go"
+			// template = cache_template.RedisConfigTemplate
+		case "dragonfly":
+			fileName = folderName + "/dragonfly.go"
+			// template = cache_template.RedisConfigTemplate
+		}
+		if err := pkg.GoFileGenerator(i, path, folderName, fileName, template); err != nil {
 			log.Fatal(err)
 			return err
 		}
