@@ -69,7 +69,7 @@ func (uc *InitProjectUseCase) Run(p *domain.Project, progressCh chan<- string) e
 			return domain.InitQuerierInfra(uc.Runner, p.Path, &p.Database)
 		},
 		func() error {
-			progressCh <- "Running redis infra generation"
+			progressCh <- "Running in-memory infra generation"
 			return domain.InitInMemoryInfra(uc.Runner, p.Path, &p.InMemory)
 		},
 		func() error {
