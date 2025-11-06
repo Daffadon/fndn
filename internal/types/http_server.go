@@ -11,5 +11,8 @@ type (
 		MQImport          string
 		MQInstance        string
 		MQCloseConn       string
+		CacheImport       string
+		CacheInstanceType string
+		CacheCloseConn    string
 	}
 )

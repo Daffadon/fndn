@@ -31,16 +31,16 @@ func BuildContainer() *dig.Container {
 	if err := container.Provide(storage.{{.DBConnection}}); err != nil {
 		panic("Failed to provide db connection: " + err.Error())
 	}
-	// redis connection
-	if err := container.Provide(cache.NewRedisConnection); err != nil {
-		panic("Failed to provide redis connection: " + err.Error())
+	//  connection
+	if err := container.Provide(cache.{{.CacheConnection}}); err != nil {
+		panic("Failed to provide cache connection: " + err.Error())
 	}
 
 	// you can add your own handler, service, repository,infra, or even 
 	// your own defined config here and invoke in the /cmd/server/http_server.go 
 	
 	// infra
-	if err := container.Provide(cache_infra.NewRedisCache); err != nil {
+	if err := container.Provide(cache_infra.{{.CacheInfra}}); err != nil {
 		panic("Failed to provide redis infra: " + err.Error())
 	}	
 	if err := container.Provide(mq_infra.{{.MQInfra}}); err != nil {

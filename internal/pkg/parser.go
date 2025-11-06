@@ -20,7 +20,7 @@ func ParseTemplate(tmplStr string, data interface{}) (string, error) {
 	return buf.String(), nil
 }
 
-func HTTPServerParser(fwk, db, mq string) (string, error) {
+func HTTPServerParser(fwk, db, mq, cache string) (string, error) {
 	var t types.HTTPServerParse
 	switch fwk {
 	case "gin":
@@ -98,6 +98,21 @@ func HTTPServerParser(fwk, db, mq string) (string, error) {
 					logger.Error().Err(err).Msg("Failed to close mq client connection")
 				}
 			}()`
+	}
+
+	switch cache {
+	case "redis","dragonfly":
+		t.CacheImport = `"github.com/redis/go-redis/v9"`
+		t.CacheInstanceType = "*redis.Client"
+		t.CacheCloseConn = `defer func() {
+				if err := cache.Close(); err != nil {
+					logger.Error().Err(err).Msg("Failed to close cache connection")
+				}
+			}()`
+	case "valkey":
+		t.CacheImport = `"github.com/valkey-io/valkey-go"`
+		t.CacheInstanceType = "valkey.Client"
+		t.CacheCloseConn = `defer cache.Close()`
 	}
 
 	return ParseTemplate(main_template.HTTPServerTemplate, t)
