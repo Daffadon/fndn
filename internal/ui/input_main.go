@@ -71,7 +71,7 @@ func newModel(uc *app.InitProjectUseCase, targetDir string) model {
 		},
 		{
 			Label:    "In-memory Store",
-			Input:    module.NewRadioButton([]string{"Redis", "Valkey", "KeyDB", "Dragonfly"}, 0),
+			Input:    module.NewRadioButton([]string{"Redis", "Valkey", "Dragonfly"}, 0),
 			Validate: nil,
 		},
 	}
