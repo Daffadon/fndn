@@ -28,9 +28,11 @@ func InitMQConfig(i infra.CommandRunner, p *Project) error {
 			fileName = folderName + "/sqs.go"
 			template = mq_template.AmazonSQSConfigTemplate
 		}
-		if err := pkg.GoFileGenerator(i, p.Path, folderName, fileName, template); err != nil {
-			log.Fatal(err)
-			return err
+		if fileName != "" || template != "" {
+			if err := pkg.GoFileGenerator(i, p.Path, folderName, fileName, template); err != nil {
+				log.Fatal(err)
+				return err
+			}
 		}
 		return nil
 	}
