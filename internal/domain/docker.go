@@ -86,6 +86,9 @@ func InitDockerComposeConfig(i infra.CommandRunner, p *Project) error {
 		case "valkey":
 			cacheDockerTemplate = cache_template.DockerComposeValkeyConfigTemplate
 			cacheVolumeTemplate = cache_template.DockerComposeValkeyVolumeTemplate
+		case "dragonfly":
+			cacheDockerTemplate = cache_template.DockerComposeDragonflyConfigTemplate
+			cacheVolumeTemplate = cache_template.DockerComposeDragonflyVolumeTemplate
 		}
 
 		templates := []string{
