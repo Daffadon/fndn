@@ -15,3 +15,11 @@ valkey:
   username: "username"
   password: "password"
 `
+
+const DragonFlyYamlConfigTemplate string =`
+dragonfly:
+  address: "localhost"
+  port: "6379"
+  client_name: "your_service/app_name"
+  password: "password"
+`
