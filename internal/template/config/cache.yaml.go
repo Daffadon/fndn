@@ -23,3 +23,11 @@ dragonfly:
   client_name: "your_service/app_name"
   password: "password"
 `
+
+const RedictYamlConfigTemplate string =`
+redict:
+  address: "localhost"
+  port: "6379"
+  client_name: "your_service/app_name"
+  password: "password"
+`

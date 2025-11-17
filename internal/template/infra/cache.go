@@ -183,3 +183,62 @@ func (r *dragonflyInfra) Delete(ctx context.Context, key string) error {
 	return nil
 }
 `
+
+const RedictInfraTemplate string =`
+package cache_infra
+
+import (
+	"github.com/redis/go-redis/v9"
+	"github.com/rs/zerolog"
+)
+
+type (
+	RedictInfra interface {
+		Set(ctx context.Context, key string, value interface{}, expiration time.Duration) error
+		Get(ctx context.Context, key string) (string, error)
+		Delete(ctx context.Context, key string) error
+	}
+	redictInfra struct {
+		redictClient *redis.Client
+		logger      zerolog.Logger
+	}
+)
+
+func NewRedictCache(redictClient *redis.Client, logger zerolog.Logger) RedictInfra {
+	return &redictInfra{
+		redictClient: redictClient,
+		logger:      logger,
+	}
+}
+
+func (r *redictInfra) Set(ctx context.Context, key string, value interface{}, expiration time.Duration) error {
+	err := r.redictClient.Set(ctx, key, value, expiration).Err()
+	if err != nil {
+		r.logger.Error().Err(err).Str("key", key).Msg("failed to set value in redict")
+		return err
+	}
+	return nil
+}
+
+func (r *redictInfra) Get(ctx context.Context, key string) (string, error) {
+	val, err := r.redictClient.Get(ctx, key).Result()
+	if err != nil {
+		if err == redis.Nil {
+			r.logger.Warn().Str("key", key).Msg("key not found in redict")
+			return "", err
+		}
+		r.logger.Error().Err(err).Str("key", key).Msg("failed to get value from redict")
+		return "", err
+	}
+	return val, nil
+}
+
+func (r *redictInfra) Delete(ctx context.Context, key string) error {
+	err := r.redictClient.Del(ctx, key).Err()
+	if err != nil {
+		r.logger.Error().Err(err).Str("key", key).Msg("failed to delete key from redict")
+		return err
+	}
+	return nil
+}
+`
