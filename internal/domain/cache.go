@@ -23,6 +23,9 @@ func InitInMemoryConfig(i infra.CommandRunner, path *string, inMemory *string) e
 		case "dragonfly":
 			fileName = folderName + "/dragonfly.go"
 			template = cache_template.DragonflyConfigTemplate
+		case "redict":
+			fileName = folderName + "/redict.go"
+			template = cache_template.RedictConfigTemplate
 		}
 		if fileName != "" || template != "" {
 			if err := pkg.GoFileGenerator(i, path, folderName, fileName, template); err != nil {

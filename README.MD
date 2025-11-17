@@ -80,6 +80,7 @@ Currently, the generation are in default mode and custom mode with limitation at
 ![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?&style=for-the-badge&logo=redis&logoColor=white)
 ![Valkey](https://img.shields.io/badge/valkey-2D2471?style=for-the-badge&logo=valkey&logoColor=white)
 ![Dragonfly](https://img.shields.io/badge/Dragonfly-0B0514?style=for-the-badge&logo=dragonfly&logoColor=white)
+![Redict](https://img.shields.io/badge/Redict-800000?style=for-the-badge&logo=Redict&logoColor=white)
 
 - Object Storage
 

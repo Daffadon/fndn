@@ -52,6 +52,8 @@ func InitYamlConfig(i infra.CommandRunner, p *Project) error {
 			s += config_template.ValkeyYamlConfigTemplate
 		case "dragonfly":
 			s += config_template.DragonFlyYamlConfigTemplate
+		case "redict":
+			s += config_template.RedictYamlConfigTemplate
 		}
 
 		switch p.MQ {

@@ -55,6 +55,9 @@ func InitInMemoryInfra(i infra.CommandRunner, path *string, inMemory *string) er
 		case "dragonfly":
 			fileName = folderName + "/dragonfly_infra.go"
 			template = infra_template.DragonFlyInfraTemplate
+		case "redict":
+			fileName = folderName + "/redict_infra.go"
+			template = infra_template.RedictInfraTemplate
 		}
 		if fileName != "" || template != "" {
 			if err := pkg.GoFileGenerator(i, path, folderName, fileName, template); err != nil {
