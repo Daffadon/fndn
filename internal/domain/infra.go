@@ -99,6 +99,34 @@ func InitMQinfra(i infra.CommandRunner, p *Project) error {
 	return errors.New("path is nil")
 }
 
+func InitObjectStorageInfra(i infra.CommandRunner, path, os *string) error {
+	if path != nil {
+		folderName := "/internal/infra/storage"
+		fileName := folderName
+		var template string
+		switch *os {
+		case "rustfs":
+			fileName += "/rustfs.go"
+			template = infra_template.RustfsInfraTemplate
+
+		case "seaweedfs":
+			fileName += "/seaweedfs.go"
+			template = infra_template.SeaweedInfraTemplate
+
+		case "minio":
+			fileName += "/minio.go"
+			template = infra_template.MinioInfraTemplate
+		}
+		if template != "" {
+			if err := pkg.GoFileGenerator(i, path, folderName, fileName, template); err != nil {
+				log.Fatal(err)
+				return err
+			}
+		}
+		return nil
+	}
+	return errors.New("path is nil")
+}
 func InitMinioInfra(i infra.CommandRunner, path *string) error {
 	if path != nil {
 		folderName := "/internal/infra/storage"
