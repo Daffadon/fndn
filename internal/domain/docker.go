@@ -94,18 +94,31 @@ func InitDockerComposeConfig(i infra.CommandRunner, p *Project) error {
 			cacheVolumeTemplate = cache_template.DockerComposeRedictVolumeTemplate
 		}
 
+		var objectStorageDockerTemplate, objectStorageVolumeTemplate string
+		switch p.ObjectStorage {
+		case "rustfs":
+			objectStorageDockerTemplate = objectstorage_template.DockerComposeRustfsConfigTemplate
+			objectStorageVolumeTemplate = objectstorage_template.DockerComposeRustfsVolumeTemplate
+		case "seaweedfs":
+			objectStorageDockerTemplate = objectstorage_template.DockerComposeSeaweedfsConfigTemplate
+			objectStorageVolumeTemplate = objectstorage_template.DockerComposeSeaweedfsVolumeTemplate
+		case "minio":
+			objectStorageDockerTemplate = objectstorage_template.DockerComposeMinioConfigTemplate
+			objectStorageVolumeTemplate = objectstorage_template.DockerComposeMinioVolumeTemplate
+		}
+
 		templates := []string{
 			config_template.DockerComposeAppConfigTemplate,
 			dbDockerTemplate,
 			mqDockerTemplate,
 			cacheDockerTemplate,
-			objectstorage_template.DockerComposeMinioConfigTemplate,
+			objectStorageDockerTemplate,
 
 			// volume
 			database_template.DockerComposeDBVolumeTemplate,
 			mqVolumetemplate,
 			cacheVolumeTemplate,
-			objectstorage_template.DockerComposeMinioVolumeTemplate,
+			objectStorageVolumeTemplate,
 		}
 		for _, tpl := range templates {
 			if err := parserHelper(&results, tpl, st); err != nil {
