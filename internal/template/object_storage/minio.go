@@ -32,8 +32,8 @@ const DockerComposeMinioConfigTemplate string = `
     image: minio/minio:RELEASE.2025-05-24T17-08-30Z-cpuv1
     container_name: {{.ProjectName}}_storage
     environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      MINIO_ROOT_USER: ${OS_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${OS_ROOT_PASSWORD}
     restart: unless-stopped
     ports:
       - "9000:80"
