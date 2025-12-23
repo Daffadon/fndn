@@ -1,4 +1,4 @@
-# Go + Gin + 3rd Party + Clean Architecture 🤯
+# Go + Modern 3rd Party + Clean Architecture 🤯
 
 ```bash
  __            _
@@ -35,8 +35,8 @@ MQ_PASSWORD=password
 CACHE_PASSWORD=password
 
 # minio env
-MINIO_ROOT_USER=ROOTUSER
-MINIO_ROOT_PASSWORD=CHANGEME123
+OS_ROOT_USER=ROOTUSER
+OS_ROOT_PASSWORD=CHANGEME123
 ```
 
 After its been set, run the third party via docker command in the root of your project
