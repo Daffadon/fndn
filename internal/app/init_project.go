@@ -59,8 +59,8 @@ func (uc *InitProjectUseCase) Run(p *domain.Project, progressCh chan<- string) e
 			return domain.InitInMemoryConfig(uc.Runner, p.Path, &p.InMemory)
 		},
 		func() error {
-			progressCh <- "Running minio config generation"
-			return domain.InitMinioConfig(uc.Runner, p.Path)
+			progressCh <- "Running object config generation"
+			return domain.InitObjectStorageConfig(uc.Runner, p.Path, &p.ObjectStorage)
 		},
 
 		// infra
@@ -77,8 +77,8 @@ func (uc *InitProjectUseCase) Run(p *domain.Project, progressCh chan<- string) e
 			return domain.InitMQinfra(uc.Runner, p)
 		},
 		func() error {
-			progressCh <- "Running minio infra generation"
-			return domain.InitMinioInfra(uc.Runner, p.Path)
+			progressCh <- "Running object infra generation"
+			return domain.InitObjectStorageInfra(uc.Runner, p.Path, &p.ObjectStorage)
 		},
 
 		// domain
@@ -153,6 +153,10 @@ func (uc *InitProjectUseCase) Run(p *domain.Project, progressCh chan<- string) e
 		func() error {
 			progressCh <- "Running cache config file generation"
 			return domain.InitInMemoryConfigFile(uc.Runner, p)
+		},
+		func() error {
+			progressCh <- "Running object storage config file generation"
+			return domain.InitObjectStorageConfigFile(uc.Runner, p)
 		},
 		func() error {
 			progressCh <- "Running .env.example file generation"

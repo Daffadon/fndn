@@ -5,15 +5,16 @@ import (
 )
 
 type Project struct {
-	ModuleName string
-	Name       string
-	Path       *string
-	Framework  string
-	Database   string
-	MQ         string
-	InMemory   string
-	Git        bool
-	Air        bool
+	ModuleName    string
+	Name          string
+	Path          *string
+	Framework     string
+	Database      string
+	MQ            string
+	InMemory      string
+	ObjectStorage string
+	Git           bool
+	Air           bool
 }
 
 func InitProject(i infra.CommandRunner, path, moduleName string) error {

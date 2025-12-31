@@ -76,6 +76,8 @@ func (m *model) viewStep() string {
 		s += style.BlueStyle.Render("which message queue would you connect?\n")
 	case 7:
 		s += style.BlueStyle.Render("which in-memory store would you use?\n")
+	case 8:
+		s += style.BlueStyle.Render("which object storage whould you choose?\n")
 	}
 
 	s += "\n"
@@ -101,15 +103,16 @@ func (m *model) viewStep() string {
 func (m *model) submit() tea.Cmd {
 	m.stopwatch.Start()
 	project := domain.Project{
-		ModuleName: "",
-		Name:       "",
-		Path:       nil,
-		Git:        false,
-		Air:        false,
-		Framework:  "gin",
-		Database:   "postgresql",
-		MQ:         "nats",
-		InMemory:   "redis",
+		ModuleName:    "",
+		Name:          "",
+		Path:          nil,
+		Git:           false,
+		Air:           false,
+		Framework:     "gin",
+		Database:      "postgresql",
+		MQ:            "nats",
+		InMemory:      "redis",
+		ObjectStorage: "rustfs",
 	}
 	project.Path = &m.targetDir
 
@@ -138,6 +141,9 @@ func (m *model) submit() tea.Cmd {
 			}
 			if v, ok := m.steps[7].Input.Value().(string); ok {
 				project.InMemory = strings.ToLower(v)
+			}
+			if v, ok := m.steps[8].Input.Value().(string); ok {
+				project.ObjectStorage = strings.ToLower(v)
 			}
 		}
 	}

@@ -8,3 +8,21 @@ minio:
     user: "ROOTUSER"
     password: "CHANGEME123"
 `
+
+const RustfsYamlConfigTemplate string = `
+rustfs:
+  host: "localhost"
+  port: 9000
+  credential:
+    user: "ROOTUSER"
+    password: "CHANGEME123"
+`
+
+const SeaweedfsYamlConfigTemplate string = `
+seaweedfs:
+  host: "localhost"
+  port: 9000
+  credential:
+    user: "ROOTUSER"
+    password: "CHANGEME123"
+`

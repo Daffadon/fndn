@@ -37,7 +37,7 @@ const DockerComposeRabbitMQConfigTemplate string = `
       - "15672:15672"  # Management UI
 		volumes:
       - {{.ProjectName}}_rabbitmq_data:/var/lib/rabbitmq
-      - ./config/mq/definition.json:/etc/rabbitmq/definitions.json
+      - ./config/mq/definition.json:/etc/rabbitmq/definitions.json:ro
     environment:
       RABBITMQ_DEFAULT_USER: ${MQ_USER}
       RABBITMQ_DEFAULT_PASS: ${MQ_PASSWORD}

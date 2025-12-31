@@ -20,9 +20,9 @@ func BuildContainer() *dig.Container {
 	if err := container.Provide(logger.NewLogger); err != nil {
 		panic("Failed to provide logger: " + err.Error())
 	}
-	// minio connection
-	if err := container.Provide(storage.NewMinioConnection); err != nil {
-		panic("Failed to provide minio connection: " + err.Error())
+	// object storage connection
+	if err := container.Provide(storage.{{.OSConnection}}); err != nil {
+		panic("Failed to provide object storage connection: " + err.Error())
 	}
 
 	{{.MQInit}}
@@ -41,13 +41,13 @@ func BuildContainer() *dig.Container {
 	
 	// infra
 	if err := container.Provide(cache_infra.{{.CacheInfra}}); err != nil {
-		panic("Failed to provide redis infra: " + err.Error())
+		panic("Failed to provide cache infra: " + err.Error())
 	}	
 	if err := container.Provide(mq_infra.{{.MQInfra}}); err != nil {
 		panic("Failed to provide MQ infra: " + err.Error())
 	}	
-	if err := container.Provide(storage_infra.NewMinioInfra); err != nil {
-		panic("Failed to provide minio infra: " + err.Error())
+	if err := container.Provide(storage_infra.{{.OSInfra}}); err != nil {
+		panic("Failed to provide object storage infra: " + err.Error())
 	}	
 	if err := container.Provide(storage_infra.NewQuerier); err != nil {
 		panic("Failed to provide querier infra: " + err.Error())
