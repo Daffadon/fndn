@@ -18,12 +18,12 @@ Bootstrap your Go projects with clean architecture, best practices, and a solid 
 ---
 
 > [!NOTE]
-> v0.5.1 now is stable, latest version, and generating one set of application with its driver to 3rd party. in this version, you can generate different framework, database, message queue, and in-memory-store.
+> v0.6.0 now is stable, latest version, and generating one set of application with its driver to 3rd party. in this version, you can generate different framework, database, message queue, in-memory store, and object storage.
 
 ## 🔥 Get started
 
 ```bash
-go run github.com/daffadon/fndn@v0.5.1 init .
+go run github.com/daffadon/fndn@v0.6.0 init .
 ```
 
 \* . generate in current directory
@@ -31,7 +31,7 @@ go run github.com/daffadon/fndn@v0.5.1 init .
 OR
 
 ```bash
-go run github.com/daffadon/fndn@v0.5.1 --help
+go run github.com/daffadon/fndn@v0.6.0 --help
 ```
 
 to see how can you use the tools
@@ -44,12 +44,12 @@ to see how can you use the tools
 If you want to install the tools to your system, you can either using go install or download the binary in available release:
 
 ```bash
-go install github.com/daffadon/fndn@v0.5.1
+go install github.com/daffadon/fndn@v0.6.0
 ```
 
 ## 🛠️ The techstack
 
-Currently, the generation are in default mode and custom mode with limitation at `framework`, `database`, `message queue`, and `in-memory store`. the `Default` mode is using the first techstack from each section. the generated techstack that you can use are:
+Currently, the generation are in default mode and custom mode with limitation at `framework`, `database`, `message queue`, `in-memory store`, `object storage`. the `Default` mode is using the first techstack from each section. the generated techstack that you can use are:
 
 - Framework
 
@@ -84,6 +84,8 @@ Currently, the generation are in default mode and custom mode with limitation at
 
 - Object Storage
 
+![Rustfs](https://img.shields.io/badge/RustFS-0196D0?style=for-the-badge&logo=RustFS&logoColor=white)
+![Seaweedfs](https://img.shields.io/badge/Seaweedfs-0059AC?style=for-the-badge&logo=SeaweedFS&logoColor=white)
 ![Minio](https://img.shields.io/badge/minio-C8324D?style=for-the-badge&logo=nats&logoColor=white)
 
 - Deployment
@@ -215,6 +217,7 @@ main.go -> bootstrap/bootstrap.go -> di/di.go ---|----> internal/domain/*.go (ex
 
 > [!NOTE]
 > due to limitation, you can't use any database. instead use, `postgres` database. if you find similar log with below log in your postgres db, change the database to `postgres` (i've made this default, but in case you change the database name in docker-compose.yml, change your database).
+>
 > ```
 > /usr/local/bin/docker-entrypoint.sh: running /docker-entrypoint-initdb.d/20-install.sql
 > psql:/docker-entrypoint-initdb.d/20-install.sql:1: NOTICE: installing required extension "documentdb_core"
