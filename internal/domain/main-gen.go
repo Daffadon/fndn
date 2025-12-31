@@ -19,6 +19,8 @@ func InitDependencyInjection(i infra.CommandRunner, p *Project) error {
 			MQInfra         string
 			CacheConnection string
 			CacheInfra      string
+			OSConnection    string
+			OSInfra         string
 		}
 		switch p.Database {
 		case "postgresql", "mariadb", "clickhouse":
@@ -66,6 +68,19 @@ func InitDependencyInjection(i infra.CommandRunner, p *Project) error {
 		case "redict":
 			st.CacheConnection = "NewRedictConnection"
 			st.CacheInfra = "NewRedictCache"
+		}
+		switch p.ObjectStorage {
+		case "rustfs":
+			st.OSConnection = "NewRustfsConnection"
+			st.OSInfra = "NewRustfsInfra"
+
+		case "seaweedfs":
+			st.OSConnection = "NewSeaweedfsConnection"
+			st.OSInfra = "NewSeaweedfsInfra"
+
+		case "minio":
+			st.OSConnection = "NewMinioConnection"
+			st.OSInfra = "NewMinioInfra"
 		}
 
 		template, err := pkg.ParseTemplate(main_template.DITemplate, st)

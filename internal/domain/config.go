@@ -67,7 +67,16 @@ func InitYamlConfig(i infra.CommandRunner, p *Project) error {
 		case "amazon sqs":
 			s += config_template.AmazonSQSConfigTemplate
 		}
-		s += config_template.MinioYamlConfigTemplate
+
+		switch p.ObjectStorage {
+
+		case "rustfs":
+			s += config_template.RustfsYamlConfigTemplate
+		case "seaweedfs":
+			s += config_template.SeaweedfsYamlConfigTemplate
+		case "minio":
+			s += config_template.MinioYamlConfigTemplate
+		}
 		s += config_template.ServerYamlConfigTemplate
 
 		if err := pkg.GenericFileGenerator(i, p.Path, folderName, fileName, s); err != nil {
