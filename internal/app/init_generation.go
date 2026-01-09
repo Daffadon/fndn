@@ -14,11 +14,14 @@ func (i *InitGenerate) Run(g *domain.Generator, progressCh chan<- string) error 
 	switch g.Type {
 	case "framework":
 		progressCh <- "Running framework generation"
-		if err := domain.GenerateSpecificProject(g.Value, i.Runner, path); err != nil {
+		if err := domain.GenerateSpecificFramework(g.Value, i.Runner, path); err != nil {
 			return err
 		}
 	case "database":
-
+		progressCh <- "Running database config generation"
+		if err := domain.GenerateSpecificDatabase(g.Value, i.Runner, path); err != nil {
+			return err
+		}
 	}
 	progressCh <- "Running go get -u ./... to download 3rd party modules"
 	if err := i.Runner.Run("go", []string{"get", "-u", "./..."}, path); err != nil {
