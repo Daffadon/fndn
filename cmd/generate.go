@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	cli_database "github.com/daffadon/fndn/internal/ui/cli/main_generate/database"
 	cli_framework "github.com/daffadon/fndn/internal/ui/cli/main_generate/framework"
 	"github.com/spf13/cobra"
 )
@@ -21,12 +22,10 @@ var frameworkCmd = &cobra.Command{
 }
 
 var dbCmd = &cobra.Command{
-	Use:   "db",
+	Use:   "database",
 	Short: "Generate a database",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		// Add logic to generate a database
-		fmt.Println("Generating database...")
-		return nil
+		return cli_database.RunGenerateDatabaseConfig()
 	},
 }
 
