@@ -67,7 +67,7 @@ func BuildContainer() *dig.Container {
 	}
 
 	// http server
-	if err := container.Provide(router.NewHTTP); err != nil {
+	if err := container.Provide(router.{{.HTTPInit}}); err != nil {
 		panic("Failed to provide http server: " + err.Error())
 	}
 	return container

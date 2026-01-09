@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func NewHTTP() *chi.Mux{
+func NewHTTPChi() *chi.Mux{
 	r := chi.NewRouter()
 	env := os.Getenv("ENV")
 	if env != "production" {

@@ -14,6 +14,7 @@ func InitDependencyInjection(i infra.CommandRunner, p *Project) error {
 		folderName := "/cmd/di"
 		fileName := folderName + "/container.go"
 		var st struct {
+			HTTPInit        string
 			DBConnection    string
 			MQInit          string
 			MQInfra         string
@@ -21,6 +22,18 @@ func InitDependencyInjection(i infra.CommandRunner, p *Project) error {
 			CacheInfra      string
 			OSConnection    string
 			OSInfra         string
+		}
+		switch p.Framework {
+		case "gin":
+			st.HTTPInit = "NewHTTPGin"
+		case "chi":
+			st.HTTPInit = "NewHTTPChi"
+		case "echo":
+			st.HTTPInit = "NewHTTPEcho"
+		case "fiber":
+			st.HTTPInit = "NewHTTPFiber"
+		case "gorilla/mux":
+			st.HTTPInit = "NewHTTPMux"
 		}
 		switch p.Database {
 		case "postgresql", "mariadb", "clickhouse":

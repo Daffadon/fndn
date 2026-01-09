@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func NewHTTP() *fiber.App {
+func NewHTTPFiber() *fiber.App {
 	env := os.Getenv("ENV")
 	var config fiber.Config
 	if env == "production" {
