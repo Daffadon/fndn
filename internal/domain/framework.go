@@ -35,7 +35,7 @@ func InitFramework(i infra.CommandRunner, path *string, framework *string) error
 	return errors.New("path is nil")
 }
 
-func GenerateSpecificProject(framework string, infraRunner infra.CommandRunner, path string) error {
+func GenerateSpecificFramework(framework string, infraRunner infra.CommandRunner, path string) error {
 	// check folder config/router/ exist or not
 	// check filename
 	folderName := "/config/router"
