@@ -5,6 +5,7 @@ import (
 
 	cli_database "github.com/daffadon/fndn/internal/ui/cli/main_generate/database"
 	cli_framework "github.com/daffadon/fndn/internal/ui/cli/main_generate/framework"
+	cli_mq "github.com/daffadon/fndn/internal/ui/cli/main_generate/mq"
 	"github.com/spf13/cobra"
 )
 
@@ -33,9 +34,7 @@ var mqCmd = &cobra.Command{
 	Use:   "mq",
 	Short: "Generate a message queue",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		// Add logic to generate a message queue
-		fmt.Println("Generating message queue...")
-		return nil
+		return cli_mq.RunGenerateMQConfig()
 	},
 }
 
