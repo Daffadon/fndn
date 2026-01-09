@@ -133,9 +133,18 @@ func (m *GenerateModel) viewDone() string {
 		di,
 	)
 	if m.ConfigType != "framework" {
-		s += style.BlueStyle.Render("please take a look at https://github.com/daffadon/fndn/internal/template/common/all_config.yaml.md and search the keyword for additional config.local.yaml to make sure generated config is working\n")
-		s += style.BlueStyle.Render("please take a look at https://github.com/daffadon/fndn/internal/template/common/docker-compose.all.md and search the keyword to deploy associated product with generated config\n")
-		s += style.BlueStyle.Render("please take a look at https://github.com/daffadon/fndn/internal/template/common/platform_config_file.md and search the keyword to make a file associated to a product deployed (if needed)\n")
+		width := m.Width
+		if width <= 0 {
+			width = 80 // fallback until WindowSizeMsg arrives
+		}
+		lines := []string{
+			"check https://github.com/daffadon/fndn/blob/main/internal/template/common/all_config.yaml.md for additional config.local.yaml",
+			"check https://github.com/daffadon/fndn/blob/main/internal/template/common/docker-compose.all.md to deploy product associated",
+			"check https://github.com/daffadon/fndn/blob/main/internal/template/common/platform_config_file.md to make a config file product associated",
+		}
+		for _, line := range lines {
+			s += style.BlueStyle.Render(helper.PadOrTruncate(line, width)) + "\n"
+		}
 	}
 	return s
 }
@@ -145,6 +154,8 @@ func (m *GenerateModel) viewStep() string {
 	switch m.ConfigType {
 	case "framework":
 		s += "\nThis will generate a new config for chosen http framework\n"
+	case "database":
+		s += "\nThis will generate a new config for chose database\n"
 	}
 
 	s += "\n"
