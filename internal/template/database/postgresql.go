@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func NewSQLConn(logger zerolog.Logger) *pgxpool.Pool {
+func NewPostgresqlConn(logger zerolog.Logger) *pgxpool.Pool {
 	protocol := viper.GetString("database.sql.protocol")
 	host := viper.GetString("database.sql.host")
 	user := viper.GetString("database.sql.user")

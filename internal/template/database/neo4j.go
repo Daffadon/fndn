@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func NewGraphDBConn(logger zerolog.Logger) neo4j.DriverWithContext {
+func NewNeoFourJConn(logger zerolog.Logger) neo4j.DriverWithContext {
 	protocol := viper.GetString("database.graph.protocol")
 	host := viper.GetString("database.graph.host")
 	port := viper.GetString("database.graph.port")

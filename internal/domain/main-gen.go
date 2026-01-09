@@ -36,12 +36,18 @@ func InitDependencyInjection(i infra.CommandRunner, p *Project) error {
 			st.HTTPInit = "NewHTTPMux"
 		}
 		switch p.Database {
-		case "postgresql", "mariadb", "clickhouse":
-			st.DBConnection = "NewSQLConn"
+		case "postgresql":
+			st.DBConnection = "NewPostgresqlConn"
+		case "mariadb":
+			st.DBConnection = "NewMariaDBConn"
+		case "clickhouse":
+			st.DBConnection = "NewClickhouseConn"
+		case "mongodb":
+			st.DBConnection = "NewMongoDBConn"
+		case "ferretdb":
+			st.DBConnection = "NewFerretDBConn"
 		case "neo4j":
-			st.DBConnection = "NewGraphDBConn"
-		default:
-			st.DBConnection = "NewNoSQLConn"
+			st.DBConnection = "NewNeoFourJConn"
 		}
 
 		provideMQDefault := `
