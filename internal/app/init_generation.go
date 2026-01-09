@@ -22,6 +22,11 @@ func (i *InitGenerate) Run(g *domain.Generator, progressCh chan<- string) error 
 		if err := domain.GenerateSpecificDatabase(g.Value, i.Runner, path); err != nil {
 			return err
 		}
+	case "mq":
+		progressCh <- "Running message queue config generation"
+		if err := domain.GenerateSpecificMQ(g.Value, i.Runner, path); err != nil {
+			return err
+		}
 	}
 	progressCh <- "Running go get -u ./... to download 3rd party modules"
 	if err := i.Runner.Run("go", []string{"get", "-u", "./..."}, path); err != nil {
