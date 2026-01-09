@@ -153,9 +153,11 @@ func (m *GenerateModel) viewStep() string {
 	var s string
 	switch m.ConfigType {
 	case "framework":
-		s += "\nThis will generate a new config for chosen http framework\n"
+		s += "This will generate a new config for chosen http framework\n"
 	case "database":
-		s += "\nThis will generate a new config for chose database\n"
+		s += "This will generate a new config for chosen database\n"
+	case "mq":
+		s += "This will generate a new config for chosen message queue\n"
 	}
 
 	s += "\n"
