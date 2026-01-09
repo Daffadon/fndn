@@ -50,29 +50,44 @@ func InitDependencyInjection(i infra.CommandRunner, p *Project) error {
 			st.DBConnection = "NewNeoFourJConn"
 		}
 
-		provideMQDefault := `
-			// mq client connection
-			if err := container.Provide(mq.NewMQConnection); err != nil {
-				panic("Failed to provide mq connection: " + err.Error())
-			}
-		`
 		switch p.MQ {
 		case "nats":
 			st.MQInfra = "NewJetstreamInfra"
-			provideMQDefault += `
+			st.MQInit = `
+				// mq client connection
+				if err := container.Provide(mq.NewNatsConnection); err != nil {
+					panic("Failed to provide mq connection: " + err.Error())
+				}
 				// jetstream connection
 				if err := container.Provide(jetstream.New); err != nil {
 					panic("Failed to provide jetstream instance: " + err.Error())
 				}
 			`
 		case "rabbitmq":
+			st.MQInit = `
+				// mq client connection
+				if err := container.Provide(mq.NewRabbitMQConnection); err != nil {
+					panic("Failed to provide mq connection: " + err.Error())
+				}
+			`
 			st.MQInfra = "NewRabbitMQInfra"
 		case "kafka":
+			st.MQInit = `
+				// mq client connection
+				if err := container.Provide(mq.NewKafkaConnection); err != nil {
+					panic("Failed to provide mq connection: " + err.Error())
+				}
+			`
 			st.MQInfra = "NewKafkaInfra"
 		case "amazon sqs":
+			st.MQInit = `
+				// mq client connection
+				if err := container.Provide(mq.NewSQSConnection); err != nil {
+					panic("Failed to provide mq connection: " + err.Error())
+				}
+			`
 			st.MQInfra = "NewSQSInfra"
 		}
-		st.MQInit = provideMQDefault
 
 		switch p.InMemory {
 		case "redis":

@@ -8,7 +8,7 @@ import (
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 	
-func NewMQConnection() *amqp.Connection {
+func NewRabbitMQConnection() *amqp.Connection {
 	addr := fmt.Sprintf("%s://%s:%s@%s:%s/",
 		viper.GetString("rabbitmq.protocol"),
 		viper.GetString("rabbitmq.credential.user"),
