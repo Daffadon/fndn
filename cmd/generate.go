@@ -1,11 +1,11 @@
 package cmd
 
 import (
-	"fmt"
-
+	cli_cache "github.com/daffadon/fndn/internal/ui/cli/main_generate/cache"
 	cli_database "github.com/daffadon/fndn/internal/ui/cli/main_generate/database"
 	cli_framework "github.com/daffadon/fndn/internal/ui/cli/main_generate/framework"
 	cli_mq "github.com/daffadon/fndn/internal/ui/cli/main_generate/mq"
+	cli_storage "github.com/daffadon/fndn/internal/ui/cli/main_generate/storage"
 	"github.com/spf13/cobra"
 )
 
@@ -42,9 +42,7 @@ var cacheCmd = &cobra.Command{
 	Use:   "cache",
 	Short: "Generate a cache",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		// Add logic to generate a cache
-		fmt.Println("Generating cache...")
-		return nil
+		return cli_cache.RunGenerateCacheConfig()
 	},
 }
 
@@ -52,8 +50,6 @@ var storageCmd = &cobra.Command{
 	Use:   "storage",
 	Short: "Generate a file storage",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		// Add logic to generate file storage
-		fmt.Println("Generating file storage...")
-		return nil
+		return cli_storage.RunGenerateStorageConfig()
 	},
 }
