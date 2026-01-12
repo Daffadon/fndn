@@ -29,7 +29,7 @@ func NewSeaweedfsConnection() *minio.Client {
 const DockerComposeSeaweedfsConfigTemplate string = `
 # seaweedfs master
   {{.ProjectName}}_storage_master:
-    image: chrislusf/seaweedfs:4.03
+    image: dhi.io/seaweedfs:4
     container_name: {{.ProjectName}}_storage_master
 		command: 'master -ip={{.ProjectName}}_storage_master -port=9333 -disableHttp -volumePreallocate=false'
 		healthcheck:
@@ -43,7 +43,7 @@ const DockerComposeSeaweedfsConfigTemplate string = `
 
 # seaweed volume
   {{.ProjectName}}_storage_volume:
-    image: chrislusf/seaweedfs:4.03
+    image: dhi.io/seaweedfs:4
     container_name: {{.ProjectName}}_storage_volume
 		command: 'volume -ip={{.ProjectName}}_storage_volume -port=8080 -mserver={{.ProjectName}}_storage_master:9333'
 		healthcheck:
@@ -60,7 +60,7 @@ const DockerComposeSeaweedfsConfigTemplate string = `
 
 # seaweed filer
 	{{.ProjectName}}_storage_filer:
-		image: chrislusf/seaweedfs:4.03
+		image: dhi.io/seaweedfs:4
 		container_name: {{.ProjectName}}_storage_filer
 		command: 'filer -master={{.ProjectName}}_storage_master:9333 -ip={{.ProjectName}}_storage_filer -ip.bind=0.0.0.0 -port=8888 -port.readonly=8889'
 		ports:
@@ -82,7 +82,7 @@ const DockerComposeSeaweedfsConfigTemplate string = `
 
 # seaweed s3
 	{{.ProjectName}}_storage_s3:
-		image: chrislusf/seaweedfs:4.03
+		image: dhi.io/seaweedfs:4
 		container_name: {{.ProjectName}}_storage_s3
 		command: 's3 -filer={{.ProjectName}}_storage_filer:8888 -port=9000 -ip.bind=0.0.0.0 -config=/etc/seaweedfs/s3.json'
 		healthcheck:

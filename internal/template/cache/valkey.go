@@ -26,7 +26,7 @@ func NewValkeyConnection(logger zerolog.Logger) (valkey.Client, error) {
 const DockerComposeValkeyConfigTemplate string = `
 # valkey
   {{.ProjectName}}_cache:
-    image: valkey/valkey:9-alpine3.22
+    image: dhi.io/valkey:9
     container_name: {{.ProjectName}}_cache
     volumes:
       - {{.ProjectName}}_valkey_data:/data

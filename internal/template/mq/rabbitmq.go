@@ -30,7 +30,7 @@ func NewRabbitMQConnection() *amqp.Connection {
 const DockerComposeRabbitMQConfigTemplate string = `
 # rabbitmq
   {{.ProjectName}}_mq:
-		image: rabbitmq:4.1.4-alpine
+		image: dhi.io/rabbitmq:4.2
     container_name: {{.ProjectName}}_mq
     ports:
       - "5672:5672"    # RabbitMQ main port

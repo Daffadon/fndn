@@ -37,7 +37,7 @@ func NewPostgresqlConn(logger zerolog.Logger) *pgxpool.Pool {
 const DockerComposePostgresqlConfigTemplate string = `
 # db
   {{.ProjectName}}_db:
-    image: postgres:17.5-alpine3.22
+    image: dhi.io/postgres:17-alpine3.22
     container_name: {{.ProjectName}}_db
     environment:
       POSTGRES_USER: ${DB_USER}

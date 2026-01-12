@@ -39,7 +39,7 @@ func NewNeoFourJConn(logger zerolog.Logger) neo4j.DriverWithContext {
 const DockerComposeNeo4JConfigTemplate string = `
 # db
   {{.ProjectName}}_db:
-    image: neo4j:5.26.12-community-bullseye
+    image: dhi.io/neo4j:5
     container_name: {{.ProjectName}}_db
     environment:
       NEO4J_AUTH: ${DB_USER}/${DB_PASSWORD}

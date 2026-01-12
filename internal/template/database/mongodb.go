@@ -37,7 +37,7 @@ func NewMongoDBConn(logger zerolog.Logger) *mongo.Client {
 const DockerComposeMongoDBConfigTemplate string = `
 # db
 	{{.ProjectName}}_db:
-			image: mongo:8.0-noble
+			image: dhi.io/mongodb:8.0
 			container_name: {{.ProjectName}}_db
 			restart: unless-stopped
 			environment:

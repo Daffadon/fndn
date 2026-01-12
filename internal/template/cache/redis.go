@@ -29,7 +29,7 @@ func NewRedisConnection(zerolog zerolog.Logger) (*redis.Client, error) {
 const DockerComposeRedisConfigTemplate string = `
 # redis
   {{.ProjectName}}_cache:
-    image: redis:7.2
+    image: dhi.io/redis:7
     container_name: {{.ProjectName}}_cache
     volumes:
       - {{.ProjectName}}_redis_data:/data
