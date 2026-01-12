@@ -8,7 +8,7 @@ import(
 	"github.com/nats-io/nats.go"
 )
 
-func NewMQConnection() *nats.Conn {
+func NewNatsConnection() *nats.Conn {
 	addr := fmt.Sprintf("%s://%s:%s", viper.GetString("nats.protocol"), viper.GetString("nats.address"), viper.GetString("nats.port"))
 	nc, err := nats.Connect(addr,
 		nats.UserInfo(viper.GetString("nats.credential.user"), viper.GetString("nats.credential.password")),

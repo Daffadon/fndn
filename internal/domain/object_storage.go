@@ -12,19 +12,14 @@ import (
 func InitObjectStorageConfig(i infra.CommandRunner, path *string, os *string) error {
 	if path != nil {
 		folderName := "/config/storage"
-		fileName := folderName
+		fileName := folderName + "/storage.go"
 		var template string
 		switch *os {
 		case "rustfs":
-			fileName += "/rustfs.go"
 			template = objectstorage_template.RustfsConfigTemplate
-
 		case "seaweedfs":
-			fileName += "/seaweedfs.go"
 			template = objectstorage_template.SeaweedfsConfigTemplate
-
 		case "minio":
-			fileName += "/minio.go"
 			template = objectstorage_template.MinioConfigTemplate
 		}
 		if template != "" {
@@ -59,4 +54,34 @@ func InitObjectStorageConfigFile(i infra.CommandRunner, p *Project) error {
 		return nil
 	}
 	return errors.New("path is nil")
+}
+
+func GenerateSpecificStorage(storage string, infraRunner infra.CommandRunner, path string) error {
+	// check folder config/router/ exist or not
+	// check filename
+	folderName := "/config/storage_"
+	fileName := folderName + "/storage.go"
+
+	// if exist, the file name add _framework_name
+	exist := pkg.IsFileExists("." + fileName)
+	if exist {
+		fileName = folderName + "/storage_" + storage + ".go"
+	}
+
+	var t string
+	switch storage {
+	case "rustfs":
+		t = objectstorage_template.RustfsConfigTemplate
+	case "seaweedfs":
+		t = objectstorage_template.SeaweedfsConfigTemplate
+	case "minio":
+		t = objectstorage_template.MinioConfigTemplate
+	}
+
+	if err := pkg.GoFileGenerator(infraRunner, &path, folderName, fileName, t); err != nil {
+		log.Fatal(err)
+		return err
+	}
+
+	return nil
 }

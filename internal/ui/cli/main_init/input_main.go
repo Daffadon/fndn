@@ -1,4 +1,4 @@
-package ui
+package main_init
 
 import (
 	"fmt"
@@ -17,10 +17,6 @@ import (
 	"github.com/daffadon/fndn/internal/ui/module"
 	"github.com/daffadon/fndn/internal/ui/style"
 )
-
-func (m model) Init() tea.Cmd {
-	return tea.Batch(textinput.Blink, m.spinner.Tick)
-}
 
 func newModel(uc *app.InitProjectUseCase, targetDir string) model {
 	sp := spinner.New()
@@ -76,7 +72,7 @@ func newModel(uc *app.InitProjectUseCase, targetDir string) model {
 		},
 		{
 			Label:    "Object Storage",
-			Input:    module.NewRadioButton([]string{"RustFS", "SeaweedFS", "MinIO",}, 0),
+			Input:    module.NewRadioButton([]string{"RustFS", "SeaweedFS", "MinIO"}, 0),
 			Validate: nil,
 		},
 	}
@@ -102,6 +98,10 @@ func RunModuleInput(targetDir string) error {
 		return err
 	}
 	return nil
+}
+
+func (m model) Init() tea.Cmd {
+	return tea.Batch(textinput.Blink, m.spinner.Tick)
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {

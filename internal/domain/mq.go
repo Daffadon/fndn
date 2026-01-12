@@ -12,20 +12,16 @@ import (
 func InitMQConfig(i infra.CommandRunner, p *Project) error {
 	if p.Path != nil {
 		folderName := "/config/mq"
-		var fileName string
+		fileName := folderName + "/mq.go"
 		var template string
 		switch p.MQ {
 		case "nats":
-			fileName = folderName + "/nats.go"
 			template = mq_template.NatsConfigTemplate
 		case "rabbitmq":
-			fileName = folderName + "/rabbitmq.go"
 			template = mq_template.RabbitMQConfigTemplate
 		case "kafka":
-			fileName = folderName + "/kafka.go"
 			template = mq_template.KafkaConfigTemplate
 		case "amazon sqs":
-			fileName = folderName + "/sqs.go"
 			template = mq_template.AmazonSQSConfigTemplate
 		}
 		if fileName != "" || template != "" {
@@ -63,4 +59,36 @@ func InitMQConfigFile(i infra.CommandRunner, p *Project) error {
 		return nil
 	}
 	return errors.New("path is nil")
+}
+
+func GenerateSpecificMQ(mq string, infraRunner infra.CommandRunner, path string) error {
+	// check folder config/router/ exist or not
+	// check filename
+	folderName := "/config/mq"
+	fileName := folderName + "/mq.go"
+
+	// if exist, the file name add _framework_name
+	exist := pkg.IsFileExists("." + fileName)
+	if exist {
+		fileName = folderName + "/mq_" + mq + ".go"
+	}
+
+	var t string
+	switch mq {
+	case "nats":
+		t = mq_template.NatsConfigTemplate
+	case "rabbitmq":
+		t = mq_template.RabbitMQConfigTemplate
+	case "kafka":
+		t = mq_template.KafkaConfigTemplate
+	case "amazon sqs":
+		t = mq_template.AmazonSQSConfigTemplate
+	}
+
+	if err := pkg.GoFileGenerator(infraRunner, &path, folderName, fileName, t); err != nil {
+		log.Fatal(err)
+		return err
+	}
+
+	return nil
 }

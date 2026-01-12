@@ -72,7 +72,7 @@ func (r *RadioButton) View() string {
 
 	// Add instruction for navigation and selection
 	if r.focused {
-		s += "\n↑↓ to navigate, Space/Enter to choose "
+		s += "\n↑↓ to navigate, Space to select, Enter to choose "
 	}
 
 	return s[:len(s)-1] // Remove trailing newline

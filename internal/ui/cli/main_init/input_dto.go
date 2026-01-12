@@ -1,4 +1,4 @@
-package ui
+package main_init
 
 import (
 	"time"

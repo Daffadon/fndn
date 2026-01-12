@@ -11,7 +11,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func NewSQLConn(logger zerolog.Logger)*sql.DB {
+func NewMariaDBConn(logger zerolog.Logger)*sql.DB {
 	host := viper.GetString("database.sql.host")
 	user := viper.GetString("database.sql.user")
 	password := viper.GetString("database.sql.password")

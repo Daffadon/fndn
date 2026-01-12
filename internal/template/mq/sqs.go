@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func NewMQConnection(ctx context.Context) *sqs.Client {
+func NewSQSConnection(ctx context.Context) *sqs.Client {
 	cfg, err := config.LoadDefaultConfig(ctx, config.WithCredentialsProvider(
 		credentials.NewStaticCredentialsProvider(
 			viper.GetString("sqs.auth.access_key_id"), 			// AWS Access Key ID
