@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func NewHTTP() *gin.Engine {
+func NewHTTPGin() *gin.Engine {
 	env := os.Getenv("ENV")
 	if env == "production" {
 		gin.SetMode(gin.ReleaseMode)

@@ -9,10 +9,10 @@ import (
 	"github.com/spf13/viper"
 )
 
-func NewHTTP() *echo.Echo {
+func NewHTTPEcho() *echo.Echo {
 	env := os.Getenv("ENV")
 	e := echo.New()
-	e.Use(middleware.Logger())
+	e.Use(middleware.RequestLogger())
 
 	if env == "production" {
 		e.Debug = false

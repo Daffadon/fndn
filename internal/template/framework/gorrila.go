@@ -11,7 +11,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func NewHTTP() *mux.Router {
+func NewHTTPMux() *mux.Router {
 	r := mux.NewRouter()
 	return r
 }

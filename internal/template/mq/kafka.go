@@ -9,7 +9,7 @@ import(
 	"github.com/segmentio/kafka-go/sasl/plain"
 )
 
-func NewMQConnection() *kafka.Conn {
+func NewKafkaConnection() *kafka.Conn {
 	// Build Kafka broker address
 	addr := fmt.Sprintf("%s:%s", viper.GetString("kafka.address"), viper.GetString("kafka.port"))
 

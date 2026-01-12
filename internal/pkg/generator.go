@@ -8,6 +8,14 @@ import (
 	"golang.org/x/tools/imports"
 )
 
+func IsFileExists(filename string) bool {
+	info, err := os.Stat(filename)
+	if os.IsNotExist(err) {
+		return false
+	}
+	return !info.IsDir()
+}
+
 func GoFileGenerator(i infra.CommandRunner,
 	path *string,
 	folderName,

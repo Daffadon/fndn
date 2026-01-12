@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func NewSQLConn(logger zerolog.Logger) clickhouse.Conn {
+func NewClickhouseConn(logger zerolog.Logger) clickhouse.Conn {
 	addr := fmt.Sprintf("%s:%s", viper.GetString("database.sql.host"), viper.GetString("database.sql.port"))
 	conn, err := clickhouse.Open(&clickhouse.Options{
 		Addr: []string{addr},

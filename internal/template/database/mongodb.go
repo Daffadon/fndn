@@ -10,7 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 	
-func NewNoSQLConn(logger zerolog.Logger) *mongo.Client {
+func NewMongoDBConn(logger zerolog.Logger) *mongo.Client {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
