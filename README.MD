@@ -4,6 +4,8 @@
 Bootstrap your Go projects with clean architecture, best practices, and a solid foundation — all generated in seconds.
 
 ---
+> [!NOTE]
+> version/hdi is a branch that use product from Docker hardened Image in the docker compose file. I will try to keep this align with the stream in main branch as close as possible.
 
 ## 🚀 Features
 
