@@ -7,8 +7,6 @@ Bootstrap your Go projects with clean architecture, best practices, and a solid 
 
 ## 🚀 Features
 
-<!-- - 🔧 Configurable tech stack options -->
-
 - 🏗️ Clean architecture scaffolding
 - 🛠️ Customizable set of techstack
 - ⚡ Interactive CLI with Bubble Tea
@@ -18,12 +16,12 @@ Bootstrap your Go projects with clean architecture, best practices, and a solid 
 ---
 
 > [!NOTE]
-> v0.6.0 now is stable, latest version, and generating one set of application with its driver to 3rd party. in this version, you can generate different framework, database, message queue, in-memory store, and object storage.
+> v0.7.0 now is stable, latest version, and generating one set of application with its driver to 3rd party. in this version, you can generate different framework, database, message queue, in-memory store, and object storage.
 
 ## 🔥 Get started
 
 ```bash
-go run github.com/daffadon/fndn@v0.6.0 init .
+go run github.com/daffadon/fndn@v0.7.0 init .
 ```
 
 \* . generate in current directory
@@ -31,7 +29,7 @@ go run github.com/daffadon/fndn@v0.6.0 init .
 OR
 
 ```bash
-go run github.com/daffadon/fndn@v0.6.0 --help
+go run github.com/daffadon/fndn@v0.7.0 --help
 ```
 
 to see how can you use the tools
@@ -39,17 +37,25 @@ to see how can you use the tools
 > [!NOTE]
 > For The first time, it will take longer than expected to generate depends on go cache, go modcache, and your internet speed.
 
+After the project is generated, you can also generate a config for another techstack provided by using below command.
+
+```bash
+go run github.com/daffadon/fndn@v0.7.0 generate [command]
+```
+
+*command*: framework, database, mq, cache, storage
+
 ## 📦 Installation
 
 If you want to install the tools to your system, you can either using go install or download the binary in available release:
 
 ```bash
-go install github.com/daffadon/fndn@v0.6.0
+go install github.com/daffadon/fndn@v0.7.0
 ```
 
 ## 🛠️ The techstack
 
-Currently, the generation are in default mode and custom mode with limitation at `framework`, `database`, `message queue`, `in-memory store`, `object storage`. the `Default` mode is using the first techstack from each section. the generated techstack that you can use are:
+Currently, the generation are in default mode and custom mode with a freedom to choose `framework`, `database`, `message queue`, `in-memory store`, `object storage` that you need. the `Default` mode is using the first techstack from each section. the generated techstack that you can use are:
 
 - Framework
 
@@ -91,6 +97,12 @@ Currently, the generation are in default mode and custom mode with limitation at
 - Deployment
 
 ![Docker](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white)
+
+## 📃 Config Reference
+
+- [All Docker Compose](https://github.com/daffadon/fndn/blob/main/internal/template/common/docker-compose.all.md)
+- [Config YAML](https://github.com/daffadon/fndn/blob/main/internal/template/common/all_config.yaml.md)
+- [Platform Config File](https://github.com/daffadon/fndn/blob/main/internal/template/common/platform_config_file.md)
 
 ## 👌 What fndn do for you (v0.\*)
 
