@@ -27,6 +27,16 @@ func (i *InitGenerate) Run(g *domain.Generator, progressCh chan<- string) error 
 		if err := domain.GenerateSpecificMQ(g.Value, i.Runner, path); err != nil {
 			return err
 		}
+	case "cache":
+		progressCh <- "Running cache config generation"
+		if err := domain.GenerateSpecificCachce(g.Value, i.Runner, path); err != nil {
+			return err
+		}
+	case "storage":
+		progressCh <- "Running storage config generation"
+		if err := domain.GenerateSpecificStorage(g.Value, i.Runner, path); err != nil {
+			return err
+		}
 	}
 	progressCh <- "Running go get -u ./... to download 3rd party modules"
 	if err := i.Runner.Run("go", []string{"get", "-u", "./..."}, path); err != nil {
