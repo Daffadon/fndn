@@ -158,6 +158,10 @@ func (m *GenerateModel) viewStep() string {
 		s += "This will generate a new config for chosen database\n"
 	case "mq":
 		s += "This will generate a new config for chosen message queue\n"
+	case "cache":
+		s += "This will generate a new config for chosen cache\n"
+	case "storage":
+		s += "This will generate a new config for chosen object storage\n"
 	}
 
 	s += "\n"
