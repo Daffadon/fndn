@@ -17,6 +17,9 @@ Bootstrap your Go projects with clean architecture, best practices, and a solid 
 
 > [!NOTE]
 > v0.7.0 now is stable, latest version, and generating one set of application with its driver to 3rd party. in this version, you can generate different framework, database, message queue, in-memory store, and object storage.
+## 📋 Prerequisites
+
+Go Version: >= v1.25.0
 
 ## 🔥 Get started
 
