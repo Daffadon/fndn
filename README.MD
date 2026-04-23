@@ -5,6 +5,8 @@ Bootstrap your Go projects with clean architecture, best practices, and a solid 
 
 ---
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/Daffadon/fndn)
+
 ## 🚀 Features
 
 - 🏗️ Clean architecture scaffolding
