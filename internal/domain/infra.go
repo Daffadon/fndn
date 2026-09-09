@@ -35,6 +35,9 @@ var objectStorageInfraFiles = map[string][2]string{
 }
 
 func InitQuerierInfra(path *string, database *string) error {
+	if *database == None {
+		return nil
+	}
 	if path != nil {
 		folderName := "/internal/infra/storage"
 		fileName := folderName + "/querier.go"
@@ -63,6 +66,9 @@ func InitQuerierInfra(path *string, database *string) error {
 }
 
 func InitInMemoryInfra(path *string, inMemory *string) error {
+	if *inMemory == None {
+		return nil
+	}
 	if path != nil {
 		folderName := "/internal/infra/cache"
 		file, err := lookupFile(inMemoryInfraFiles, "in-memory store", *inMemory)
@@ -78,6 +84,9 @@ func InitInMemoryInfra(path *string, inMemory *string) error {
 }
 
 func InitMQinfra(p *Project) error {
+	if p.MQ == None {
+		return nil
+	}
 	if p.Path != nil {
 		folderName := "/internal/infra/mq"
 		file, err := lookupFile(mqInfraFiles, "message queue", p.MQ)
@@ -93,6 +102,9 @@ func InitMQinfra(p *Project) error {
 }
 
 func InitObjectStorageInfra(path, os *string) error {
+	if *os == None {
+		return nil
+	}
 	if path != nil {
 		folderName := "/internal/infra/storage"
 		file, err := lookupFile(objectStorageInfraFiles, "object storage", *os)

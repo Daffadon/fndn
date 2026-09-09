@@ -14,6 +14,9 @@ var objectStorageTemplates = map[string]string{
 }
 
 func InitObjectStorageConfig(path *string, os *string) error {
+	if *os == None {
+		return nil
+	}
 	if path != nil {
 		folderName := "/config/storage"
 		fileName := folderName + "/storage.go"
@@ -30,6 +33,9 @@ func InitObjectStorageConfig(path *string, os *string) error {
 }
 
 func InitObjectStorageConfigFile(p *Project) error {
+	if p.ObjectStorage == None {
+		return nil
+	}
 	if p.Path != nil {
 		if p.ObjectStorage != "seaweedfs" {
 			return nil

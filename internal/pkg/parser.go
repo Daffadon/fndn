@@ -22,6 +22,9 @@ func ParseTemplate(tmplStr string, data interface{}) (string, error) {
 
 func HTTPServerParser(fwk, db, mq, cache string) (string, error) {
 	var t types.HTTPServerParse
+	t.HasDB = db != types.None
+	t.HasMQ = mq != types.None
+	t.HasCache = cache != types.None
 	switch fwk {
 	case "gin":
 		t.FrameworkImport = `"github.com/gin-gonic/gin"`
@@ -101,7 +104,7 @@ func HTTPServerParser(fwk, db, mq, cache string) (string, error) {
 	}
 
 	switch cache {
-	case "redis","dragonfly","redict":
+	case "redis", "dragonfly", "redict":
 		t.CacheImport = `"github.com/redis/go-redis/v9"`
 		t.CacheInstanceType = "*redis.Client"
 		t.CacheCloseConn = `defer func() {

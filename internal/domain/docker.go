@@ -70,19 +70,19 @@ func InitDockerComposeConfig(p *Project) error {
 			ProjectName: p.Name,
 		}
 		var results []string
-		dbDockerTemplate, err := lookup(dockerDBTemplates, "database", p.Database)
+		dbDockerTemplate, err := section(dockerDBTemplates, "database", p.Database)
 		if err != nil {
 			return err
 		}
-		mqDocker, err := lookupFile(dockerMQTemplates, "message queue", p.MQ)
+		mqDocker, err := sectionFile(dockerMQTemplates, "message queue", p.MQ)
 		if err != nil {
 			return err
 		}
-		cacheDocker, err := lookupFile(dockerCacheTemplates, "in-memory store", p.InMemory)
+		cacheDocker, err := sectionFile(dockerCacheTemplates, "in-memory store", p.InMemory)
 		if err != nil {
 			return err
 		}
-		osDocker, err := lookupFile(dockerOSTemplates, "object storage", p.ObjectStorage)
+		osDocker, err := sectionFile(dockerOSTemplates, "object storage", p.ObjectStorage)
 		if err != nil {
 			return err
 		}

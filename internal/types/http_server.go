@@ -1,5 +1,8 @@
 package types
 
+// None deselects an entity. Init* funcs treat it as "skip, generate nothing".
+const None = "none"
+
 type (
 	HTTPServerParse struct {
 		FrameworkImport   string
@@ -14,5 +17,8 @@ type (
 		CacheImport       string
 		CacheInstanceType string
 		CacheCloseConn    string
+		HasDB             bool
+		HasMQ             bool
+		HasCache          bool
 	}
 )

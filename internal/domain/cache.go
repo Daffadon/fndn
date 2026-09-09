@@ -16,6 +16,9 @@ var cacheTemplates = map[string]string{
 }
 
 func InitInMemoryConfig(path *string, inMemory *string) error {
+	if *inMemory == None {
+		return nil
+	}
 	if path != nil {
 		folderName := "/config/cache"
 		fileName := folderName + "/cache.go"
@@ -33,6 +36,9 @@ func InitInMemoryConfig(path *string, inMemory *string) error {
 }
 
 func InitInMemoryConfigFile(p *Project) error {
+	if p.InMemory == None {
+		return nil
+	}
 	if p.Path != nil {
 		folderName := "/config/cache"
 		var fileName, template string

@@ -82,29 +82,37 @@ func InitDependencyInjection(p *Project) error {
 			CacheInfra      string
 			OSConnection    string
 			OSInfra         string
+			HasDB           bool
+			HasMQ           bool
+			HasCache        bool
+			HasOS           bool
 		}
 		var err error
 		if st.HTTPInit, err = lookup(diFrameworkInits, "framework", p.Framework); err != nil {
 			return err
 		}
-		if st.DBConnection, err = lookup(diDBConns, "database", p.Database); err != nil {
+		if st.DBConnection, err = section(diDBConns, "database", p.Database); err != nil {
 			return err
 		}
-		mq, err := lookupFile(diMQs, "message queue", p.MQ)
+		st.HasDB = p.Database != None
+		mq, err := sectionFile(diMQs, "message queue", p.MQ)
 		if err != nil {
 			return err
 		}
 		st.MQInfra, st.MQInit = mq[0], mq[1]
-		cache, err := lookupFile(diCacheConns, "in-memory store", p.InMemory)
+		st.HasMQ = p.MQ != None
+		cache, err := sectionFile(diCacheConns, "in-memory store", p.InMemory)
 		if err != nil {
 			return err
 		}
 		st.CacheConnection, st.CacheInfra = cache[0], cache[1]
-		os, err := lookupFile(diOSConns, "object storage", p.ObjectStorage)
+		st.HasCache = p.InMemory != None
+		os, err := sectionFile(diOSConns, "object storage", p.ObjectStorage)
 		if err != nil {
 			return err
 		}
 		st.OSConnection, st.OSInfra = os[0], os[1]
+		st.HasOS = p.ObjectStorage != None
 
 		template, err := pkg.ParseTemplate(main_template.DITemplate, st)
 		if err != nil {

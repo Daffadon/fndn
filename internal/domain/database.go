@@ -17,6 +17,9 @@ var databaseTemplates = map[string]string{
 }
 
 func InitDBConfig(path *string, db *string) error {
+	if *db == None {
+		return nil
+	}
 	if path != nil {
 		folderName := "/config/storage"
 		fileName := folderName + "/db.go"

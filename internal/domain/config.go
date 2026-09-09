@@ -49,13 +49,13 @@ func InitYamlConfig(p *Project) error {
 
 		s := config_template.YamlConfigMessageTemplate
 
-		db, err := lookup(yamlDBConfigs, "database", p.Database)
+		db, err := section(yamlDBConfigs, "database", p.Database)
 		if err != nil {
 			return err
 		}
 		s += db
 		s += config_template.AppYamlConfigTemplate
-		cache, err := lookup(yamlCacheConfigs, "in-memory store", p.InMemory)
+		cache, err := section(yamlCacheConfigs, "in-memory store", p.InMemory)
 		if err != nil {
 			return err
 		}
@@ -71,20 +71,18 @@ func InitYamlConfig(p *Project) error {
 			s += config_template.KafkaYamlConfigTemplate
 		case "amazon sqs":
 			s += config_template.AmazonSQSConfigTemplate
+		case None:
+			break
 		default:
 			_, err := lookup(yamlDBConfigs, "message queue", p.MQ)
 			return err
 		}
 
-		switch p.ObjectStorage {
-
-		case "rustfs":
-			s += config_template.RustfsYamlConfigTemplate
-		case "seaweedfs":
-			s += config_template.SeaweedfsYamlConfigTemplate
-		case "minio":
-			s += config_template.MinioYamlConfigTemplate
+		os, err := section(yamlOSConfigs, "object storage", p.ObjectStorage)
+		if err != nil {
+			return err
 		}
+		s += os
 		s += config_template.ServerYamlConfigTemplate
 
 		if err := pkg.GenericFileGenerator(p.Path, folderName, fileName, s); err != nil {

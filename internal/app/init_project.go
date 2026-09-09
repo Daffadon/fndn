@@ -14,6 +14,9 @@ type InitProjectUseCase struct {
 type initStep struct {
 	progress string
 	run      func() error
+	// needsDB skips the step when Database is none: the todo example chain
+	// (querier -> repository -> service -> handler) cannot compile without it.
+	needsDB bool
 }
 
 func (uc *InitProjectUseCase) Run(p *domain.Project, progressCh chan<- string) error {
@@ -39,122 +42,126 @@ func (uc *InitProjectUseCase) Run(p *domain.Project, progressCh chan<- string) e
 	// run each init sequentially (single thread)
 	steps := []initStep{
 		// config
-		{"Running framework generation", func() error {
+		{progress: "Running framework generation", run: func() error {
 			return domain.InitFramework(p.Path, &p.Framework)
 		}},
-		{"Running env config generation", func() error {
+		{progress: "Running env config generation", run: func() error {
 			return domain.InitENVConfig(p.Path)
 		}},
-		{"Running zerolog config generation", func() error {
+		{progress: "Running zerolog config generation", run: func() error {
 			return domain.InitZerologConfig(p.Path)
 		}},
-		{"Running DB config generation", func() error {
+		{progress: "Running DB config generation", run: func() error {
 			return domain.InitDBConfig(p.Path, &p.Database)
 		}},
-		{"Running mq config generation", func() error {
+		{progress: "Running mq config generation", run: func() error {
 			return domain.InitMQConfig(p)
 		}},
-		{"Running in-memory store config generation", func() error {
+		{progress: "Running in-memory store config generation", run: func() error {
 			return domain.InitInMemoryConfig(p.Path, &p.InMemory)
 		}},
-		{"Running object config generation", func() error {
+		{progress: "Running object config generation", run: func() error {
 			return domain.InitObjectStorageConfig(p.Path, &p.ObjectStorage)
 		}},
 
 		// infra
-		{"Running querier infra generation", func() error {
+		{progress: "Running querier infra generation", run: func() error {
 			return domain.InitQuerierInfra(p.Path, &p.Database)
-		}},
-		{"Running in-memory infra generation", func() error {
+		}, needsDB: true},
+		{progress: "Running in-memory infra generation", run: func() error {
 			return domain.InitInMemoryInfra(p.Path, &p.InMemory)
 		}},
-		{"Running mq infra generation", func() error {
+		{progress: "Running mq infra generation", run: func() error {
 			return domain.InitMQinfra(p)
 		}},
-		{"Running object infra generation", func() error {
+		{progress: "Running object infra generation", run: func() error {
 			return domain.InitObjectStorageInfra(p.Path, &p.ObjectStorage)
 		}},
 
 		// domain
-		{"Running dto example generation", func() error {
+		{progress: "Running dto example generation", run: func() error {
 			return domain.InitDTODomain(p.Path)
 		}},
-		{"Running repository example generation", func() error {
+		{progress: "Running repository example generation", run: func() error {
 			return domain.InitRepositoryDomain(p.Path, p.ModuleName)
-		}},
-		{"Running service example generation", func() error {
+		}, needsDB: true},
+		{progress: "Running service example generation", run: func() error {
 			return domain.InitServiceDomain(p.Path)
-		}},
-		{"Running handler example generation", func() error {
+		}, needsDB: true},
+		{progress: "Running handler example generation", run: func() error {
 			return domain.InitHandlerDomain(p.Path, &p.Framework)
-		}},
-		{"Running http handler example generation", func() error {
+		}, needsDB: true},
+		{progress: "Running http handler example generation", run: func() error {
 			return domain.InitHTTPHandlerDomain(p.Path, &p.Framework)
-		}},
-		{"Running pkg example generation", func() error {
+		}, needsDB: true},
+		{progress: "Running pkg example generation", run: func() error {
 			return domain.InitPkgExample(p.Path)
 		}},
 
 		// cmd
-		{"Running dependency injection file generation", func() error {
+		{progress: "Running dependency injection file generation", run: func() error {
 			return domain.InitDependencyInjection(p)
 		}},
-		{"Running bootstraper file generation", func() error {
+		{progress: "Running bootstraper file generation", run: func() error {
 			return domain.InitBootStrap(p.Path)
 		}},
-		{"Running server file generation", func() error {
+		{progress: "Running server file generation", run: func() error {
 			return domain.InitServer(p)
 		}},
-		{"Running main file generation", func() error {
+		{progress: "Running main file generation", run: func() error {
 			return domain.InitMain(p.Path)
 		}},
 
 		// global config
-		{"Running init air config", func() error {
+		{progress: "Running init air config", run: func() error {
 			return domain.InitAirConfig(uc.Runner, p.Path, p.Air)
 		}},
-		{"Running config.local.yaml generation", func() error {
+		{progress: "Running config.local.yaml generation", run: func() error {
 			return domain.InitYamlConfig(p)
 		}},
-		{"Running .gitignore file generation", func() error {
+		{progress: "Running .gitignore file generation", run: func() error {
 			return domain.InitGitignoreConfig(p.Path)
 		}},
-		{"Running Dockerfile file generation", func() error {
+		{progress: "Running Dockerfile file generation", run: func() error {
 			return domain.InitDockerFileConfig(p.Path, p.Name)
 		}},
-		{"Running docker-compose.yml file generation", func() error {
+		{progress: "Running docker-compose.yml file generation", run: func() error {
 			return domain.InitDockerComposeConfig(p)
 		}},
-		{"Running mq config file generation", func() error {
+		{progress: "Running mq config file generation", run: func() error {
 			return domain.InitMQConfigFile(p)
 		}},
-		{"Running cache config file generation", func() error {
+		{progress: "Running cache config file generation", run: func() error {
 			return domain.InitInMemoryConfigFile(p)
 		}},
-		{"Running object storage config file generation", func() error {
+		{progress: "Running object storage config file generation", run: func() error {
 			return domain.InitObjectStorageConfigFile(p)
 		}},
-		{"Running .env.example file generation", func() error {
+		{progress: "Running .env.example file generation", run: func() error {
 			return domain.InitDotEnvExampleConfig(p.Path)
 		}},
-		{"Running readme.md file generation", func() error {
+		{progress: "Running readme.md file generation", run: func() error {
 			return domain.InitReadme(p.Path)
 		}},
-		{"Running version file generation", func() error {
+		{progress: "Running version file generation", run: func() error {
 			return domain.InitVersion(p.Path)
 		}},
-		{"Running build script file generation", func() error {
+		{progress: "Running build script file generation", run: func() error {
 			return domain.InitBuildScript(p.Path, p.ModuleName)
 		}},
-		{"Running binary build script file generation", func() error {
+		{progress: "Running binary build script file generation", run: func() error {
 			return domain.InitBinaryBuildScript(p.Path, p.Name)
 		}},
-		{"Running Makefile file generation", func() error {
+		{progress: "Running Makefile file generation", run: func() error {
 			return domain.InitMakefile(p.Path)
 		}},
 	}
 
 	for _, s := range steps {
+		if s.needsDB && p.Database == domain.None {
+			progressCh <- "Skipping " + s.progress + " (no database selected)"
+			continue
+		}
 		progressCh <- s.progress
 		if err := s.run(); err != nil {
 			return err

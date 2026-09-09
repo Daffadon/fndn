@@ -21,6 +21,9 @@ var mqConfigFiles = map[string][2]string{
 }
 
 func InitMQConfig(p *Project) error {
+	if p.MQ == None {
+		return nil
+	}
 	if p.Path != nil {
 		folderName := "/config/mq"
 		fileName := folderName + "/mq.go"
@@ -37,6 +40,9 @@ func InitMQConfig(p *Project) error {
 }
 
 func InitMQConfigFile(p *Project) error {
+	if p.MQ == None {
+		return nil
+	}
 	if p.Path != nil {
 		folderName := "/config/mq"
 		file, ok := mqConfigFiles[p.MQ]
