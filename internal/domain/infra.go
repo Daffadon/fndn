@@ -2,38 +2,59 @@ package domain
 
 import (
 	"errors"
-	"log"
 
-	"github.com/daffadon/fndn/internal/infra"
 	"github.com/daffadon/fndn/internal/pkg"
 	infra_template "github.com/daffadon/fndn/internal/template/infra"
 )
 
-func InitQuerierInfra(i infra.CommandRunner, path *string, database *string) error {
+var querierTemplates = map[string]string{
+	"postgresql": infra_template.QuerierPgxInfraTemplate,
+	"mariadb":    infra_template.QuerierMariaDBInfraTemplate,
+	"clickhouse": infra_template.QuerierClickHouseInfraTemplate,
+	"neo4j":      infra_template.QuerierNeo4jInfraTemplate,
+}
+
+var inMemoryInfraFiles = map[string][2]string{
+	"redis":     {"/redis_infra.go", infra_template.RedisInfraTemplate},
+	"valkey":    {"/valkey_infra.go", infra_template.ValkeyInfraTemplate},
+	"dragonfly": {"/dragonfly_infra.go", infra_template.DragonFlyInfraTemplate},
+	"redict":    {"/redict_infra.go", infra_template.RedictInfraTemplate},
+}
+
+var mqInfraFiles = map[string][2]string{
+	"nats":       {"/jetstream_infra.go", infra_template.JetstreamInfraTemplate},
+	"rabbitmq":   {"/rabbitmq_infra.go", infra_template.RabbitMQInfraTemplate},
+	"kafka":      {"/kafka_infra.go", infra_template.KafkaMQInfraTemplate},
+	"amazon sqs": {"/sqs_infra.go", infra_template.AmazonSQSInfratemplate},
+}
+
+var objectStorageInfraFiles = map[string][2]string{
+	"rustfs":    {"/rustfs.go", infra_template.RustfsInfraTemplate},
+	"seaweedfs": {"/seaweedfs.go", infra_template.SeaweedInfraTemplate},
+	"minio":     {"/minio.go", infra_template.MinioInfraTemplate},
+}
+
+func InitQuerierInfra(path *string, database *string) error {
 	if path != nil {
 		folderName := "/internal/infra/storage"
 		fileName := folderName + "/querier.go"
 		var s string
 		switch *database {
-		case "postgresql":
-			s = infra_template.QuerierPgxInfraTemplate
-		case "mariadb":
-			s = infra_template.QuerierMariaDBInfraTemplate
-		case "clickhouse":
-			s = infra_template.QuerierClickHouseInfraTemplate
 		case "mongodb", "ferretdb":
 			st := struct{ DatabaseName string }{DatabaseName: "database_name"}
 			tmp, err := pkg.ParseTemplate(infra_template.QuerierMongoDBInfraTemplate, st)
 			if err != nil {
-				log.Println(err)
-			} else {
-				s = tmp
+				return err
 			}
-		case "neo4j":
-			s = infra_template.QuerierNeo4jInfraTemplate
+			s = tmp
+		default:
+			var err error
+			s, err = lookup(querierTemplates, "database", *database)
+			if err != nil {
+				return err
+			}
 		}
-		if err := pkg.GoFileGenerator(i, path, folderName, fileName, s); err != nil {
-			log.Fatal(err)
+		if err := pkg.GoFileGenerator(path, folderName, fileName, s); err != nil {
 			return err
 		}
 		return nil
@@ -41,98 +62,56 @@ func InitQuerierInfra(i infra.CommandRunner, path *string, database *string) err
 	return errors.New("path is nil")
 }
 
-func InitInMemoryInfra(i infra.CommandRunner, path *string, inMemory *string) error {
+func InitInMemoryInfra(path *string, inMemory *string) error {
 	if path != nil {
 		folderName := "/internal/infra/cache"
-		var fileName, template string
-		switch *inMemory {
-		case "redis":
-			fileName = folderName + "/redis_infra.go"
-			template = infra_template.RedisInfraTemplate
-		case "valkey":
-			fileName = folderName + "/valkey_infra.go"
-			template = infra_template.ValkeyInfraTemplate
-		case "dragonfly":
-			fileName = folderName + "/dragonfly_infra.go"
-			template = infra_template.DragonFlyInfraTemplate
-		case "redict":
-			fileName = folderName + "/redict_infra.go"
-			template = infra_template.RedictInfraTemplate
+		file, err := lookupFile(inMemoryInfraFiles, "in-memory store", *inMemory)
+		if err != nil {
+			return err
 		}
-		if fileName != "" || template != "" {
-			if err := pkg.GoFileGenerator(i, path, folderName, fileName, template); err != nil {
-				log.Fatal(err)
-				return err
-			}
+		if err := pkg.GoFileGenerator(path, folderName, folderName+file[0], file[1]); err != nil {
+			return err
 		}
 		return nil
 	}
 	return errors.New("path is nil")
 }
 
-func InitMQinfra(i infra.CommandRunner, p *Project) error {
+func InitMQinfra(p *Project) error {
 	if p.Path != nil {
 		folderName := "/internal/infra/mq"
-		var fileName, template string
-		switch p.MQ {
-		case "nats":
-			fileName = folderName + "/jetstream_infra.go"
-			template = infra_template.JetstreamInfraTemplate
-		case "rabbitmq":
-			fileName = folderName + "/rabbitmq_infra.go"
-			template = infra_template.RabbitMQInfraTemplate
-		case "kafka":
-			fileName = folderName + "/kafka_infra.go"
-			template = infra_template.KafkaMQInfraTemplate
-		case "amazon sqs":
-			fileName = folderName + "/sqs_infra.go"
-			template = infra_template.AmazonSQSInfratemplate
+		file, err := lookupFile(mqInfraFiles, "message queue", p.MQ)
+		if err != nil {
+			return err
 		}
-		if fileName != "" || template != "" {
-			if err := pkg.GoFileGenerator(i, p.Path, folderName, fileName, template); err != nil {
-				log.Fatal(err)
-				return err
-			}
+		if err := pkg.GoFileGenerator(p.Path, folderName, folderName+file[0], file[1]); err != nil {
+			return err
 		}
 		return nil
 	}
 	return errors.New("path is nil")
 }
 
-func InitObjectStorageInfra(i infra.CommandRunner, path, os *string) error {
+func InitObjectStorageInfra(path, os *string) error {
 	if path != nil {
 		folderName := "/internal/infra/storage"
-		fileName := folderName
-		var template string
-		switch *os {
-		case "rustfs":
-			fileName += "/rustfs.go"
-			template = infra_template.RustfsInfraTemplate
-
-		case "seaweedfs":
-			fileName += "/seaweedfs.go"
-			template = infra_template.SeaweedInfraTemplate
-
-		case "minio":
-			fileName += "/minio.go"
-			template = infra_template.MinioInfraTemplate
+		file, err := lookupFile(objectStorageInfraFiles, "object storage", *os)
+		if err != nil {
+			return err
 		}
-		if template != "" {
-			if err := pkg.GoFileGenerator(i, path, folderName, fileName, template); err != nil {
-				log.Fatal(err)
-				return err
-			}
+		if err := pkg.GoFileGenerator(path, folderName, folderName+file[0], file[1]); err != nil {
+			return err
 		}
 		return nil
 	}
 	return errors.New("path is nil")
 }
-func InitMinioInfra(i infra.CommandRunner, path *string) error {
+
+func InitMinioInfra(path *string) error {
 	if path != nil {
 		folderName := "/internal/infra/storage"
 		fileName := folderName + "/minio.go"
-		if err := pkg.GoFileGenerator(i, path, folderName, fileName, infra_template.MinioInfraTemplate); err != nil {
-			log.Fatal(err)
+		if err := pkg.GoFileGenerator(path, folderName, fileName, infra_template.MinioInfraTemplate); err != nil {
 			return err
 		}
 		return nil

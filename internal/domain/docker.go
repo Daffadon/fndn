@@ -2,10 +2,7 @@ package domain
 
 import (
 	"errors"
-	"log"
-	"sync"
 
-	"github.com/daffadon/fndn/internal/infra"
 	"github.com/daffadon/fndn/internal/pkg"
 	cache_template "github.com/daffadon/fndn/internal/template/cache"
 	config_template "github.com/daffadon/fndn/internal/template/config"
@@ -14,7 +11,35 @@ import (
 	objectstorage_template "github.com/daffadon/fndn/internal/template/object_storage"
 )
 
-func InitDockerFileConfig(i infra.CommandRunner, path *string, projectName string) error {
+var dockerDBTemplates = map[string]string{
+	"postgresql": database_template.DockerComposePostgresqlConfigTemplate,
+	"mariadb":    database_template.DockerComposeMariaDBConfigTemplate,
+	"clickhouse": database_template.DockerComposeClickHouseConfigTemplate,
+	"mongodb":    database_template.DockerComposeMongoDBConfigTemplate,
+	"ferretdb":   database_template.DockerComposeFerretDBConfigTemplate,
+	"neo4j":      database_template.DockerComposeNeo4JConfigTemplate,
+}
+
+var dockerMQTemplates = map[string][2]string{
+	"nats":     {mq_template.DockerComposeNatsConfigTemplate, mq_template.DockerComposeNatsVolumeTemplate},
+	"rabbitmq": {mq_template.DockerComposeRabbitMQConfigTemplate, mq_template.DockerComposeRabbitVolumeTemplate},
+	"kafka":    {mq_template.DockerComposeKafkaConfigTemplate, mq_template.DockerComposeKafkaVolumeTemplate},
+}
+
+var dockerCacheTemplates = map[string][2]string{
+	"redis":     {cache_template.DockerComposeRedisConfigTemplate, cache_template.DockerComposeRedisVolumeTemplate},
+	"valkey":    {cache_template.DockerComposeValkeyConfigTemplate, cache_template.DockerComposeValkeyVolumeTemplate},
+	"dragonfly": {cache_template.DockerComposeDragonflyConfigTemplate, cache_template.DockerComposeDragonflyVolumeTemplate},
+	"redict":    {cache_template.DockerComposeRedictConfigTemplate, cache_template.DockerComposeRedictVolumeTemplate},
+}
+
+var dockerOSTemplates = map[string][2]string{
+	"rustfs":    {objectstorage_template.DockerComposeRustfsConfigTemplate, objectstorage_template.DockerComposeRustfsVolumeTemplate},
+	"seaweedfs": {objectstorage_template.DockerComposeSeaweedfsConfigTemplate, objectstorage_template.DockerComposeSeaweedfsVolumeTemplate},
+	"minio":     {objectstorage_template.DockerComposeMinioConfigTemplate, objectstorage_template.DockerComposeMinioVolumeTemplate},
+}
+
+func InitDockerFileConfig(path *string, projectName string) error {
 	if path != nil {
 		folderName := ""
 		fileName := folderName + "/Dockerfile"
@@ -25,11 +50,9 @@ func InitDockerFileConfig(i infra.CommandRunner, path *string, projectName strin
 		}
 		c, err := pkg.ParseTemplate(config_template.DockerfileConfigTemplate, st)
 		if err != nil {
-			log.Fatal(err)
 			return err
 		}
-		if err := pkg.GenericFileGenerator(i, path, folderName, fileName, c); err != nil {
-			log.Fatal(err)
+		if err := pkg.GenericFileGenerator(path, folderName, fileName, c); err != nil {
 			return err
 		}
 		return nil
@@ -37,7 +60,7 @@ func InitDockerFileConfig(i infra.CommandRunner, path *string, projectName strin
 	return errors.New("path is nil")
 }
 
-func InitDockerComposeConfig(i infra.CommandRunner, p *Project) error {
+func InitDockerComposeConfig(p *Project) error {
 	if p.Path != nil {
 		folderName := ""
 		fileName := folderName + "/docker-compose.yml"
@@ -47,84 +70,42 @@ func InitDockerComposeConfig(i infra.CommandRunner, p *Project) error {
 			ProjectName: p.Name,
 		}
 		var results []string
-		var dbDockerTemplate string
-		switch p.Database {
-		case "postgresql":
-			dbDockerTemplate = database_template.DockerComposePostgresqlConfigTemplate
-		case "mariadb":
-			dbDockerTemplate = database_template.DockerComposeMariaDBConfigTemplate
-		case "clickhouse":
-			dbDockerTemplate = database_template.DockerComposeClickHouseConfigTemplate
-		case "mongodb":
-			dbDockerTemplate = database_template.DockerComposeMongoDBConfigTemplate
-		case "ferretdb":
-			dbDockerTemplate = database_template.DockerComposeFerretDBConfigTemplate
-		case "neo4j":
-			dbDockerTemplate = database_template.DockerComposeNeo4JConfigTemplate
+		dbDockerTemplate, err := lookup(dockerDBTemplates, "database", p.Database)
+		if err != nil {
+			return err
 		}
-
-		var mqDockerTemplate string
-		var mqVolumetemplate string
-		switch p.MQ {
-		case "nats":
-			mqDockerTemplate = mq_template.DockerComposeNatsConfigTemplate
-			mqVolumetemplate = mq_template.DockerComposeNatsVolumeTemplate
-		case "rabbitmq":
-			mqDockerTemplate = mq_template.DockerComposeRabbitMQConfigTemplate
-			mqVolumetemplate = mq_template.DockerComposeRabbitVolumeTemplate
-		case "kafka":
-			mqDockerTemplate = mq_template.DockerComposeKafkaConfigTemplate
-			mqVolumetemplate = mq_template.DockerComposeKafkaVolumeTemplate
+		mqDocker, err := lookupFile(dockerMQTemplates, "message queue", p.MQ)
+		if err != nil {
+			return err
 		}
-
-		var cacheDockerTemplate string
-		var cacheVolumeTemplate string
-		switch p.InMemory {
-		case "redis":
-			cacheDockerTemplate = cache_template.DockerComposeRedisConfigTemplate
-			cacheVolumeTemplate = cache_template.DockerComposeRedisVolumeTemplate
-		case "valkey":
-			cacheDockerTemplate = cache_template.DockerComposeValkeyConfigTemplate
-			cacheVolumeTemplate = cache_template.DockerComposeValkeyVolumeTemplate
-		case "dragonfly":
-			cacheDockerTemplate = cache_template.DockerComposeDragonflyConfigTemplate
-			cacheVolumeTemplate = cache_template.DockerComposeDragonflyVolumeTemplate
-		case "redict":
-			cacheDockerTemplate = cache_template.DockerComposeRedictConfigTemplate
-			cacheVolumeTemplate = cache_template.DockerComposeRedictVolumeTemplate
+		cacheDocker, err := lookupFile(dockerCacheTemplates, "in-memory store", p.InMemory)
+		if err != nil {
+			return err
 		}
-
-		var objectStorageDockerTemplate, objectStorageVolumeTemplate string
-		switch p.ObjectStorage {
-		case "rustfs":
-			objectStorageDockerTemplate = objectstorage_template.DockerComposeRustfsConfigTemplate
-			objectStorageVolumeTemplate = objectstorage_template.DockerComposeRustfsVolumeTemplate
-		case "seaweedfs":
-			objectStorageDockerTemplate = objectstorage_template.DockerComposeSeaweedfsConfigTemplate
-			objectStorageVolumeTemplate = objectstorage_template.DockerComposeSeaweedfsVolumeTemplate
-		case "minio":
-			objectStorageDockerTemplate = objectstorage_template.DockerComposeMinioConfigTemplate
-			objectStorageVolumeTemplate = objectstorage_template.DockerComposeMinioVolumeTemplate
+		osDocker, err := lookupFile(dockerOSTemplates, "object storage", p.ObjectStorage)
+		if err != nil {
+			return err
 		}
 
 		templates := []string{
 			config_template.DockerComposeAppConfigTemplate,
 			dbDockerTemplate,
-			mqDockerTemplate,
-			cacheDockerTemplate,
-			objectStorageDockerTemplate,
+			mqDocker[0],
+			cacheDocker[0],
+			osDocker[0],
 
 			// volume
 			database_template.DockerComposeDBVolumeTemplate,
-			mqVolumetemplate,
-			cacheVolumeTemplate,
-			objectStorageVolumeTemplate,
+			mqDocker[1],
+			cacheDocker[1],
+			osDocker[1],
 		}
 		for _, tpl := range templates {
-			if err := parserHelper(&results, tpl, st); err != nil {
-				log.Fatal(err)
+			c, err := pkg.ParseTemplate(tpl, st)
+			if err != nil {
 				return err
 			}
+			results = append(results, c)
 		}
 
 		s := config_template.DockerComposeDefaultConfigTemplate
@@ -134,23 +115,10 @@ func InitDockerComposeConfig(i infra.CommandRunner, p *Project) error {
 			}
 			s += results[i]
 		}
-		if err := pkg.GenericFileGenerator(i, p.Path, folderName, fileName, s); err != nil {
-			log.Fatal(err)
+		if err := pkg.GenericFileGenerator(p.Path, folderName, fileName, s); err != nil {
 			return err
 		}
 		return nil
 	}
 	return errors.New("path is nil")
-}
-
-func parserHelper(results *[]string, template string, st interface{}) error {
-	var mu sync.Mutex
-	c, err := pkg.ParseTemplate(template, st)
-	if err != nil {
-		return err
-	}
-	mu.Lock()
-	*results = append(*results, c)
-	mu.Unlock()
-	return nil
 }

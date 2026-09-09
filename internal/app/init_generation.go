@@ -1,6 +1,8 @@
 package app
 
 import (
+	"fmt"
+
 	"github.com/daffadon/fndn/internal/domain"
 	"github.com/daffadon/fndn/internal/infra"
 )
@@ -9,35 +11,32 @@ type InitGenerate struct {
 	Runner infra.CommandRunner
 }
 
+func (i *InitGenerate) generators() map[domain.GeneratorType]func(value, path string) error {
+	return map[domain.GeneratorType]func(string, string) error{
+		domain.GeneratorFramework: domain.GenerateSpecificFramework,
+		domain.GeneratorDatabase:  domain.GenerateSpecificDatabase,
+		domain.GeneratorMQ:        domain.GenerateSpecificMQ,
+		domain.GeneratorCache:     domain.GenerateSpecificCache,
+		domain.GeneratorStorage:   domain.GenerateSpecificStorage,
+	}
+}
+
 func (i *InitGenerate) Run(g *domain.Generator, progressCh chan<- string) error {
 	path := "."
-	switch g.Type {
-	case "framework":
-		progressCh <- "Running framework generation"
-		if err := domain.GenerateSpecificFramework(g.Value, i.Runner, path); err != nil {
-			return err
-		}
-	case "database":
-		progressCh <- "Running database config generation"
-		if err := domain.GenerateSpecificDatabase(g.Value, i.Runner, path); err != nil {
-			return err
-		}
-	case "mq":
-		progressCh <- "Running message queue config generation"
-		if err := domain.GenerateSpecificMQ(g.Value, i.Runner, path); err != nil {
-			return err
-		}
-	case "cache":
-		progressCh <- "Running cache config generation"
-		if err := domain.GenerateSpecificCachce(g.Value, i.Runner, path); err != nil {
-			return err
-		}
-	case "storage":
-		progressCh <- "Running storage config generation"
-		if err := domain.GenerateSpecificStorage(g.Value, i.Runner, path); err != nil {
-			return err
-		}
+	gen, ok := i.generators()[g.Type]
+	if !ok {
+		return fmt.Errorf("unknown generator type %q", g.Type)
 	}
+	progressCh <- fmt.Sprintf("Running %s generation", g.Type)
+	if err := gen(g.Value, path); err != nil {
+		return err
+	}
+	return i.Finalize(path, progressCh)
+}
+
+// Finalize runs toolchain commands needing network. Split from Run's
+// file generation so scaffold stays testable offline.
+func (i *InitGenerate) Finalize(path string, progressCh chan<- string) error {
 	progressCh <- "Running go get -u ./... to download 3rd party modules"
 	if err := i.Runner.Run("go", []string{"get", "-u", "./..."}, path); err != nil {
 		return err

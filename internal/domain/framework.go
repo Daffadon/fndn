@@ -2,32 +2,28 @@ package domain
 
 import (
 	"errors"
-	"log"
 
-	"github.com/daffadon/fndn/internal/infra"
 	"github.com/daffadon/fndn/internal/pkg"
 	framework_template "github.com/daffadon/fndn/internal/template/framework"
 )
 
-func InitFramework(i infra.CommandRunner, path *string, framework *string) error {
+var frameworkTemplates = map[string]string{
+	"gin":         framework_template.GinConfigTemplate,
+	"chi":         framework_template.ChiConfigTemplate,
+	"echo":        framework_template.EchoConfigTemplate,
+	"fiber":       framework_template.FiberConfigTemplate,
+	"gorilla/mux": framework_template.GorillaMuxConfigTemplate,
+}
+
+func InitFramework(path *string, framework *string) error {
 	if path != nil {
 		folderName := "/config/router"
 		fileName := folderName + "/http.go"
-		var t string
-		switch *framework {
-		case "gin":
-			t = framework_template.GinConfigTemplate
-		case "chi":
-			t = framework_template.ChiConfigTemplate
-		case "echo":
-			t = framework_template.EchoConfigTemplate
-		case "fiber":
-			t = framework_template.FiberConfigTemplate
-		case "gorilla/mux":
-			t = framework_template.GorillaMuxConfigTemplate
+		t, err := lookup(frameworkTemplates, "framework", *framework)
+		if err != nil {
+			return err
 		}
-		if err := pkg.GoFileGenerator(i, path, folderName, fileName, t); err != nil {
-			log.Fatal(err)
+		if err := pkg.GoFileGenerator(path, folderName, fileName, t); err != nil {
 			return err
 		}
 		return nil
@@ -35,36 +31,16 @@ func InitFramework(i infra.CommandRunner, path *string, framework *string) error
 	return errors.New("path is nil")
 }
 
-func GenerateSpecificFramework(framework string, infraRunner infra.CommandRunner, path string) error {
-	// check folder config/router/ exist or not
-	// check filename
+func GenerateSpecificFramework(framework string, path string) error {
 	folderName := "/config/router"
-	fileName := folderName + "/http.go"
+	fileName := resolveTarget(folderName+"/http.go", folderName+"/http", framework)
 
-	// if exist, the file name add _framework_name
-	exist := pkg.IsFileExists("." + fileName)
-	if exist {
-		fileName = folderName + "/http_" + framework + ".go"
-	}
-
-	var t string
-	switch framework {
-	case "gin":
-		t = framework_template.GinConfigTemplate
-	case "chi":
-		t = framework_template.ChiConfigTemplate
-	case "echo":
-		t = framework_template.EchoConfigTemplate
-	case "fiber":
-		t = framework_template.FiberConfigTemplate
-	case "gorilla/mux":
-		t = framework_template.GorillaMuxConfigTemplate
-	}
-
-	if err := pkg.GoFileGenerator(infraRunner, &path, folderName, fileName, t); err != nil {
-		log.Fatal(err)
+	t, err := lookup(frameworkTemplates, "framework", framework)
+	if err != nil {
 		return err
 	}
-
+	if err := pkg.GoFileGenerator(&path, folderName, fileName, t); err != nil {
+		return err
+	}
 	return nil
 }

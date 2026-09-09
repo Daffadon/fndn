@@ -11,6 +11,11 @@ type InitProjectUseCase struct {
 	Runner infra.CommandRunner
 }
 
+type initStep struct {
+	progress string
+	run      func() error
+}
+
 func (uc *InitProjectUseCase) Run(p *domain.Project, progressCh chan<- string) error {
 	if *p.Path == "" {
 		newPath := p.Name
@@ -32,175 +37,146 @@ func (uc *InitProjectUseCase) Run(p *domain.Project, progressCh chan<- string) e
 		return err
 	}
 	// run each init sequentially (single thread)
-	initFuncs := []func() error{
+	steps := []initStep{
 		// config
-		func() error {
-			progressCh <- "Running framework generation"
-			return domain.InitFramework(uc.Runner, p.Path, &p.Framework)
-		},
-		func() error {
-			progressCh <- "Running env config generation"
-			return domain.InitENVConfig(uc.Runner, p.Path)
-		},
-		func() error {
-			progressCh <- "Running zerolog config generation"
-			return domain.InitZerologConfig(uc.Runner, p.Path)
-		},
-		func() error {
-			progressCh <- "Running DB config generation"
-			return domain.InitDBConfig(uc.Runner, p.Path, &p.Database)
-		},
-		func() error {
-			progressCh <- "Running mq config generation"
-			return domain.InitMQConfig(uc.Runner, p)
-		},
-		func() error {
-			progressCh <- "Running in-memory store config generation"
-			return domain.InitInMemoryConfig(uc.Runner, p.Path, &p.InMemory)
-		},
-		func() error {
-			progressCh <- "Running object config generation"
-			return domain.InitObjectStorageConfig(uc.Runner, p.Path, &p.ObjectStorage)
-		},
+		{"Running framework generation", func() error {
+			return domain.InitFramework(p.Path, &p.Framework)
+		}},
+		{"Running env config generation", func() error {
+			return domain.InitENVConfig(p.Path)
+		}},
+		{"Running zerolog config generation", func() error {
+			return domain.InitZerologConfig(p.Path)
+		}},
+		{"Running DB config generation", func() error {
+			return domain.InitDBConfig(p.Path, &p.Database)
+		}},
+		{"Running mq config generation", func() error {
+			return domain.InitMQConfig(p)
+		}},
+		{"Running in-memory store config generation", func() error {
+			return domain.InitInMemoryConfig(p.Path, &p.InMemory)
+		}},
+		{"Running object config generation", func() error {
+			return domain.InitObjectStorageConfig(p.Path, &p.ObjectStorage)
+		}},
 
 		// infra
-		func() error {
-			progressCh <- "Running querier infra generation"
-			return domain.InitQuerierInfra(uc.Runner, p.Path, &p.Database)
-		},
-		func() error {
-			progressCh <- "Running in-memory infra generation"
-			return domain.InitInMemoryInfra(uc.Runner, p.Path, &p.InMemory)
-		},
-		func() error {
-			progressCh <- "Running mq infra generation"
-			return domain.InitMQinfra(uc.Runner, p)
-		},
-		func() error {
-			progressCh <- "Running object infra generation"
-			return domain.InitObjectStorageInfra(uc.Runner, p.Path, &p.ObjectStorage)
-		},
+		{"Running querier infra generation", func() error {
+			return domain.InitQuerierInfra(p.Path, &p.Database)
+		}},
+		{"Running in-memory infra generation", func() error {
+			return domain.InitInMemoryInfra(p.Path, &p.InMemory)
+		}},
+		{"Running mq infra generation", func() error {
+			return domain.InitMQinfra(p)
+		}},
+		{"Running object infra generation", func() error {
+			return domain.InitObjectStorageInfra(p.Path, &p.ObjectStorage)
+		}},
 
 		// domain
-		func() error {
-			progressCh <- "Running dto example generation"
-			return domain.InitDTODomain(uc.Runner, p.Path)
-		},
-		func() error {
-			progressCh <- "Running repository example generation"
-			return domain.InitRepositoryDomain(uc.Runner, p.Path, p.ModuleName)
-		},
-		func() error {
-			progressCh <- "Running service example generation"
-			return domain.InitServiceDomain(uc.Runner, p.Path)
-		},
-		func() error {
-			progressCh <- "Running handler example generation"
-			return domain.InitHandlerDomain(uc.Runner, p.Path, &p.Framework)
-		},
-		func() error {
-			progressCh <- "Running http handler example generation"
-			return domain.InitHTTPHandlerDomain(uc.Runner, p.Path, &p.Framework)
-		},
-		func() error {
-			progressCh <- "Running pkg example generation"
-			return domain.InitPkgExample(uc.Runner, p.Path)
-		},
+		{"Running dto example generation", func() error {
+			return domain.InitDTODomain(p.Path)
+		}},
+		{"Running repository example generation", func() error {
+			return domain.InitRepositoryDomain(p.Path, p.ModuleName)
+		}},
+		{"Running service example generation", func() error {
+			return domain.InitServiceDomain(p.Path)
+		}},
+		{"Running handler example generation", func() error {
+			return domain.InitHandlerDomain(p.Path, &p.Framework)
+		}},
+		{"Running http handler example generation", func() error {
+			return domain.InitHTTPHandlerDomain(p.Path, &p.Framework)
+		}},
+		{"Running pkg example generation", func() error {
+			return domain.InitPkgExample(p.Path)
+		}},
 
 		// cmd
-		func() error {
-			progressCh <- "Running dependency injection file generation"
-			return domain.InitDependencyInjection(uc.Runner, p)
-		},
-		func() error {
-			progressCh <- "Running bootstraper file generation"
-			return domain.InitBootStrap(uc.Runner, p.Path)
-		},
-		func() error {
-			progressCh <- "Running server file generation"
-			return domain.InitServer(uc.Runner, p)
-		},
-		func() error {
-			progressCh <- "Running main file generation"
-			return domain.InitMain(uc.Runner, p.Path)
-		},
+		{"Running dependency injection file generation", func() error {
+			return domain.InitDependencyInjection(p)
+		}},
+		{"Running bootstraper file generation", func() error {
+			return domain.InitBootStrap(p.Path)
+		}},
+		{"Running server file generation", func() error {
+			return domain.InitServer(p)
+		}},
+		{"Running main file generation", func() error {
+			return domain.InitMain(p.Path)
+		}},
 
 		// global config
-		func() error {
-			progressCh <- "Running init air config"
+		{"Running init air config", func() error {
 			return domain.InitAirConfig(uc.Runner, p.Path, p.Air)
-		},
-		func() error {
-			progressCh <- "Running config.local.yaml generation"
-			return domain.InitYamlConfig(uc.Runner, p)
-		},
-		func() error {
-			progressCh <- "Running .gitignore file generation"
-			return domain.InitGitignoreConfig(uc.Runner, p.Path)
-		},
-		func() error {
-			progressCh <- "Running Dockerfile file generation"
-			return domain.InitDockerFileConfig(uc.Runner, p.Path, p.Name)
-		},
-		func() error {
-			progressCh <- "Running docker-compose.yml file generation"
-			return domain.InitDockerComposeConfig(uc.Runner, p)
-		},
-		func() error {
-			progressCh <- "Running mq config file generation"
-			return domain.InitMQConfigFile(uc.Runner, p)
-		},
-		func() error {
-			progressCh <- "Running cache config file generation"
-			return domain.InitInMemoryConfigFile(uc.Runner, p)
-		},
-		func() error {
-			progressCh <- "Running object storage config file generation"
-			return domain.InitObjectStorageConfigFile(uc.Runner, p)
-		},
-		func() error {
-			progressCh <- "Running .env.example file generation"
-			return domain.InitDotEnvExampleConfig(uc.Runner, p.Path)
-		},
-		func() error {
-			progressCh <- "Running readme.md file generation"
-			return domain.InitReadme(uc.Runner, p.Path)
-		},
-		func() error {
-			progressCh <- "Running version file generation"
-			return domain.InitVersion(uc.Runner, p.Path)
-		},
-		func() error {
-			progressCh <- "Running build script file generation"
-			return domain.InitBuildScript(uc.Runner, p.Path, p.ModuleName)
-		},
-		func() error {
-			progressCh <- "Running binary build script file generation"
-			return domain.InitBinaryBuildScript(uc.Runner, p.Path, p.Name)
-		},
-		func() error {
-			progressCh <- "Running Makefile file generation"
-			return domain.InitMakefile(uc.Runner, p.Path)
-		},
+		}},
+		{"Running config.local.yaml generation", func() error {
+			return domain.InitYamlConfig(p)
+		}},
+		{"Running .gitignore file generation", func() error {
+			return domain.InitGitignoreConfig(p.Path)
+		}},
+		{"Running Dockerfile file generation", func() error {
+			return domain.InitDockerFileConfig(p.Path, p.Name)
+		}},
+		{"Running docker-compose.yml file generation", func() error {
+			return domain.InitDockerComposeConfig(p)
+		}},
+		{"Running mq config file generation", func() error {
+			return domain.InitMQConfigFile(p)
+		}},
+		{"Running cache config file generation", func() error {
+			return domain.InitInMemoryConfigFile(p)
+		}},
+		{"Running object storage config file generation", func() error {
+			return domain.InitObjectStorageConfigFile(p)
+		}},
+		{"Running .env.example file generation", func() error {
+			return domain.InitDotEnvExampleConfig(p.Path)
+		}},
+		{"Running readme.md file generation", func() error {
+			return domain.InitReadme(p.Path)
+		}},
+		{"Running version file generation", func() error {
+			return domain.InitVersion(p.Path)
+		}},
+		{"Running build script file generation", func() error {
+			return domain.InitBuildScript(p.Path, p.ModuleName)
+		}},
+		{"Running binary build script file generation", func() error {
+			return domain.InitBinaryBuildScript(p.Path, p.Name)
+		}},
+		{"Running Makefile file generation", func() error {
+			return domain.InitMakefile(p.Path)
+		}},
 	}
 
-	for _, f := range initFuncs {
-		if err := f(); err != nil {
+	for _, s := range steps {
+		progressCh <- s.progress
+		if err := s.run(); err != nil {
 			return err
 		}
 	}
+	return uc.finalize(*p.Path, progressCh)
+}
+
+// finalize runs toolchain commands needing network. Split from Run's
+// file generation so scaffold stays testable offline.
+func (uc *InitProjectUseCase) finalize(path string, progressCh chan<- string) error {
 	progressCh <- "Running go imports to resolve import"
-	if err := uc.Runner.Run("go", []string{"run", "golang.org/x/tools/cmd/goimports@latest", "-w", "."}, *p.Path); err != nil {
+	if err := uc.Runner.Run("go", []string{"run", "golang.org/x/tools/cmd/goimports@latest", "-w", "."}, path); err != nil {
 		return err
 	}
 	progressCh <- "Running go get -u ./... to download 3rd party modules"
-	if err := uc.Runner.Run("go", []string{"get", "-u", "./..."}, *p.Path); err != nil {
+	if err := uc.Runner.Run("go", []string{"get", "-u", "./..."}, path); err != nil {
 		return err
 	}
 	progressCh <- "Running go mod tidy"
-	if err := uc.Runner.Run("go", []string{"mod", "tidy"}, *p.Path); err != nil {
+	if err := uc.Runner.Run("go", []string{"mod", "tidy"}, path); err != nil {
 		return err
 	}
-
 	return nil
 }
