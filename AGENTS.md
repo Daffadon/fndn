@@ -7,7 +7,7 @@
 
 ## What this repo is
 
-- `fndn`: Go CLI scaffolding tool that generates Go backends (clean architecture). Module `github.com/daffadon/fndn`, Go >= 1.25 (see `README.MD`).
+- `fndn`: Go CLI scaffolding tool that generates Go backends (clean architecture). Module `github.com/daffadon/fndn`, Go >= 1.26 (see `README.MD`).
 - Entrypoint: `main.go` -> `cmd.Execute()` (`cmd/init.go`). Commands: `fndn init [.]`, `fndn generate [framework|database|mq|cache|storage]` (wired in `cmd/init.go:20-28`, defined in `cmd/scaffold.go`, `cmd/generate.go`).
 - Stack: `cobra` (CLI) + `bubbletea`/`bubbles`/`lipgloss` (interactive UI in `internal/ui/`). Generation logic: `internal/app/`, `internal/domain/`, output templates: `internal/template/`.
 
@@ -16,7 +16,7 @@
 - Run locally: `go run . --help`, `go run . init .`
 - Build all platforms: `make build` -> `script/build.sh` (CGO_ENABLED=0, `linux/windows/darwin x amd64/arm64` into `bin/dist/`, runs `upx --best --lzma` except darwin + windows/arm64). Requires `upx` installed; `make` is the only task runner.
 - No test/lint/typecheck config in repo — verify with `go build ./...` and `go vet ./...`; don't invent test commands.
-- Release: push tag `v*` -> `.github/workflows/releaser.yml` runs GoReleaser (`goreleaser/goreleaser-action@v6`, Go 1.24 on CI). Do not hand-build release artifacts.
+- Release: push tag `v*` -> `.github/workflows/releaser.yml` runs GoReleaser (`goreleaser/goreleaser-action@v6`, Go 1.26 on CI). Do not hand-build release artifacts.
 
 ## Conventions / gotchas
 

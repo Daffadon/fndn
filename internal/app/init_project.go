@@ -177,8 +177,8 @@ func (uc *InitProjectUseCase) finalize(path string, progressCh chan<- string) er
 	if err := uc.Runner.Run("go", []string{"run", "golang.org/x/tools/cmd/goimports@latest", "-w", "."}, path); err != nil {
 		return err
 	}
-	progressCh <- "Running go get -u ./... to download 3rd party modules"
-	if err := uc.Runner.Run("go", []string{"get", "-u", "./..."}, path); err != nil {
+	progressCh <- "Running go get ./... to download 3rd party modules"
+	if err := uc.Runner.Run("go", []string{"get", "./..."}, path); err != nil {
 		return err
 	}
 	progressCh <- "Running go mod tidy"

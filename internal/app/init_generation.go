@@ -37,8 +37,8 @@ func (i *InitGenerate) Run(g *domain.Generator, progressCh chan<- string) error 
 // Finalize runs toolchain commands needing network. Split from Run's
 // file generation so scaffold stays testable offline.
 func (i *InitGenerate) Finalize(path string, progressCh chan<- string) error {
-	progressCh <- "Running go get -u ./... to download 3rd party modules"
-	if err := i.Runner.Run("go", []string{"get", "-u", "./..."}, path); err != nil {
+	progressCh <- "Running go get ./... to download 3rd party modules"
+	if err := i.Runner.Run("go", []string{"get", "./..."}, path); err != nil {
 		return err
 	}
 	progressCh <- "Running go mod tidy"
