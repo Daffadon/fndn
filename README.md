@@ -9,9 +9,6 @@ Bootstrap your Go projects with clean architecture, best practices, and a solid 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/Daffadon/fndn)
 
-> [!NOTE]
-> v0.7.0 is the latest stable version. It generates one application set with its drivers for third-party services. You can generate framework, database, message queue, in-memory store, and object storage configs.
-
 ## Prerequisites
 
 Go >= v1.26.8
@@ -27,13 +24,13 @@ go install github.com/daffadon/fndn@latest
 To pin a version:
 
 ```bash
-go install github.com/daffadon/fndn@v0.7.0
+go install github.com/daffadon/fndn@v0.8.3
 ```
 
 ## Get started
 
 ```bash
-go run github.com/daffadon/fndn@v0.7.0 init .
+go run github.com/daffadon/fndn@v0.8.3 init .
 ```
 
 \* `.` generates in the current directory.
@@ -41,7 +38,7 @@ go run github.com/daffadon/fndn@v0.7.0 init .
 Or see all commands:
 
 ```bash
-go run github.com/daffadon/fndn@v0.7.0 --help
+go run github.com/daffadon/fndn@v0.8.3 --help
 ```
 
 > [!NOTE]
@@ -50,7 +47,7 @@ go run github.com/daffadon/fndn@v0.7.0 --help
 After the project is generated, you can add a config for another tech stack with:
 
 ```bash
-go run github.com/daffadon/fndn@v0.7.0 generate [command]
+go run github.com/daffadon/fndn@v0.8.3 generate [command]
 ```
 
 *command*: framework, database, mq, cache, storage
