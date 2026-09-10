@@ -86,10 +86,10 @@ func (uc *InitProjectUseCase) Run(p *domain.Project, progressCh chan<- string) e
 			return domain.InitRepositoryDomain(p.Path, p.ModuleName)
 		}, needsDB: true},
 		{progress: "Running service example generation", run: func() error {
-			return domain.InitServiceDomain(p.Path)
+			return domain.InitServiceDomain(p.Path, p.ModuleName)
 		}, needsDB: true},
 		{progress: "Running handler example generation", run: func() error {
-			return domain.InitHandlerDomain(p.Path, &p.Framework)
+			return domain.InitHandlerDomain(p.Path, &p.Framework, p.ModuleName)
 		}, needsDB: true},
 		{progress: "Running http handler example generation", run: func() error {
 			return domain.InitHTTPHandlerDomain(p.Path, &p.Framework)
@@ -103,13 +103,13 @@ func (uc *InitProjectUseCase) Run(p *domain.Project, progressCh chan<- string) e
 			return domain.InitDependencyInjection(p)
 		}},
 		{progress: "Running bootstraper file generation", run: func() error {
-			return domain.InitBootStrap(p.Path)
+			return domain.InitBootStrap(p.Path, p.ModuleName)
 		}},
 		{progress: "Running server file generation", run: func() error {
 			return domain.InitServer(p)
 		}},
 		{progress: "Running main file generation", run: func() error {
-			return domain.InitMain(p.Path)
+			return domain.InitMain(p.Path, p.ModuleName)
 		}},
 
 		// global config

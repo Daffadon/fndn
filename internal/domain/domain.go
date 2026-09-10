@@ -44,11 +44,20 @@ func InitRepositoryDomain(path *string, mn string) error {
 	return errors.New("path is nil")
 }
 
-func InitServiceDomain(path *string) error {
+func InitServiceDomain(path *string, mn string) error {
 	if path != nil {
 		folderName := "/internal/domain/service"
 		fileName := folderName + "/todo.go"
-		if err := pkg.GoFileGenerator(path, folderName, fileName, domain_template.TodoServiceTemplate); err != nil {
+		s := struct {
+			ModuleName string
+		}{
+			ModuleName: mn,
+		}
+		c, err := pkg.ParseTemplate(domain_template.TodoServiceTemplate, s)
+		if err != nil {
+			return err
+		}
+		if err := pkg.GoFileGenerator(path, folderName, fileName, c); err != nil {
 			return err
 		}
 		return nil
@@ -56,7 +65,7 @@ func InitServiceDomain(path *string) error {
 	return errors.New("path is nil")
 }
 
-func InitHandlerDomain(path *string, framework *string) error {
+func InitHandlerDomain(path *string, framework *string, mn string) error {
 	if path != nil {
 		folderName := "/internal/domain/handler"
 		fileName := folderName + "/todo.go"
@@ -64,7 +73,16 @@ func InitHandlerDomain(path *string, framework *string) error {
 		if err != nil {
 			return err
 		}
-		if err := pkg.GoFileGenerator(path, folderName, fileName, t); err != nil {
+		s := struct {
+			ModuleName string
+		}{
+			ModuleName: mn,
+		}
+		c, err := pkg.ParseTemplate(t, s)
+		if err != nil {
+			return err
+		}
+		if err := pkg.GoFileGenerator(path, folderName, fileName, c); err != nil {
 			return err
 		}
 		return nil

@@ -3,7 +3,10 @@ package domain_template
 const GinTodoHandlerTemplate string = `
 package handler
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"{{.ModuleName}}/internal/domain/service"
+)
 
 type (
 	TodoHandler interface {
@@ -31,6 +34,8 @@ func (t *todoHandler) AddNewTodo(ctx *gin.Context){
 const ChiTodoHandlerTemplate string = `
 package handler
 
+import "{{.ModuleName}}/internal/domain/service"
+
 type (
 	TodoHandler interface {
 		// your function definition
@@ -57,7 +62,10 @@ func (t *todoHandler) AddNewTodo(w http.ResponseWriter, r *http.Request){
 const EchoTodoHandlerTemplate string = `
 package handler
 
-import "github.com/labstack/echo/v4"
+import (
+	"github.com/labstack/echo/v4"
+	"{{.ModuleName}}/internal/domain/service"
+)
 
 type (
 	TodoHandler interface {
@@ -85,7 +93,10 @@ func (t *todoHandler) AddNewTodo(c echo.Context)error{
 const FiberTodoHandlerTemplate string = `
 package handler
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"github.com/gofiber/fiber/v2"
+	"{{.ModuleName}}/internal/domain/service"
+)
 
 type (
 	TodoHandler interface {
@@ -112,6 +123,8 @@ func (t *todoHandler) AddNewTodo(c *fiber.Ctx)error{
 
 const GorillaTodoHandlerTemplate string = `
 package handler
+
+import "{{.ModuleName}}/internal/domain/service"
 
 type (
 	TodoHandler interface {

@@ -10,6 +10,7 @@ import (
 	{{if .HasCache}}{{.CacheImport}}{{end}}
 	"github.com/rs/zerolog"
 	"go.uber.org/dig"
+	"{{.ModuleName}}/internal/domain/handler"
 )
 
 type Server struct {

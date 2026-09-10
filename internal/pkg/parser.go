@@ -20,8 +20,9 @@ func ParseTemplate(tmplStr string, data interface{}) (string, error) {
 	return buf.String(), nil
 }
 
-func HTTPServerParser(fwk, db, mq, cache string) (string, error) {
+func HTTPServerParser(fwk, db, mq, cache, moduleName string) (string, error) {
 	var t types.HTTPServerParse
+	t.ModuleName = moduleName
 	t.HasDB = db != types.None
 	t.HasMQ = mq != types.None
 	t.HasCache = cache != types.None
