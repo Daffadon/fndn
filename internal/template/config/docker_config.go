@@ -1,7 +1,7 @@
 package config_template
 
 const DockerfileConfigTemplate string = `
-FROM golang:1.24.6-alpine3.22 AS builder
+FROM golang:1.26.8-alpine AS builder
 WORKDIR /app
 COPY . .
 
