@@ -31,7 +31,7 @@ type GenerateModel struct {
 	ProgressCh   chan string
 	ErrCh        chan error
 	Logs         string
-	ConfigType   string
+	ConfigType   domain.GeneratorType
 	ValueType    string
 	Err          error
 

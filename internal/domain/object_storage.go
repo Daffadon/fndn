@@ -2,86 +2,64 @@ package domain
 
 import (
 	"errors"
-	"log"
 
-	"github.com/daffadon/fndn/internal/infra"
 	"github.com/daffadon/fndn/internal/pkg"
 	objectstorage_template "github.com/daffadon/fndn/internal/template/object_storage"
 )
 
-func InitObjectStorageConfig(i infra.CommandRunner, path *string, os *string) error {
+var objectStorageTemplates = map[string]string{
+	"rustfs":    objectstorage_template.RustfsConfigTemplate,
+	"seaweedfs": objectstorage_template.SeaweedfsConfigTemplate,
+	"minio":     objectstorage_template.MinioConfigTemplate,
+}
+
+func InitObjectStorageConfig(path *string, os *string) error {
+	if *os == None {
+		return nil
+	}
 	if path != nil {
 		folderName := "/config/storage"
 		fileName := folderName + "/storage.go"
-		var template string
-		switch *os {
-		case "rustfs":
-			template = objectstorage_template.RustfsConfigTemplate
-		case "seaweedfs":
-			template = objectstorage_template.SeaweedfsConfigTemplate
-		case "minio":
-			template = objectstorage_template.MinioConfigTemplate
+		template, err := lookup(objectStorageTemplates, "object storage", *os)
+		if err != nil {
+			return err
 		}
-		if template != "" {
-			if err := pkg.GoFileGenerator(i, path, folderName, fileName, template); err != nil {
-				log.Fatal(err)
-				return err
-			}
+		if err := pkg.GoFileGenerator(path, folderName, fileName, template); err != nil {
+			return err
 		}
 		return nil
 	}
 	return errors.New("path is nil")
 }
 
-func InitObjectStorageConfigFile(i infra.CommandRunner, p *Project) error {
+func InitObjectStorageConfigFile(p *Project) error {
+	if p.ObjectStorage == None {
+		return nil
+	}
 	if p.Path != nil {
-		folderName := "/config/storage"
-		fileName := folderName
-		var template string
-
-		switch p.ObjectStorage {
-		case "seaweedfs":
-			fileName += "/s3.json"
-			template = objectstorage_template.SeaweedfsConfigFileTemplate
+		if p.ObjectStorage != "seaweedfs" {
+			return nil
 		}
-
-		if template != "" {
-			if err := pkg.GenericFileGenerator(i, p.Path, folderName, fileName, template); err != nil {
-				log.Fatal(err)
-				return err
-			}
+		folderName := "/config/storage"
+		fileName := folderName + "/s3.json"
+		if err := pkg.GenericFileGenerator(p.Path, folderName, fileName, objectstorage_template.SeaweedfsConfigFileTemplate); err != nil {
+			return err
 		}
 		return nil
 	}
 	return errors.New("path is nil")
 }
 
-func GenerateSpecificStorage(storage string, infraRunner infra.CommandRunner, path string) error {
-	// check folder config/router/ exist or not
-	// check filename
+func GenerateSpecificStorage(storage string, path string) error {
 	folderName := "/config/storage_"
-	fileName := folderName + "/storage.go"
+	fileName := resolveTarget(folderName+"/storage.go", folderName+"/storage", storage)
 
-	// if exist, the file name add _framework_name
-	exist := pkg.IsFileExists("." + fileName)
-	if exist {
-		fileName = folderName + "/storage_" + storage + ".go"
-	}
-
-	var t string
-	switch storage {
-	case "rustfs":
-		t = objectstorage_template.RustfsConfigTemplate
-	case "seaweedfs":
-		t = objectstorage_template.SeaweedfsConfigTemplate
-	case "minio":
-		t = objectstorage_template.MinioConfigTemplate
-	}
-
-	if err := pkg.GoFileGenerator(infraRunner, &path, folderName, fileName, t); err != nil {
-		log.Fatal(err)
+	t, err := lookup(objectStorageTemplates, "object storage", storage)
+	if err != nil {
 		return err
 	}
-
+	if err := pkg.GoFileGenerator(&path, folderName, fileName, t); err != nil {
+		return err
+	}
 	return nil
 }

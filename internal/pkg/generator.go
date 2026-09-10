@@ -4,7 +4,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/daffadon/fndn/internal/infra"
 	"golang.org/x/tools/imports"
 )
 
@@ -16,26 +15,30 @@ func IsFileExists(filename string) bool {
 	return !info.IsDir()
 }
 
-func GoFileGenerator(i infra.CommandRunner,
+// ensureFile creates parent dir and touches file, returning full path.
+func ensureFile(path *string, folderName, fileName string) (string, error) {
+	dir := *path + folderName
+	if err := os.MkdirAll(dir, 0755); err != nil {
+		return "", err
+	}
+	fn := *path + fileName
+	f, err := os.OpenFile(fn, os.O_RDONLY|os.O_CREATE, 0644)
+	if err != nil {
+		return "", err
+	}
+	f.Close()
+	return fn, nil
+}
+
+func GoFileGenerator(
 	path *string,
 	folderName,
 	fileName,
 	template string) error {
-	// Ensure parent directory exists
-	dir := *path + folderName
-	if err := os.MkdirAll(dir, 0755); err != nil {
-		return err
-	}
-
-	// Define the Go file name
-	fn := *path + fileName
-
-	// Create the file if it doesn't exist (Go way)
-	f, err := os.OpenFile(fn, os.O_RDONLY|os.O_CREATE, 0644)
+	fn, err := ensureFile(path, folderName, fileName)
 	if err != nil {
 		return err
 	}
-	f.Close()
 
 	opts := &imports.Options{
 		Comments:  true,
@@ -56,27 +59,15 @@ func GoFileGenerator(i infra.CommandRunner,
 	return nil
 }
 
-func GenericFileGenerator(i infra.CommandRunner,
+func GenericFileGenerator(
 	path *string,
 	folderName,
 	fileName,
 	template string) error {
-
-	// Define the YAML file name
-	fn := *path + fileName
-
-	// Ensure parent directory exists
-	dir := *path + folderName
-	if err := os.MkdirAll(dir, 0755); err != nil {
-		return err
-	}
-
-	// Touch the file
-	f, err := os.OpenFile(fn, os.O_RDONLY|os.O_CREATE, 0644)
+	fn, err := ensureFile(path, folderName, fileName)
 	if err != nil {
 		return err
 	}
-	f.Close()
 
 	cleanTemplate := template
 	if strings.HasSuffix(fileName, ".yaml") || strings.HasSuffix(fileName, ".yml") {

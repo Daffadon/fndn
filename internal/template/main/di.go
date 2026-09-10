@@ -21,35 +21,35 @@ func BuildContainer() *dig.Container {
 		panic("Failed to provide logger: " + err.Error())
 	}
 	// object storage connection
-	if err := container.Provide(storage.{{.OSConnection}}); err != nil {
+	{{if .HasOS}}if err := container.Provide(storage.{{.OSConnection}}); err != nil {
 		panic("Failed to provide object storage connection: " + err.Error())
-	}
+	}{{end}}
 
 	{{.MQInit}}
 
 	// db connection
-	if err := container.Provide(storage.{{.DBConnection}}); err != nil {
+	{{if .HasDB}}if err := container.Provide(storage.{{.DBConnection}}); err != nil {
 		panic("Failed to provide db connection: " + err.Error())
-	}
+	}{{end}}
 	//  connection
-	if err := container.Provide(cache.{{.CacheConnection}}); err != nil {
+	{{if .HasCache}}if err := container.Provide(cache.{{.CacheConnection}}); err != nil {
 		panic("Failed to provide cache connection: " + err.Error())
-	}
+	}{{end}}
 
 	// you can add your own handler, service, repository,infra, or even 
 	// your own defined config here and invoke in the /cmd/server/http_server.go 
 	
 	// infra
-	if err := container.Provide(cache_infra.{{.CacheInfra}}); err != nil {
+	{{if .HasCache}}if err := container.Provide(cache_infra.{{.CacheInfra}}); err != nil {
 		panic("Failed to provide cache infra: " + err.Error())
-	}	
-	if err := container.Provide(mq_infra.{{.MQInfra}}); err != nil {
+	}	{{end}}
+	{{if .HasMQ}}if err := container.Provide(mq_infra.{{.MQInfra}}); err != nil {
 		panic("Failed to provide MQ infra: " + err.Error())
-	}	
-	if err := container.Provide(storage_infra.{{.OSInfra}}); err != nil {
+	}	{{end}}
+	{{if .HasOS}}if err := container.Provide(storage_infra.{{.OSInfra}}); err != nil {
 		panic("Failed to provide object storage infra: " + err.Error())
-	}	
-	if err := container.Provide(storage_infra.NewQuerier); err != nil {
+	}	{{end}}
+	{{if .HasDB}}if err := container.Provide(storage_infra.NewQuerier); err != nil {
 		panic("Failed to provide querier infra: " + err.Error())
 	}
 
@@ -64,7 +64,7 @@ func BuildContainer() *dig.Container {
 	// handler
 	if err := container.Provide(handler.NewTodoHandler); err != nil {
 		panic("Failed to provide todo handler: " + err.Error())
-	}
+	}{{end}}
 
 	// http server
 	if err := container.Provide(router.{{.HTTPInit}}); err != nil {

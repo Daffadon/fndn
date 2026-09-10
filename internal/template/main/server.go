@@ -5,9 +5,9 @@ package server
 
 import (
 	{{.FrameworkImport}}
-	{{.DBImport}}
-	{{.MQImport}}
-	{{.CacheImport}}
+	{{if .HasDB}}{{.DBImport}}{{end}}
+	{{if .HasMQ}}{{.MQImport}}{{end}}
+	{{if .HasCache}}{{.CacheImport}}{{end}}
 	"github.com/rs/zerolog"
 	"go.uber.org/dig"
 )
@@ -23,21 +23,21 @@ func (s *Server) Run(ctx context.Context) {
 		func(
 			logger zerolog.Logger,
 			r {{.FrameworkRouter}},
-			cache {{.CacheInstanceType}},
-			{{.MQInstance}}
-			db {{.DBInstanceType}},
-			th handler.TodoHandler,
+			{{if .HasCache}}cache {{.CacheInstanceType}},{{end}}
+			{{if .HasMQ}}{{.MQInstance}}{{end}}
+			{{if .HasDB}}db {{.DBInstanceType}},{{end}}
+			{{if .HasDB}}th handler.TodoHandler,{{end}}
 			// and many other returned type provided
 			// in the container from /cmd/di/container.go
 		) {
-			{{.CacheCloseConn}}
-			{{.MQCloseConn}}
-			defer {{.DBCloseConnection}}
+			{{if .HasCache}}{{.CacheCloseConn}}{{end}}
+			{{if .HasMQ}}{{.MQCloseConn}}{{end}}
+			{{if .HasDB}}defer {{.DBCloseConnection}}{{end}}
 			
 			// you can register your routes here
 			// for the example and implementation, here is the example
 
-			handler.RegisterTodoRoutes(r,th)
+			{{if .HasDB}}handler.RegisterTodoRoutes(r,th){{end}}
 			
 			srv := &http.Server{
 				Addr:              s.Address,

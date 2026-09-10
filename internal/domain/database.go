@@ -2,36 +2,33 @@ package domain
 
 import (
 	"errors"
-	"log"
 
-	"github.com/daffadon/fndn/internal/infra"
 	"github.com/daffadon/fndn/internal/pkg"
 	database_template "github.com/daffadon/fndn/internal/template/database"
 )
 
-func InitDBConfig(i infra.CommandRunner, path *string, db *string) error {
+var databaseTemplates = map[string]string{
+	"postgresql": database_template.PostgresqlConfigTemplate,
+	"mariadb":    database_template.MariaDBConfigTemplate,
+	"clickhouse": database_template.ClickHouseConfigTemplate,
+	"mongodb":    database_template.MongoDBConfigTemplate,
+	"ferretdb":   database_template.FerretDBConfigTemplate,
+	"neo4j":      database_template.Neo4jConfigTemplate,
+}
+
+func InitDBConfig(path *string, db *string) error {
+	if *db == None {
+		return nil
+	}
 	if path != nil {
 		folderName := "/config/storage"
 		fileName := folderName + "/db.go"
-		var template string
 
-		switch *db {
-		case "postgresql":
-			template = database_template.PostgresqlConfigTemplate
-		case "mariadb":
-			template = database_template.MariaDBConfigTemplate
-		case "clickhouse":
-			template = database_template.ClickHouseConfigTemplate
-		case "mongodb":
-			template = database_template.MongoDBConfigTemplate
-		case "ferretdb":
-			template = database_template.FerretDBConfigTemplate
-		case "neo4j":
-			template = database_template.Neo4jConfigTemplate
+		template, err := lookup(databaseTemplates, "database", *db)
+		if err != nil {
+			return err
 		}
-
-		if err := pkg.GoFileGenerator(i, path, folderName, fileName, template); err != nil {
-			log.Fatal(err)
+		if err := pkg.GoFileGenerator(path, folderName, fileName, template); err != nil {
 			return err
 		}
 		return nil
@@ -39,38 +36,16 @@ func InitDBConfig(i infra.CommandRunner, path *string, db *string) error {
 	return errors.New("path is nil")
 }
 
-func GenerateSpecificDatabase(db string, infraRunner infra.CommandRunner, path string) error {
-	// check folder config/router/ exist or not
-	// check filename
+func GenerateSpecificDatabase(db string, path string) error {
 	folderName := "/config/storage"
-	fileName := folderName + "/db.go"
+	fileName := resolveTarget(folderName+"/db.go", folderName+"/db", db)
 
-	// if exist, the file name add _framework_name
-	exist := pkg.IsFileExists("." + fileName)
-	if exist {
-		fileName = folderName + "/db_" + db + ".go"
-	}
-
-	var template string
-	switch db {
-	case "postgresql":
-		template = database_template.PostgresqlConfigTemplate
-	case "mariadb":
-		template = database_template.MariaDBConfigTemplate
-	case "clickhouse":
-		template = database_template.ClickHouseConfigTemplate
-	case "mongodb":
-		template = database_template.MongoDBConfigTemplate
-	case "ferretdb":
-		template = database_template.FerretDBConfigTemplate
-	case "neo4j":
-		template = database_template.Neo4jConfigTemplate
-	}
-
-	if err := pkg.GoFileGenerator(infraRunner, &path, folderName, fileName, template); err != nil {
-		log.Fatal(err)
+	template, err := lookup(databaseTemplates, "database", db)
+	if err != nil {
 		return err
 	}
-
+	if err := pkg.GoFileGenerator(&path, folderName, fileName, template); err != nil {
+		return err
+	}
 	return nil
 }
