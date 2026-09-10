@@ -82,11 +82,12 @@ func InitDependencyInjection(p *Project) error {
 			CacheInfra      string
 			OSConnection    string
 			OSInfra         string
-			HasDB           bool
-			HasMQ           bool
-			HasCache        bool
-			HasOS           bool
-		}
+		HasDB           bool
+		HasMQ           bool
+		HasCache        bool
+		HasOS           bool
+		ModuleName      string
+	}
 		var err error
 		if st.HTTPInit, err = lookup(diFrameworkInits, "framework", p.Framework); err != nil {
 			return err
@@ -113,6 +114,7 @@ func InitDependencyInjection(p *Project) error {
 		}
 		st.OSConnection, st.OSInfra = os[0], os[1]
 		st.HasOS = p.ObjectStorage != None
+		st.ModuleName = p.ModuleName
 
 		template, err := pkg.ParseTemplate(main_template.DITemplate, st)
 		if err != nil {
@@ -126,11 +128,20 @@ func InitDependencyInjection(p *Project) error {
 	return errors.New("path is nil")
 }
 
-func InitBootStrap(path *string) error {
+func InitBootStrap(path *string, mn string) error {
 	if path != nil {
 		folderName := "/cmd/bootstrap"
 		fileName := folderName + "/bootstrap.go"
-		if err := pkg.GoFileGenerator(path, folderName, fileName, main_template.BootStrapTemplate); err != nil {
+		s := struct {
+			ModuleName string
+		}{
+			ModuleName: mn,
+		}
+		c, err := pkg.ParseTemplate(main_template.BootStrapTemplate, s)
+		if err != nil {
+			return err
+		}
+		if err := pkg.GoFileGenerator(path, folderName, fileName, c); err != nil {
 			return err
 		}
 		return nil
@@ -142,7 +153,7 @@ func InitServer(p *Project) error {
 	if p.Path != nil {
 		folderName := "/cmd/server"
 		fileName := folderName + "/server.go"
-		c, err := pkg.HTTPServerParser(p.Framework, p.Database, p.MQ, p.InMemory)
+		c, err := pkg.HTTPServerParser(p.Framework, p.Database, p.MQ, p.InMemory, p.ModuleName)
 		if err != nil {
 			return err
 		}
@@ -154,11 +165,20 @@ func InitServer(p *Project) error {
 	return errors.New("path is nil")
 }
 
-func InitMain(path *string) error {
+func InitMain(path *string, mn string) error {
 	if path != nil {
 		folderName := "/cmd"
 		fileName := folderName + "/main.go"
-		if err := pkg.GoFileGenerator(path, folderName, fileName, main_template.MainTemplate); err != nil {
+		s := struct {
+			ModuleName string
+		}{
+			ModuleName: mn,
+		}
+		c, err := pkg.ParseTemplate(main_template.MainTemplate, s)
+		if err != nil {
+			return err
+		}
+		if err := pkg.GoFileGenerator(path, folderName, fileName, c); err != nil {
 			return err
 		}
 		return nil

@@ -3,7 +3,10 @@ package domain_template
 const TodoRepositoryTemplate string = `
 package repository
 
-import storage_infra "{{.ModuleName}}/internal/infra/storage"
+import (
+	storage_infra "{{.ModuleName}}/internal/infra/storage"
+	"{{.ModuleName}}/internal/domain/dto"
+)
 
 type (
 	TodoRepository interface {

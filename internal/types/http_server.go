@@ -20,5 +20,6 @@ type (
 		HasDB             bool
 		HasMQ             bool
 		HasCache          bool
+		ModuleName        string
 	}
 )

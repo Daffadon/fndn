@@ -3,7 +3,11 @@ package main_template
 const MainTemplate string = `
 package main
 
-import "github.com/spf13/viper"
+import (
+	"github.com/spf13/viper"
+	"{{.ModuleName}}/cmd/bootstrap"
+	"{{.ModuleName}}/cmd/server"
+)
 
 func main() {
 	container := bootstrap.Run()

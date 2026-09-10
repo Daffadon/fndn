@@ -7,6 +7,17 @@ package di
 import (
 	"go.uber.org/dig"
 	"github.com/nats-io/nats.go/jetstream"
+	"{{.ModuleName}}/config/cache"
+	"{{.ModuleName}}/config/logger"
+	"{{.ModuleName}}/config/mq"
+	"{{.ModuleName}}/config/router"
+	"{{.ModuleName}}/config/storage"
+	"{{.ModuleName}}/internal/domain/handler"
+	"{{.ModuleName}}/internal/domain/repository"
+	"{{.ModuleName}}/internal/domain/service"
+	cache_infra "{{.ModuleName}}/internal/infra/cache"
+	mq_infra "{{.ModuleName}}/internal/infra/mq"
+	storage_infra "{{.ModuleName}}/internal/infra/storage"
 )
 
 func BuildContainer() *dig.Container {

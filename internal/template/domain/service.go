@@ -3,6 +3,11 @@ package domain_template
 const TodoServiceTemplate string = `
 package service
 
+import (
+	"{{.ModuleName}}/internal/domain/dto"
+	"{{.ModuleName}}/internal/domain/repository"
+)
+
 type (
 	TodoService interface {
 		// your function definition
