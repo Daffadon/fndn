@@ -1,48 +1,53 @@
 # fndn
 
-**A CLI scaffolding tool for Go backend projects.**  
+**A CLI scaffolding tool for Go backend projects.**
 Bootstrap your Go projects with clean architecture, best practices, and a solid foundation — all generated in seconds.
 
----
-
+[![Release](https://img.shields.io/github/v/release/Daffadon/fndn)](https://github.com/Daffadon/fndn/releases)
+[![Go](https://img.shields.io/github/go-mod/go-version/Daffadon/fndn)](https://go.dev/)
+[![Build](https://github.com/Daffadon/fndn/actions/workflows/releaser.yml/badge.svg)](https://github.com/Daffadon/fndn/actions)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/Daffadon/fndn)
 
-## 🚀 Features
-
-- 🏗️ Clean architecture scaffolding
-- 🛠️ Customizable set of techstack
-- ⚡ Interactive CLI with Bubble Tea
-- 🐳 Docker & containerization ready
-- 📦 Go modules setup
-
----
-
 > [!NOTE]
-> v0.7.0 now is stable, latest version, and generating one set of application with its driver to 3rd party. in this version, you can generate different framework, database, message queue, in-memory store, and object storage.
-## 📋 Prerequisites
+> v0.7.0 is the latest stable version. It generates one application set with its drivers for third-party services. You can generate framework, database, message queue, in-memory store, and object storage configs.
 
-Go Version: >= v1.26.8
+## Prerequisites
 
-## 🔥 Get started
+Go >= v1.26.8
+
+## Installation
+
+Install the tool to your system with `go install`, or download a binary from the [releases page](https://github.com/Daffadon/fndn/releases):
+
+```bash
+go install github.com/daffadon/fndn@latest
+```
+
+To pin a version:
+
+```bash
+go install github.com/daffadon/fndn@v0.7.0
+```
+
+## Get started
 
 ```bash
 go run github.com/daffadon/fndn@v0.7.0 init .
 ```
 
-\* . generate in current directory
+\* `.` generates in the current directory.
 
-OR
+Or see all commands:
 
 ```bash
 go run github.com/daffadon/fndn@v0.7.0 --help
 ```
 
-to see how can you use the tools
-
 > [!NOTE]
-> For The first time, it will take longer than expected to generate depends on go cache, go modcache, and your internet speed.
+> The first generation takes longer than expected, depending on the Go build cache, module cache, and internet speed.
 
-After the project is generated, you can also generate a config for another techstack provided by using below command.
+After the project is generated, you can add a config for another tech stack with:
 
 ```bash
 go run github.com/daffadon/fndn@v0.7.0 generate [command]
@@ -50,17 +55,20 @@ go run github.com/daffadon/fndn@v0.7.0 generate [command]
 
 *command*: framework, database, mq, cache, storage
 
-## 📦 Installation
+## Features
 
-If you want to install the tools to your system, you can either using go install or download the binary in available release:
+- Clean architecture scaffolding
+- Customizable tech stack
+- Interactive CLI with Bubble Tea
+- Docker and containerization ready
+- Go modules setup
 
-```bash
-go install github.com/daffadon/fndn@v0.7.0
-```
+## The tech stack
 
-## 🛠️ The techstack
+Generation runs in default mode or custom mode, with the freedom to choose the `framework`, `database`, `message queue`, `in-memory store`, and `object storage` you need. Default mode uses the first tech stack from each section.
 
-Currently, the generation are in default mode and custom mode with a freedom to choose `framework`, `database`, `message queue`, `in-memory store`, `object storage` that you need. the `Default` mode is using the first techstack from each section. the generated techstack that you can use are:
+<details>
+<summary>Supported tech stacks</summary>
 
 - Framework
 
@@ -84,7 +92,7 @@ Currently, the generation are in default mode and custom mode with a freedom to 
 ![Nats](https://img.shields.io/badge/nats-2DACE1?style=for-the-badge&logo=nats&logoColor=white)
 ![RabbitMQ](https://img.shields.io/badge/rabbitmq-%23FF6600.svg?&style=for-the-badge&logo=rabbitmq&logoColor=white)
 ![Kafka](https://img.shields.io/badge/Apache_Kafka-231F20?style=for-the-badge&logo=apache-kafka&logoColor=white)
-![Amazon SQS](https://img.shields.io/badge/amazon%20sqs-F79114?style=for-the-badge&logo=amazon%20sqs&logoColor=whit)
+![Amazon SQS](https://img.shields.io/badge/amazon%20sqs-F79114?style=for-the-badge&logoColor=white)
 
 - Cache
 
@@ -95,23 +103,25 @@ Currently, the generation are in default mode and custom mode with a freedom to 
 
 - Object Storage
 
-![Rustfs](https://img.shields.io/badge/RustFS-0196D0?style=for-the-badge&logo=RustFS&logoColor=white)
-![Seaweedfs](https://img.shields.io/badge/Seaweedfs-0059AC?style=for-the-badge&logo=SeaweedFS&logoColor=white)
-![Minio](https://img.shields.io/badge/minio-C8324D?style=for-the-badge&logo=nats&logoColor=white)
+![Rustfs](https://img.shields.io/badge/RustFS-0196D0?style=for-the-badge&logoColor=white)
+![Seaweedfs](https://img.shields.io/badge/Seaweedfs-0059AC?style=for-the-badge&logoColor=white)
+![Minio](https://img.shields.io/badge/minio-C8324D?style=for-the-badge&logo=minio&logoColor=white)
 
 - Deployment
 
 ![Docker](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white)
 
-## 📃 Config Reference
+</details>
+
+## Config Reference
 
 - [All Docker Compose](https://github.com/daffadon/fndn/blob/main/internal/template/common/docker-compose.all.md)
 - [Config YAML](https://github.com/daffadon/fndn/blob/main/internal/template/common/all_config.yaml.md)
 - [Platform Config File](https://github.com/daffadon/fndn/blob/main/internal/template/common/platform_config_file.md)
 
-## 👌 What fndn do for you (v0.\*)
+## What fndn does for you (v0.\*)
 
-it's generating the folder structure that use clean architecture as reference. If you're not familiar with the scheme, don't worry, let's talk about it.
+It generates a folder structure that uses clean architecture as reference. If you're not familiar with the scheme, don't worry, let's talk about it.
 
 <details>
 <summary>Project Folder Structure</summary>
@@ -182,20 +192,20 @@ project
 
 The folder structure is grouped by its usage:
 
-1. `cmd`: where the command is exist to running the application. there are several folder, which is for bootstraping, dependency injection, construct the server. `main.go` is the entrypoint for all of those.
-2. `config`: store all the configs; connection to 3rd party, instantiation of an dependency, configuration for http server, and certificate for tls. furthermore you can add more like grpc server config, log emitter, or any other configuration.
-3. `internal`: the place where you put on your app logic business that is not should be exposed. this is special folder for golang cause the module can't be imported from anywhere even when the repository is publicly accessible. [see more](https://go.dev/doc/go1.4#internalpackages)
-4. `script`: this is shell script for build the app. there are two scripts, one for build the binary and one for build the docker image.
+1. `cmd`: where the commands exist to run the application. There are several folders for bootstrapping, dependency injection, and constructing the server. `main.go` is the entrypoint for all of those.
+2. `config`: stores all the configs; connection to 3rd party services, instantiation of dependencies, configuration for the http server, and certificates for tls. Furthermore you can add more like grpc server config, log emitter, or any other configuration.
+3. `internal`: the place where you put your app business logic that should not be exposed. This is a special folder for golang because the module can't be imported from anywhere even when the repository is publicly accessible. [see more](https://go.dev/doc/go1.4#internalpackages)
+4. `script`: shell scripts to build the app. There are two scripts, one to build the binary and one to build the docker image.
 
-for the files, there are several files that is generated and you can change for your app:
+Several generated files you can change for your app:
 
 1. `.air.toml`: Check your repository readme for special notes if it's not working on windows
-2. `.env.example`: check your repository readme for what should you do to this file
-3. `Dockerfile`: this is generated Dockerfile that use **multistage and distroless**. so in case you want to do something to your containerized app and need a shell, you can change the base image of the second stage.
-4. `config.local.yaml`: check your repository readme for what should you do to this file
-5. `docker-compose.yml`: this is for production purpose. for development, this file is purposed to run the 3rd party for your app.
+2. `.env.example`: check your repository readme for what you should do with this file
+3. `Dockerfile`: this generated Dockerfile uses **multistage and distroless**. So in case you want to do something to your containerized app and need a shell, you can change the base image of the second stage.
+4. `config.local.yaml`: check your repository readme for what you should do with this file
+5. `docker-compose.yml`: this is for production purposes. For development, this file is purposed to run the 3rd party services for your app.
 
-## 🔀 how to read the code
+## How to read the code
 
 ```bash
                                                  |----> config/*.go (except /env)
@@ -211,14 +221,14 @@ main.go -> bootstrap/bootstrap.go -> di/di.go ---|----> internal/domain/*.go (ex
 ```
 
 > [!NOTE]
-> All of dependencies are injected in the `cmd/di/di.go`. So, calling to the infra in the `repository/todo.go` is not drawed.
+> All of the dependencies are injected in the `cmd/di/container.go`. So, calling the infra in the `repository/todo.go` is not shown.
 
-## 🚨 Troubleshoot
+## Troubleshoot
 
 ### Air is not working on wsl
 
 > [!NOTE]
-> If you use windows and generate the project using wsl, the hot reload won't work. better you use the fndn for windows in this case or if its already generated, you can change the .air.toml in `bin and cmd` to become like below and **run air from windows**, not from wsl.
+> If you use windows and generate the project using wsl, the hot reload won't work. Better you use the fndn for windows in this case or if its already generated, you can change the .air.toml in `bin and cmd` to become like below and **run air from windows**, not from wsl.
 >
 > ```yml
 > bin = "./tmp/main.exe"
@@ -233,7 +243,7 @@ main.go -> bootstrap/bootstrap.go -> di/di.go ---|----> internal/domain/*.go (ex
 ### FerretDB is not working as expected
 
 > [!NOTE]
-> due to limitation, you can't use any database. instead use, `postgres` database. if you find similar log with below log in your postgres db, change the database to `postgres` (i've made this default, but in case you change the database name in docker-compose.yml, change your database).
+> Due to limitation, you can't use any database. Instead use, `postgres` database. If you find a similar log with the below log in your postgres db, change the database to `postgres` (i've made this default, but in case you change the database name in docker-compose.yml, change your database).
 >
 > ```
 > /usr/local/bin/docker-entrypoint.sh: running /docker-entrypoint-initdb.d/20-install.sql
