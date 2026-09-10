@@ -2,6 +2,7 @@ package domain
 
 import (
 	"errors"
+	"strings"
 
 	"github.com/daffadon/fndn/internal/pkg"
 	cache_template "github.com/daffadon/fndn/internal/template/cache"
@@ -93,12 +94,6 @@ func InitDockerComposeConfig(p *Project) error {
 			mqDocker[0],
 			cacheDocker[0],
 			osDocker[0],
-
-			// volume
-			database_template.DockerComposeDBVolumeTemplate,
-			mqDocker[1],
-			cacheDocker[1],
-			osDocker[1],
 		}
 		for _, tpl := range templates {
 			c, err := pkg.ParseTemplate(tpl, st)
@@ -108,12 +103,30 @@ func InitDockerComposeConfig(p *Project) error {
 			results = append(results, c)
 		}
 
-		s := config_template.DockerComposeDefaultConfigTemplate
-		for i := range results {
-			if i == 5 {
-				s += config_template.DockerComposeVolumeConfigTemplate
+		// volumes only for selected tech: db volume is unconditional
+		// in the template list, so gate it here like the services.
+		volumeSources := []string{}
+		if p.Database != None {
+			volumeSources = append(volumeSources, database_template.DockerComposeDBVolumeTemplate)
+		}
+		volumeSources = append(volumeSources, mqDocker[1], cacheDocker[1], osDocker[1])
+		var volumes []string
+		for _, tpl := range volumeSources {
+			if tpl == "" {
+				continue
 			}
-			s += results[i]
+			c, err := pkg.ParseTemplate(tpl, st)
+			if err != nil {
+				return err
+			}
+			volumes = append(volumes, c)
+		}
+
+		s := config_template.DockerComposeDefaultConfigTemplate
+		s += strings.Join(results, "")
+		if len(volumes) > 0 {
+			s += config_template.DockerComposeVolumeConfigTemplate
+			s += strings.Join(volumes, "")
 		}
 		if err := pkg.GenericFileGenerator(p.Path, folderName, fileName, s); err != nil {
 			return err

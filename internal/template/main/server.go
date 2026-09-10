@@ -27,7 +27,7 @@ func (s *Server) Run(ctx context.Context) {
 			{{if .HasCache}}cache {{.CacheInstanceType}},{{end}}
 			{{if .HasMQ}}{{.MQInstance}}{{end}}
 			{{if .HasDB}}db {{.DBInstanceType}},{{end}}
-			{{if .HasDB}}th handler.TodoHandler,{{end}}
+			th handler.TodoHandler,
 			// and many other returned type provided
 			// in the container from /cmd/di/container.go
 		) {
@@ -38,7 +38,7 @@ func (s *Server) Run(ctx context.Context) {
 			// you can register your routes here
 			// for the example and implementation, here is the example
 
-			{{if .HasDB}}handler.RegisterTodoRoutes(r,th){{end}}
+			handler.RegisterTodoRoutes(r,th)
 			
 			srv := &http.Server{
 				Addr:              s.Address,

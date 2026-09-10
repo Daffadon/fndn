@@ -31,26 +31,27 @@ func BuildContainer() *dig.Container {
 	if err := container.Provide(logger.NewLogger); err != nil {
 		panic("Failed to provide logger: " + err.Error())
 	}
-	// object storage connection
-	{{if .HasOS}}if err := container.Provide(storage.{{.OSConnection}}); err != nil {
+	{{if .HasOS}}// object storage connection
+	if err := container.Provide(storage.{{.OSConnection}}); err != nil {
 		panic("Failed to provide object storage connection: " + err.Error())
-	}{{end}}
-
-	{{.MQInit}}
-
-	// db connection
-	{{if .HasDB}}if err := container.Provide(storage.{{.DBConnection}}); err != nil {
+	}
+	{{end}}
+	{{if .HasMQ}}{{.MQInit}}{{end}}
+	{{if .HasDB}}// db connection
+	if err := container.Provide(storage.{{.DBConnection}}); err != nil {
 		panic("Failed to provide db connection: " + err.Error())
-	}{{end}}
-	//  connection
-	{{if .HasCache}}if err := container.Provide(cache.{{.CacheConnection}}); err != nil {
+	}
+	{{end}}
+	{{if .HasCache}}// cache connection
+	if err := container.Provide(cache.{{.CacheConnection}}); err != nil {
 		panic("Failed to provide cache connection: " + err.Error())
-	}{{end}}
+	}
+	{{end}}
 
 	// you can add your own handler, service, repository,infra, or even 
 	// your own defined config here and invoke in the /cmd/server/http_server.go 
 	
-	// infra
+	{{if or .HasCache .HasMQ .HasOS .HasDB}}// infra
 	{{if .HasCache}}if err := container.Provide(cache_infra.{{.CacheInfra}}); err != nil {
 		panic("Failed to provide cache infra: " + err.Error())
 	}	{{end}}
@@ -63,7 +64,8 @@ func BuildContainer() *dig.Container {
 	{{if .HasDB}}if err := container.Provide(storage_infra.NewQuerier); err != nil {
 		panic("Failed to provide querier infra: " + err.Error())
 	}
-
+	{{end}}
+	{{end}}
 	// repo
 	if err := container.Provide(repository.NewTodoRepository); err != nil {
 		panic("Failed to provide todo repository: " + err.Error())
@@ -75,7 +77,7 @@ func BuildContainer() *dig.Container {
 	// handler
 	if err := container.Provide(handler.NewTodoHandler); err != nil {
 		panic("Failed to provide todo handler: " + err.Error())
-	}{{end}}
+	}
 
 	// http server
 	if err := container.Provide(router.{{.HTTPInit}}); err != nil {

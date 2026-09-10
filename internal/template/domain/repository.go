@@ -3,10 +3,7 @@ package domain_template
 const TodoRepositoryTemplate string = `
 package repository
 
-import (
-	storage_infra "{{.ModuleName}}/internal/infra/storage"
-	"{{.ModuleName}}/internal/domain/dto"
-)
+import "{{.ModuleName}}/internal/domain/dto"
 
 type (
 	TodoRepository interface {
@@ -14,15 +11,11 @@ type (
 		AddNewTodo(todo dto.Todo)(bool,error)
 	}
 	todoRepository struct {
-		// your injected dependency, like logger, cache, mq in infra
-		// for example
-		q storage_infra.Querier
 	}
 )
 
-func NewTodoRepository(q storage_infra.Querier) TodoRepository {
+func NewTodoRepository() TodoRepository {
 	return &todoRepository{
-		q:q,
 	}
 }
 
