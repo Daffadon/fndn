@@ -14,9 +14,6 @@ type InitProjectUseCase struct {
 type initStep struct {
 	progress string
 	run      func() error
-	// needsDB skips the step when Database is none: the todo example chain
-	// (querier -> repository -> service -> handler) cannot compile without it.
-	needsDB bool
 }
 
 func (uc *InitProjectUseCase) Run(p *domain.Project, progressCh chan<- string) error {
@@ -67,7 +64,7 @@ func (uc *InitProjectUseCase) Run(p *domain.Project, progressCh chan<- string) e
 		// infra
 		{progress: "Running querier infra generation", run: func() error {
 			return domain.InitQuerierInfra(p.Path, &p.Database)
-		}, needsDB: true},
+		}},
 		{progress: "Running in-memory infra generation", run: func() error {
 			return domain.InitInMemoryInfra(p.Path, &p.InMemory)
 		}},
@@ -84,16 +81,16 @@ func (uc *InitProjectUseCase) Run(p *domain.Project, progressCh chan<- string) e
 		}},
 		{progress: "Running repository example generation", run: func() error {
 			return domain.InitRepositoryDomain(p.Path, p.ModuleName)
-		}, needsDB: true},
+		}},
 		{progress: "Running service example generation", run: func() error {
 			return domain.InitServiceDomain(p.Path, p.ModuleName)
-		}, needsDB: true},
+		}},
 		{progress: "Running handler example generation", run: func() error {
 			return domain.InitHandlerDomain(p.Path, &p.Framework, p.ModuleName)
-		}, needsDB: true},
+		}},
 		{progress: "Running http handler example generation", run: func() error {
 			return domain.InitHTTPHandlerDomain(p.Path, &p.Framework)
-		}, needsDB: true},
+		}},
 		{progress: "Running pkg example generation", run: func() error {
 			return domain.InitPkgExample(p.Path)
 		}},
@@ -158,10 +155,6 @@ func (uc *InitProjectUseCase) Run(p *domain.Project, progressCh chan<- string) e
 	}
 
 	for _, s := range steps {
-		if s.needsDB && p.Database == domain.None {
-			progressCh <- "Skipping " + s.progress + " (no database selected)"
-			continue
-		}
 		progressCh <- s.progress
 		if err := s.run(); err != nil {
 			return err
