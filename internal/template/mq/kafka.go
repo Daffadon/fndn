@@ -44,7 +44,7 @@ func NewKafkaConnection() *kafka.Conn {
 const DockerComposeKafkaConfigTemplate string = `
 # kafka
   {{.ProjectName}}_mq:
-    image: apache/kafka:3.9.1
+    image: apache/kafka:4.3.1
     container_name: {{.ProjectName}}_mq
     ports:
       - "9092:9092"

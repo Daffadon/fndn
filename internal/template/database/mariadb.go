@@ -40,7 +40,7 @@ func NewMariaDBConn(logger zerolog.Logger)*sql.DB {
 const DockerComposeMariaDBConfigTemplate string = `
 # db
 	{{.ProjectName}}_db:
-		image: mariadb:12.0.2-ubi
+		image: mariadb:12.3.3-ubi10
 		container_name: {{.ProjectName}}_db
 		environment:
       MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}

@@ -36,7 +36,7 @@ func NewClickhouseConn(logger zerolog.Logger) clickhouse.Conn {
 const DockerComposeClickHouseConfigTemplate string = `
 # db
 	{{.ProjectName}}_db:
-			image: clickhouse:25.9.4.58-jammy
+			image: clickhouse:26.8.2.7-jammy
 			container_name: {{.ProjectName}}_db
 			restart: unless-stopped
 			environment:

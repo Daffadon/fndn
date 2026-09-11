@@ -29,7 +29,7 @@ func NewRustfsConnection() *minio.Client {
 const DockerComposeRustfsConfigTemplate string = `
 # rustfs
   {{.ProjectName}}_storage:
-    image: rustfs/rustfs:1.0.0-alpha.76
+    image: rustfs/rustfs:1.0.0-rc.6
     container_name: {{.ProjectName}}_storage
     environment:
       - RUSTFS_CONSOLE_ENABLE=true

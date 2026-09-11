@@ -28,7 +28,7 @@ func NewNatsConnection() *nats.Conn {
 const DockerComposeNatsConfigTemplate string = `
 # nats
   {{.ProjectName}}_mq:
-    image: nats:2.11.9
+    image: nats:2.14.6-nanoserver
     container_name: {{.ProjectName}}_mq
     restart: unless-stopped
     volumes:

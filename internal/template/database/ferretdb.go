@@ -34,7 +34,7 @@ func NewFerretDBConn(logger zerolog.Logger) *mongo.Client {
 const DockerComposeFerretDBConfigTemplate string = `
 # db
 	{{.ProjectName}}_db:
-			image: ghcr.io/ferretdb/ferretdb:2.5.0
+			image: ghcr.io/ferretdb/ferretdb:2.7.0
 			container_name: {{.ProjectName}}_db
 			restart: unless-stopped
 			environment:
@@ -45,7 +45,7 @@ const DockerComposeFerretDBConfigTemplate string = `
 				- postgres 
 
 	postgres:
-    image: ghcr.io/ferretdb/postgres-documentdb:17-0.106.0-ferretdb-2.5.0
+    image: ghcr.io/ferretdb/postgres-documentdb:17-0.107.0-ferretdb-2.7.0 
 		restart: unless-stopped
     environment:
       - POSTGRES_USER=${DB_USER}

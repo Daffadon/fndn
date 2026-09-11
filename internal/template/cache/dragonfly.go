@@ -26,7 +26,7 @@ func NewDragonflyConnection(zerolog zerolog.Logger) (*redis.Client, error) {
 const DockerComposeDragonflyConfigTemplate string = `
 # dragonfly
   {{.ProjectName}}_cache:
-    image: ghcr.io/dragonflydb/dragonfly:v1.34.1
+    image: ghcr.io/dragonflydb/dragonfly:v1.40.2
     container_name: {{.ProjectName}}_cache
     volumes:
       - {{.ProjectName}}_dragonfly_data:/data
